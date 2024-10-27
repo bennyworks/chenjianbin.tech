@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   providers: [
-    // @ts-ignore
+    // @ts-expect-error
     WeChatProvider({
       clientId: env.WECHAT_APP_ID,
       clientSecret: env.WECHAT_APP_SECRET,
