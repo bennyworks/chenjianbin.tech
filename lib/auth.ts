@@ -23,6 +23,12 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   providers: [
+    // @ts-ignore
+    WeChatProvider({
+      clientId: env.WECHAT_APP_ID,
+      clientSecret: env.WECHAT_APP_SECRET,
+      platformType: "WebsiteApp"
+    }),
     GitHubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
