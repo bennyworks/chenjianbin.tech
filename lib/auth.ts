@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   providers: [
-    // @ts-expect-error
+    // @ts-expect-error 由于WeChatProvider由@auth/core提供，因此无法正确推断其类型，但是传参是正确的
     WeChatProvider({
       clientId: env.WECHAT_APP_ID,
       clientSecret: env.WECHAT_APP_SECRET,
