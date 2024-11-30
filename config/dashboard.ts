@@ -14,6 +14,11 @@ export const dashboardConfig: DashboardConfig = {
   ],
   sidebarNav: [
     {
+      title:"Scheduler",
+      href: "/dashboard/scheduler",
+      icon: "calendar",
+    },
+    {
       title: "Posts",
       href: "/dashboard",
       icon: "post",

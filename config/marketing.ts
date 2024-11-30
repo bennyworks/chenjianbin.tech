@@ -3,6 +3,10 @@ import { MarketingConfig } from "types"
 export const marketingConfig: MarketingConfig = {
   mainNav: [
     {
+      title: "家庭日程管家",
+      href: "/scheduler",
+    },
+    {
       title: "Features",
       href: "/#features",
     },
