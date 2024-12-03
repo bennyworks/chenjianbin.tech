@@ -6,9 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url               = env("DATABASE_URL")
-  directUrl         = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Account {
@@ -55,6 +55,8 @@ model User {
   accounts Account[]
   sessions Session[]
   Post     Post[]
+  families Family[]
+  members  Member[] // 用户可能绑定多个成员
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -85,4 +87,87 @@ model Post {
   author User @relation(fields: [authorId], references: [id])
 
   @@map(name: "posts")
+}
+
+enum EventType {
+  None     @map("无")
+  Interest @map("兴趣")
+  Course   @map("课程")
+  Activity @map("活动")
+  Work     @map("工作")
+  Life     @map("生活")
+}
+
+enum RepeatType {
+  NoRepeat @map("不重复")
+  Daily    @map("每天")
+  Weekly   @map("每周")
+  Monthly  @map("每月")
+  Yearly   @map("每年")
+}
+
+enum MemberType {
+  Child  @map("孩子")
+  Parent @map("父母")
+}
+
+enum GrowthStage {
+  PrimaryStudent @map("小学生")
+  JuniorStudent  @map("初中生")
+  SeniorStudent  @map("高中生")
+  Parent         @map("父母")
+}
+
+model Event {
+  id        String     @id @default(cuid())
+  title     String
+  type      EventType  @default(None)
+  date      DateTime
+  location  String?
+  item      String?
+  repeat    RepeatType @default(NoRepeat)
+  startTime DateTime?  @map(name: "start_time")
+  endTime   DateTime?  @map(name: "end_time")
+  memberId  String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map(name: "evnets")
+}
+
+model Member {
+  id          String      @id @default(cuid())
+  type        MemberType
+  age         Int?
+  growthStage GrowthStage @map(name: "growth_stage")
+  familyId    String
+  userId      String?
+  events      Event[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  user   User?  @relation(fields: [userId], references: [id])
+  family Family @relation(fields: [familyId], references: [id])
+
+  @@map(name: "members")
+}
+
+model Family {
+  id      String   @id @default(cuid())
+  name    String?
+  ownerId String
+  members Member[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  user User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // 创建联合唯一索引
+  @@unique([name, ownerId])
+  @@map("families")
 }

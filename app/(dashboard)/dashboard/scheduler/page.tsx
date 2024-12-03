@@ -16,7 +16,7 @@ export default async function SchedulerPage() {
 
   return (
     <DashboardShell>
-      <DashboardHeader heading="Scheduler" text="Manage your schedule" />
+      <DashboardHeader className="" heading="家庭日程表" text="管理您的日程" />
       <FamilyCalendar />
     </DashboardShell>
   );
