@@ -81,12 +81,9 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
   };
 
   return (
-    <div className={cn("h-full", className)} {...props}>
-      <div className="flex w-full justify-start items-start divide-x divide-gray-300">
-        <div className="w-3/12 px-2">
-          <EventList events={currentEvents} />
-        </div>
-        <div className="w-9/12 px-2">
+    <div className={cn("w-full", className)} {...props}>
+      <div className="flex flex-col sm:flex-row sm:divide-x sm:divide-gray-300">
+        <div className="w-full sm:w-9/12 px-2">
           <FullCalendar
             locale={"zh-CN"}
             height={"60vh"}
@@ -116,6 +113,9 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
                 : []
             }
           ></FullCalendar>
+        </div>
+        <div className="w-full mt-8 sm:mt-0 sm:w-3/12 px-2">
+          <EventList events={currentEvents} />
         </div>
       </div>
       <AddEventDialog

@@ -30,8 +30,8 @@ import {
 export function EventList({ events }: { events: EventApi[] }) {
   return (
     <>
-      <div className="text-left text-lg font-extra-bold mb-4">事项列表</div>
-      <ul className="space-y-2 max-h-[55vh] overflow-y-auto">
+      <div className="text-center text-md font-heading mb-4">事项列表</div>
+      <ul className="space-y-2 h-[56vh] overflow-y-auto">
         {events.length <= 0 && (
           <div className="mt-8 text-sm italic text-center text-gray-500">
             空空如也
