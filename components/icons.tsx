@@ -87,10 +87,11 @@ export const Icons = {
     <svg
       version="1.0"
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="32"
+      height="32"
       viewBox="0 0 400.000000 400.000000"
       preserveAspectRatio="xMidYMid meet"
+      {...props}
     >
       <g
         transform="translate(0.000000,400.000000) scale(0.100000,-0.100000)"
