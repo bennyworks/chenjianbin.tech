@@ -1,13 +1,12 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { NextAuthOptions } from "next-auth"
-import EmailProvider from "next-auth/providers/email"
-import GitHubProvider from "next-auth/providers/github"
-import WeChatProvider from "@auth/core/providers/wechat"
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { NextAuthOptions } from 'next-auth'
+import EmailProvider from 'next-auth/providers/email'
+import GitHubProvider from 'next-auth/providers/github'
 //import { Client } from "postmark"
 
-import { env } from "@/env.mjs"
-import { siteConfig } from "@/config/site"
-import { db } from "@/lib/db"
+import { env } from '@/env.mjs'
+import { siteConfig } from '@/config/site'
+import { db } from '@/lib/db'
 
 //const postmarkClient = new Client(env.POSTMARK_API_TOKEN)
 
@@ -17,18 +16,12 @@ export const authOptions: NextAuthOptions = {
   // @see https://github.com/prisma/prisma/issues/16117
   adapter: PrismaAdapter(db as any),
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
   providers: [
-    // @ts-expect-error 由于WeChatProvider由@auth/core提供，因此无法正确推断其类型，但是传参是正确的
-    WeChatProvider({
-      clientId: env.WECHAT_APP_ID,
-      clientSecret: env.WECHAT_APP_SECRET,
-      platformType: "WebsiteApp"
-    }),
     GitHubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
@@ -49,7 +42,7 @@ export const authOptions: NextAuthOptions = {
           ? env.POSTMARK_SIGN_IN_TEMPLATE
           : env.POSTMARK_ACTIVATION_TEMPLATE
         if (!templateId) {
-          throw new Error("Missing template id")
+          throw new Error('Missing template id')
         }
         /*
         const result = await postmarkClient.sendEmailWithTemplate({

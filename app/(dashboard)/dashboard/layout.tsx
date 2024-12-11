@@ -1,19 +1,48 @@
-import { notFound } from "next/navigation"
+import { notFound } from 'next/navigation'
 
-import { dashboardConfig } from "@/config/dashboard"
-import { getCurrentUser } from "@/lib/session"
-import { MainNav } from "@/components/main-nav"
-import { DashboardNav } from "@/components/nav"
-import { SiteFooter } from "@/components/site-footer"
-import { UserAccountNav } from "@/components/user-account-nav"
+import { dashboardConfig } from '@/config/dashboard'
+import { getCurrentUser } from '@/lib/session'
+import { MainNav } from '@/components/main-nav'
+import { DashboardNav } from '@/components/nav'
+import { SiteFooter } from '@/components/site-footer'
+import { UserAccountNav } from '@/components/user-account-nav'
+import { DashboardSidebar } from '@/components/dashboard-sidebar'
+import { Separator } from '@/components/ui/separator'
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+} from '@/components/ui/sidebar'
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
 
 interface DashboardLayoutProps {
   children?: React.ReactNode
 }
 
-export default async function DashboardLayout({
-  children,
-}: DashboardLayoutProps) {
+export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = await getCurrentUser()
 
   if (!user) {
@@ -21,28 +50,41 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col space-y-6">
-      <header className="sticky top-0 z-40 border-b bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
-          <MainNav items={dashboardConfig.mainNav} />
-          <UserAccountNav
-            user={{
-              name: user.name,
-              image: user.image,
-              email: user.email,
-            }}
-          />
+    <SidebarProvider>
+      <DashboardSidebar
+        user={{
+          name: user.name,
+          image: user.image,
+          email: user.email,
+        }}
+      />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+          </div>
+          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
-      </header>
-      <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-        <aside className="hidden w-[200px] flex-col md:flex">
-          <DashboardNav items={dashboardConfig.sidebarNav} />
-        </aside>
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
-          {children}
-        </main>
-      </div>
-      <SiteFooter className="border-t" />
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

@@ -1,37 +1,112 @@
-import { DashboardConfig } from "types"
+import { DashboardConfig } from 'types'
+import { Icons } from '@/components/icons'
+import { set } from 'zod'
+import {
+  AudioWaveform,
+  BadgeCheck,
+  Bell,
+  BookOpen,
+  Bot,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  Folder,
+  Forward,
+  Frame,
+  GalleryVerticalEnd,
+  LogOut,
+  Map,
+  MoreHorizontal,
+  PieChart,
+  Plus,
+  Settings2,
+  Sparkles,
+  SquareTerminal,
+  Trash2,
+  LifeBuoy,
+  Send,
+  Share,
+} from 'lucide-react'
 
 export const dashboardConfig: DashboardConfig = {
-  mainNav: [
+  navMain: [
     {
-      title: "Documentation",
-      href: "/docs",
+      title: 'Documentation',
+      href: '#',
+      icon: BookOpen,
+      isActive: true,
+      items: [
+        {
+          title: 'Introduction',
+          url: '#',
+        },
+        {
+          title: 'Get Started',
+          url: '#',
+        },
+        {
+          title: 'Tutorials',
+          url: '#',
+        },
+        {
+          title: 'Changelog',
+          url: '#',
+        },
+      ],
     },
     {
-      title: "Support",
-      href: "/support",
-      disabled: true,
+      title: 'Settings',
+      href: '#',
+      icon: Settings2,
+      isActive: false,
+      items: [
+        {
+          title: 'General',
+          url: '#',
+        },
+        {
+          title: 'Team',
+          url: '#',
+        },
+        {
+          title: 'Billing',
+          url: '#',
+        },
+        {
+          title: 'Limits',
+          url: '#',
+        },
+      ],
     },
   ],
-  sidebarNav: [
+  navSecondary: [
     {
-      title:"Scheduler",
-      href: "/dashboard/scheduler",
-      icon: "calendar",
+      title: 'Support',
+      href: '#',
+      icon: LifeBuoy,
     },
     {
-      title: "Posts",
-      href: "/dashboard",
-      icon: "post",
+      title: 'Feedback',
+      href: '#',
+      icon: Send,
+    },
+  ],
+  projects: [
+    {
+      title: 'Design Engineering',
+      href: '#',
+      icon: Frame,
     },
     {
-      title: "Billing",
-      href: "/dashboard/billing",
-      icon: "billing",
+      title: 'Sales & Marketing',
+      href: '#',
+      icon: PieChart,
     },
     {
-      title: "Settings",
-      href: "/dashboard/settings",
-      icon: "settings",
+      title: 'Travel',
+      href: '#',
+      icon: Map,
     },
   ],
 }

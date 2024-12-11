@@ -19,6 +19,13 @@ import {
   Plus,
   Settings,
   SunMedium,
+  BookOpen,
+  Settings2,
+  Send,
+  LifeBuoy,
+  Frame,
+  PieChart,
+  Map,
   Trash,
   Twitter,
   User,
@@ -52,6 +59,13 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   calendar: Calendar,
+  bookOpen: BookOpen,
+  settings2: Settings2,
+  send: Send,
+  lifeBuoy: LifeBuoy,
+  frame: Frame,
+  pieChart: PieChart,
+  map: Map,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
