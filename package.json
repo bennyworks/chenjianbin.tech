@@ -1,7 +1,23 @@
 {
-  "name": "my-app",
+  "name": "chenjianbin.tech",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +27,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
   },
   "dependencies": {
-    "@auth/core": "^0.37.2",
+    "@auth/core": "0.34.2",
     "@auth/prisma-adapter": "^2.7.1",
     "@editorjs/code": "^2.9.3",
     "@editorjs/editorjs": "^2.30.7",
