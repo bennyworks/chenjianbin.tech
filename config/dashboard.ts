@@ -94,13 +94,13 @@ export const dashboardConfig: DashboardConfig = {
   ],
   projects: [
     {
-      title: 'Design Engineering',
-      href: '#',
+      title: 'Posts',
+      href: '/dashboard',
       icon: Frame,
     },
     {
-      title: 'Sales & Marketing',
-      href: '#',
+      title: 'Scheduler',
+      href: '/dashboard/scheduler',
       icon: PieChart,
     },
     {
