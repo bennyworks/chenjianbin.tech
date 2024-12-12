@@ -23,7 +23,7 @@ export type SidebarNavItem = {
       items?: never
     }
   | {
-      href?: string
+      href: string
       items: NavLink[]
     }
 )

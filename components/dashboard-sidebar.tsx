@@ -115,7 +115,7 @@ export function DashboardSidebar({ user }: UserAccountNavProps) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <a href={subItem.href}>
                               <span>{subItem.title}</span>
                             </a>
                           </SidebarMenuSubButton>

@@ -39,19 +39,19 @@ export const dashboardConfig: DashboardConfig = {
       items: [
         {
           title: 'Introduction',
-          url: '#',
+          href: '#',
         },
         {
           title: 'Get Started',
-          url: '#',
+          href: '#',
         },
         {
           title: 'Tutorials',
-          url: '#',
+          href: '#',
         },
         {
           title: 'Changelog',
-          url: '#',
+          href: '#',
         },
       ],
     },
@@ -63,19 +63,19 @@ export const dashboardConfig: DashboardConfig = {
       items: [
         {
           title: 'General',
-          url: '#',
+          href: '#',
         },
         {
           title: 'Team',
-          url: '#',
+          href: '#',
         },
         {
           title: 'Billing',
-          url: '#',
+          href: '#',
         },
         {
           title: 'Limits',
-          url: '#',
+          href: '#',
         },
       ],
     },
@@ -94,12 +94,12 @@ export const dashboardConfig: DashboardConfig = {
   ],
   projects: [
     {
-      title: 'Posts',
+      title: '首页',
       href: '/dashboard',
       icon: Frame,
     },
     {
-      title: 'Scheduler',
+      title: '日程管理',
       href: '/dashboard/scheduler',
       icon: PieChart,
     },
