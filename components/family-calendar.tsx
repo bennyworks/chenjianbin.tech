@@ -1,71 +1,60 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import {
-  formatDate,
-  DateSelectArg,
-  EventClickArg,
-  EventApi,
-} from "@fullcalendar/core";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import "@fullcalendar/core/locales/zh-cn";
-import { AddEventDialog } from "@/components/add-event-dialog";
-import { EventList } from "@/components/event-list";
+import * as React from 'react'
+import { cn } from '@/lib/utils'
+import { formatDate, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import '@fullcalendar/core/locales/zh-cn'
+import { AddEventDialog } from '@/components/add-event-dialog'
+import { EventList } from '@/components/event-list'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
-  const [currentEvents, setCurrentEvents] = React.useState<EventApi[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
-  const [newEventTitle, setNewEventTitle] = React.useState<string>("");
-  const [selectedDate, setSelectedDate] = React.useState<DateSelectArg | null>(
-    null
-  );
+  const [currentEvents, setCurrentEvents] = React.useState<EventApi[]>([])
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false)
+  const [newEventTitle, setNewEventTitle] = React.useState<string>('')
+  const [selectedDate, setSelectedDate] = React.useState<DateSelectArg | null>(null)
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saveedEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    if (typeof window !== 'undefined') {
+      const saveedEvents = JSON.parse(localStorage.getItem('events') || '[]')
       if (saveedEvents) {
-        setCurrentEvents(saveedEvents);
+        setCurrentEvents(saveedEvents)
       }
     }
-  }, []);
+  }, [])
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("events", JSON.stringify(currentEvents));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('events', JSON.stringify(currentEvents))
     }
-  }, [currentEvents]);
+  }, [currentEvents])
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
-    setSelectedDate(selectInfo);
-    setIsDialogOpen(true);
-  };
+    setSelectedDate(selectInfo)
+    setIsDialogOpen(true)
+  }
 
   const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setNewEventTitle("");
-  };
+    setIsDialogOpen(false)
+    setNewEventTitle('')
+  }
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    if (
-      confirm(
-        `Are you sure you want to delete the event '${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove();
+    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      clickInfo.event.remove()
     }
-  };
+  }
 
   const handleAddEvent = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (newEventTitle && selectedDate) {
-      const calendarApi = selectedDate.view.calendar;
-      calendarApi.unselect();
+      const calendarApi = selectedDate.view.calendar
+      calendarApi.unselect()
 
       const newEvent = {
         id: `${selectedDate?.start.toISOString()}-${newEventTitle}`,
@@ -73,31 +62,31 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
         start: selectedDate?.start,
         end: selectedDate?.end,
         allDay: selectedDate?.allDay,
-      };
+      }
 
-      calendarApi.addEvent(newEvent);
-      handleCloseDialog();
+      calendarApi.addEvent(newEvent)
+      handleCloseDialog()
     }
-  };
+  }
 
   return (
-    <div className={cn("w-full", className)} {...props}>
+    <div className={cn('w-full', className)} {...props}>
       <div className="flex flex-col sm:flex-row sm:divide-x sm:divide-gray-300">
         <div className="w-full sm:w-9/12 px-2">
           <FullCalendar
-            locale={"zh-CN"}
-            height={"60vh"}
+            locale={'zh-CN'}
+            height={'60vh'}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
             }}
             buttonText={{
-              today: "今天",
-              month: "月",
-              week: "周",
-              day: "日",
+              today: '今天',
+              month: '月',
+              week: '周',
+              day: '日',
             }}
             initialView="dayGridMonth"
             editable={true}
@@ -108,10 +97,28 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
             eventClick={handleEventClick}
             eventsSet={(events) => setCurrentEvents(events)}
             initialEvents={
-              typeof window !== "undefined"
-                ? JSON.parse(localStorage.getItem("events") || "[]")
+              typeof window !== 'undefined'
+                ? JSON.parse(localStorage.getItem('events') || '[]')
                 : []
             }
+            contentHeight="auto"
+            dayHeaderClassNames="text-sm font-medium"
+            dayCellClassNames="text-sm"
+            eventClassNames="text-sm font-medium"
+            titleFormat={{ year: 'numeric', month: 'long' }}
+            views={{
+              dayGridMonth: {
+                titleFormat: { year: 'numeric', month: 'long' },
+                dayHeaderFormat: { weekday: 'short' },
+              },
+              timeGridWeek: {
+                titleFormat: { year: 'numeric', month: 'long' },
+                dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric' },
+              },
+              timeGridDay: {
+                titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+              },
+            }}
           ></FullCalendar>
         </div>
         <div className="w-full mt-8 sm:mt-0 sm:w-3/12 px-2">
@@ -126,5 +133,5 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
         onTitleChange={(e) => setNewEventTitle(e.target.value)}
       />
     </div>
-  );
+  )
 }
