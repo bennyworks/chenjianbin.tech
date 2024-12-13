@@ -23,11 +23,11 @@ import { FamilyMember, FamilyMemberFormData } from '@/types/family'
 
 const formSchema = z.object({
   name: z.string().min(1, '姓名不能为空'),
-  type: z.enum(['parent', 'child'], {
+  type: z.enum(['Parent', 'Child'], {
     required_error: '请选择成员类型',
   }),
   birthday: z.string().min(1, '请选择生日'),
-  lifeStage: z.enum(['adult', 'elementary', 'junior-high', 'senior-high'], {
+  lifeStage: z.enum(['PrimaryStudent', 'JuniorStudent', 'SeniorStudent', 'Parent'], {
     required_error: '请选择生活阶段',
   }),
 })
@@ -44,9 +44,9 @@ export function MemberForm({ open, onOpenChange, onSubmit, initialData }: Member
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: '',
-      type: 'child',
+      type: 'Child',
       birthday: '',
-      lifeStage: 'elementary',
+      lifeStage: 'PrimaryStudent',
     },
   })
 
@@ -89,8 +89,8 @@ export function MemberForm({ open, onOpenChange, onSubmit, initialData }: Member
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="parent">父母</SelectItem>
-                      <SelectItem value="child">孩子</SelectItem>
+                      <SelectItem value="Parent">父母</SelectItem>
+                      <SelectItem value="Child">孩子</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -123,10 +123,10 @@ export function MemberForm({ open, onOpenChange, onSubmit, initialData }: Member
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="adult">成人</SelectItem>
-                      <SelectItem value="elementary">小学</SelectItem>
-                      <SelectItem value="junior-high">初中</SelectItem>
-                      <SelectItem value="senior-high">高中</SelectItem>
+                      <SelectItem value="PrimaryStudent">小学</SelectItem>
+                      <SelectItem value="JuniorStudent">初中</SelectItem>
+                      <SelectItem value="SeniorStudent">高中</SelectItem>
+                      <SelectItem value="Parent">父母</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

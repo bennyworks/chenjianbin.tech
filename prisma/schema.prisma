@@ -111,7 +111,7 @@ enum MemberType {
   Parent @map("父母")
 }
 
-enum GrowthStage {
+enum LifeStage {
   PrimaryStudent @map("小学生")
   JuniorStudent  @map("初中生")
   SeniorStudent  @map("高中生")
@@ -140,9 +140,10 @@ model Event {
 
 model Member {
   id          String      @id @default(cuid())
+  name        String
   type        MemberType
   age         Int?
-  growthStage GrowthStage @map(name: "growth_stage")
+  lifeStage LifeStage @map(name: "life_stage")
   familyId    String
   userId      String?
   events      Event[]

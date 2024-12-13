@@ -60,10 +60,10 @@ export function MemberCard({ member, onEdit, onDelete }: MemberCardProps) {
           </div>
           <div className="text-sm text-right">
             <span className="text-muted-foreground">阶段：</span>
-            {member.lifeStage === 'elementary' && '小学'}
-            {member.lifeStage === 'junior-high' && '初中'}
-            {member.lifeStage === 'senior-high' && '高中'}
-            {member.lifeStage === 'adult' && '成人'}
+            {member.lifeStage === 'PrimaryStudent' && '小学'}
+            {member.lifeStage === 'JuniorStudent' && '初中'}
+            {member.lifeStage === 'SeniorStudent' && '高中'}
+            {member.lifeStage === 'Parent' && '父母'}
           </div>
         </div>
       </CardContent>
