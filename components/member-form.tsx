@@ -26,7 +26,12 @@ const formSchema = z.object({
   type: z.enum(['Parent', 'Child'], {
     required_error: '请选择成员类型',
   }),
-  birthday: z.string().min(1, '请选择生日'),
+  birthday: z.string()
+    .min(1, '请选择生日')
+    .transform((date) => {
+      // Convert the date to ISO format with time and timezone
+      return new Date(date).toISOString();
+    }),
   lifeStage: z.enum(['PrimaryStudent', 'JuniorStudent', 'SeniorStudent', 'Parent'], {
     required_error: '请选择生活阶段',
   }),

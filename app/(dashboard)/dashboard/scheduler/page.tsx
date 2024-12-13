@@ -25,6 +25,8 @@ async function handleAddMember(data: FamilyMemberFormData) {
     },
   })
 
+  console.log(family)
+
   // If no family exists, create one
   if (!family) {
     family = await db.family.create({
@@ -41,6 +43,7 @@ async function handleAddMember(data: FamilyMemberFormData) {
       name: data.name,
       type: data.type,
       age: data.age,
+      birthday: data.birthday,
       lifeStage: data.lifeStage,
       userId: user.id,
       familyId: family.id,
@@ -99,6 +102,12 @@ export default async function SchedulerPage() {
     redirect(authOptions?.pages?.signIn || '/login')
   }
 
+  const members = await db.member.findMany({
+    where: {
+      userId: user.id,
+    },
+  })
+
   const tabs = [
     {
       id: 'settings',
@@ -120,6 +129,12 @@ export default async function SchedulerPage() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">家庭</h2>
           <FamilyList
+            initialMembers={
+              members?.map((member) => ({
+                ...member,
+                birthday: member.birthday.toISOString(),
+              })) || []
+            }
             onAdd={handleAddMember}
             onEdit={handleEditMember}
             onDelete={handleDeleteMember}

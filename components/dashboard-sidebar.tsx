@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { User } from 'next-auth'
+import { signOut } from 'next-auth/react'
 import { UserAvatar } from '@/components/user-avatar'
 import { dashboardConfig } from '@/config/dashboard'
 import { siteConfig } from '@/config/site'
@@ -227,7 +228,15 @@ export function DashboardSidebar({ user }: UserAccountNavProps) {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onSelect={(event) => {
+                    event.preventDefault()
+                    signOut({
+                      callbackUrl: `${window.location.origin}/login`,
+                    })
+                  }}
+                >
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

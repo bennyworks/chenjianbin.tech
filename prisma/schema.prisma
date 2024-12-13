@@ -142,6 +142,7 @@ model Member {
   id          String      @id @default(cuid())
   name        String
   type        MemberType
+  birthday    DateTime
   age         Int?
   lifeStage LifeStage @map(name: "life_stage")
   familyId    String
@@ -159,7 +160,7 @@ model Member {
 
 model Family {
   id      String   @id @default(cuid())
-  name    String?
+  name    String
   ownerId String
   members Member[]
 
