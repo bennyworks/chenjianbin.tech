@@ -1,83 +1,97 @@
-import * as React from "react";
+'use client'
 
-import {
-  formatDate,
-  DateSelectArg,
-  EventClickArg,
-  EventApi,
-} from "@fullcalendar/core";
+import { useState } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { EventCard } from '@/components/event-card'
+import { EventForm } from '@/components/event-form'
+import type { EventFormData } from '@/types/event'
+import type { EventListProps, Event } from '@/types/event'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Ellipsis, Trash } from "lucide-react";
+export function EventList({
+  initialEvents = [],
+  members = [],
+  onAdd,
+  onEdit,
+  onDelete,
+}: EventListProps) {
+  const [events, setEvents] = useState<Event[]>(initialEvents)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [formOpen, setFormOpen] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<Event | undefined>()
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  const filteredEvents = initialEvents.filter(
+    (event) =>
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
-export function EventList({ events }: { events: EventApi[] }) {
+  const handleAdd = (data: EventFormData) => {
+    const newEvent: Event = {
+      id: Math.random().toString(36).substr(2, 9),
+      ...data,
+    }
+    setEvents([...events, newEvent])
+    setFormOpen(false)
+    onAdd?.(data)
+  }
+
+  const handleEdit = (data: EventFormData) => {
+    if (!editingEvent) return
+    const updatedEvents = events.map((event) =>
+      event.id === editingEvent.id ? { ...event, ...data } : event
+    )
+
+    setEvents(updatedEvents)
+    setFormOpen(false)
+    onEdit?.(editingEvent.id, data)
+  }
+
+  const handleDelete = (id: string) => {
+    setEvents(events.filter((event) => event.id !== id))
+    onDelete?.(id)
+  }
+
   return (
-    <>
-      <div className="text-center text-md font-heading mb-4">事项列表</div>
-      <ul className="space-y-2 h-[56vh] overflow-y-auto">
-        {events.length <= 0 && (
-          <div className="mt-8 text-sm italic text-center text-gray-500">
-            空空如也
-          </div>
-        )}
-        {events.length > 0 &&
-          events.map((event: EventApi) => (
-            <li
-              className="border border-gray-200 shadow rounded-lg px-2 py-2 text-gray-600"
-              key={event.id}
-            >
-              <div className="flex justify-between items-center">
-                <div className="w-full items-center justify-between sm:px-2">
-                  <div className="space-x-2 rtl:space-x-reverse">
-                    <span className="text-emphasis truncate font-medium">
-                      {event.title}
-                    </span>
-                  </div>
-                  <p className="text-subtle text-sm mt-1">
-                    {formatDate(event.start!, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      locale: "zh-CN",
-                    })}
-                  </p>
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <Ellipsis />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-48">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <Trash />
-                        <span>删除</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </li>
-          ))}
-      </ul>
-    </>
-  );
+    <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex-1 mr-4">
+          <Input
+            type="search"
+            placeholder="搜索事项..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Button onClick={() => setFormOpen(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          添加事项
+        </Button>
+      </div>
+
+      <div className="space-y-4">
+        {filteredEvents.map((event) => (
+          <EventCard
+            key={event.id}
+            event={event}
+            members={members}
+            onEdit={(event) => setEditingEvent(event)}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
+      <EventForm
+        members={members}
+        open={formOpen || !!editingEvent}
+        onOpenChange={(open) => {
+          setFormOpen(open)
+          if (!open) setEditingEvent(undefined)
+        }}
+        onSubmit={editingEvent ? handleEdit : handleAdd}
+        initialData={editingEvent}
+      />
+    </div>
+  )
 }

@@ -33,14 +33,19 @@ export function CollapsibleTabs({ tabs, className, style }: CollapsibleTabsProps
     setTimeout(() => setIsLoading(false), 500) // Simulate loading
   }
 
+  const containerStyle = {
+    ...style,
+    minWidth: isExpanded ? '600px' : '60px',
+    transition: 'min-width 0.3s ease',
+  }
+
   return (
     <div
       className={cn(
         'flex border rounded-lg overflow-hidden transition-all duration-300 ease-in-out relative',
-        isExpanded ? 'w-full' : 'w-[60px]',
         className
       )}
-      style={style}
+      style={containerStyle}
     >
       <div
         className={cn(
@@ -88,11 +93,8 @@ export function CollapsibleTabs({ tabs, className, style }: CollapsibleTabsProps
               )}
             >
               {React.cloneElement(tab.icon as React.ReactElement, {
-                className: 'h-6 w-6',
+                className: 'h-4 w-4',
               })}
-              <div className="absolute right-full mr-2 px-2 py-1 rounded bg-popover text-sm invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 whitespace-nowrap">
-                {tab.title}
-              </div>
             </button>
           ))}
         </div>

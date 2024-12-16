@@ -8,8 +8,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import '@fullcalendar/core/locales/zh-cn'
-import { AddEventDialog } from '@/components/add-event-dialog'
-import { EventList } from '@/components/event-list'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -70,61 +68,52 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
   }
 
   return (
-    <div className={cn('w-full', className)} {...props}>
-      <div className="flex flex-col sm:flex-row sm:divide-x sm:divide-gray-300">
-        <FullCalendar
-          locale={'zh-CN'}
-          height={'60vh'}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay',
-          }}
-          buttonText={{
-            today: '今天',
-            month: '月',
-            week: '周',
-            day: '日',
-          }}
-          initialView="dayGridMonth"
-          editable={true}
-          selectable={true}
-          selectMirror={true}
-          dayMaxEvents={true}
-          select={handleDateSelect}
-          eventClick={handleEventClick}
-          eventsSet={(events) => setCurrentEvents(events)}
-          initialEvents={
-            typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('events') || '[]') : []
-          }
-          contentHeight="auto"
-          dayHeaderClassNames="text-sm font-medium"
-          dayCellClassNames="text-sm"
-          eventClassNames="text-sm font-medium"
-          titleFormat={{ year: 'numeric', month: 'long' }}
-          views={{
-            dayGridMonth: {
-              titleFormat: { year: 'numeric', month: 'long' },
-              dayHeaderFormat: { weekday: 'short' },
-            },
-            timeGridWeek: {
-              titleFormat: { year: 'numeric', month: 'long' },
-              dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric' },
-            },
-            timeGridDay: {
-              titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
-            },
-          }}
-        ></FullCalendar>
-      </div>
-      <AddEventDialog
-        title={newEventTitle}
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onClick={handleAddEvent}
-        onTitleChange={(e) => setNewEventTitle(e.target.value)}
-      />
+    <div className={cn('flew w-full', className)} {...props}>
+      <FullCalendar
+        locale={'zh-CN'}
+        height={'60vh'}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        headerToolbar={{
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+        }}
+        buttonText={{
+          today: '今天',
+          month: '月',
+          week: '周',
+          day: '日',
+        }}
+        initialView="dayGridMonth"
+        editable={true}
+        selectable={true}
+        selectMirror={true}
+        dayMaxEvents={true}
+        select={handleDateSelect}
+        eventClick={handleEventClick}
+        eventsSet={(events) => setCurrentEvents(events)}
+        initialEvents={
+          typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('events') || '[]') : []
+        }
+        contentHeight="auto"
+        dayHeaderClassNames="text-sm font-medium"
+        dayCellClassNames="text-sm"
+        eventClassNames="text-sm font-medium"
+        titleFormat={{ year: 'numeric', month: 'long' }}
+        views={{
+          dayGridMonth: {
+            titleFormat: { year: 'numeric', month: 'long' },
+            dayHeaderFormat: { weekday: 'short' },
+          },
+          timeGridWeek: {
+            titleFormat: { year: 'numeric', month: 'long' },
+            dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric' },
+          },
+          timeGridDay: {
+            titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+          },
+        }}
+      ></FullCalendar>
     </div>
   )
 }

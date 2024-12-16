@@ -9,6 +9,8 @@ import { FamilyList } from '@/components/family-list'
 import { db } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { FamilyMemberFormData, LifeStage, MemberType } from '@/types/family'
+import { EventList } from '@/components/event-list'
+import { Event, EventFormData } from '@/types/event'
 
 async function handleAddMember(data: FamilyMemberFormData) {
   'use server'
@@ -24,8 +26,6 @@ async function handleAddMember(data: FamilyMemberFormData) {
       ownerId: user.id,
     },
   })
-
-  console.log(family)
 
   // If no family exists, create one
   if (!family) {
@@ -95,6 +95,52 @@ async function handleDeleteMember(id: string) {
   revalidatePath('/dashboard/scheduler')
 }
 
+async function handleAddEvent(data: EventFormData) {
+  'use server'
+  try {
+    await db.event.create({
+      data: {
+        title: data.title,
+        startTime: new Date(`${data.startDate}T${data.startTime}`),
+        endTime: new Date(`${data.endDate || data.startDate}T${data.endTime || data.startTime}`),
+        location: data.location,
+        repeat: data.repeat,
+        memberId: data.memberId,
+      },
+    })
+    revalidatePath('/dashboard/scheduler')
+  } catch (error) {
+    console.error('Failed to add event:', error)
+  }
+}
+
+async function handleEditEvent(id: string, data: EventFormData) {
+  'use server'
+  try {
+    await db.event.update({
+      where: { id: id },
+      data: {
+        ...data,
+      },
+    })
+    revalidatePath('/dashboard/scheduler')
+  } catch (error) {
+    console.error('Failed to edit event:', error)
+  }
+}
+
+async function handleDeleteEvent(id: string) {
+  'use server'
+  try {
+    await db.event.delete({
+      where: { id },
+    })
+    revalidatePath('/dashboard/scheduler')
+  } catch (error) {
+    console.error('Failed to delete event:', error)
+  }
+}
+
 export default async function SchedulerPage() {
   const user = await getCurrentUser()
 
@@ -102,11 +148,25 @@ export default async function SchedulerPage() {
     redirect(authOptions?.pages?.signIn || '/login')
   }
 
-  const members = await db.member.findMany({
-    where: {
-      userId: user.id,
-    },
-  })
+  const members = await db.member
+    .findMany({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        birthday: true,
+        lifeStage: true,
+      },
+    })
+    .then((members) =>
+      members.map((member) => ({
+        ...member,
+        birthday: member.birthday?.toISOString() || new Date().toISOString(),
+      }))
+    )
 
   const tabs = [
     {
@@ -116,8 +176,8 @@ export default async function SchedulerPage() {
       content: (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">设置</h2>
-          <p>设置内容区域</p>
-          <p>这里可以放置各种设置选项。</p>
+          <p>事项内容区域</p>
+          <p>这里可以列出待办事项或任务列表。</p>
         </div>
       ),
     },
@@ -129,12 +189,7 @@ export default async function SchedulerPage() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">家庭</h2>
           <FamilyList
-            initialMembers={
-              members?.map((member) => ({
-                ...member,
-                birthday: member.birthday.toISOString(),
-              })) || []
-            }
+            initialMembers={members}
             onAdd={handleAddMember}
             onEdit={handleEditMember}
             onDelete={handleDeleteMember}
@@ -149,8 +204,13 @@ export default async function SchedulerPage() {
       content: (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">事项</h2>
-          <p>事项内容区域</p>
-          <p>这里可以列出待办事项或任务列表。</p>
+          <EventList
+            initialEvents={[]}
+            members={members}
+            onAdd={handleAddEvent}
+            onEdit={handleEditEvent}
+            onDelete={handleDeleteEvent}
+          />
         </div>
       ),
     },
@@ -159,15 +219,11 @@ export default async function SchedulerPage() {
   return (
     <DashboardShell>
       <div className="relative min-h-[calc(100vh-4rem)]">
-        <div className="absolute inset-0 pr-[60px]">
+        <div className="absolute inset-0 pr-[76px] transition-[padding] duration-300">
           <FamilyCalendar />
         </div>
         <div className="absolute right-0 top-0 bottom-0 z-10">
-          <CollapsibleTabs
-            tabs={tabs}
-            className="h-full bg-white shadow-lg rounded-l-lg"
-            style={{ minWidth: '60px' }}
-          />
+          <CollapsibleTabs tabs={tabs} className="h-[90vh] bg-white shadow-lg rounded-l-lg" />
         </div>
       </div>
     </DashboardShell>

@@ -1,4 +1,4 @@
-import { MoreVertical, Edit, Trash } from 'lucide-react'
+import { Ellipsis, Edit, Trash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -33,7 +33,7 @@ export function MemberCard({ member, onEdit, onDelete }: MemberCardProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">
-              <MoreVertical className="h-4 w-4" />
+              <Ellipsis className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
@@ -50,7 +50,7 @@ export function MemberCard({ member, onEdit, onDelete }: MemberCardProps) {
         </DropdownMenu>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start pl-4 pr-2">
           <div className="space-y-1">
             <div className="text-sm">
               <span className="text-muted-foreground">生日：</span>
