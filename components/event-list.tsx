@@ -45,7 +45,7 @@ export function EventList({
     )
 
     setEvents(updatedEvents)
-    setFormOpen(false)
+    setEditingEvent(undefined)
     onEdit?.(editingEvent.id, data)
   }
 
@@ -71,17 +71,16 @@ export function EventList({
         </Button>
       </div>
 
-      <div className="space-y-4">
-        {filteredEvents.map((event) => (
-          <EventCard
-            key={event.id}
-            event={event}
-            members={members}
-            onEdit={(event) => setEditingEvent(event)}
-            onDelete={handleDelete}
-          />
-        ))}
-      </div>
+      {filteredEvents.map((event) => (
+        <EventCard
+          key={event.id}
+          event={event}
+          members={members}
+          onEdit={(event) => setEditingEvent(event)}
+          onDelete={handleDelete}
+        />
+      ))}
+
       <EventForm
         members={members}
         open={formOpen || !!editingEvent}
