@@ -229,9 +229,10 @@ export default async function SchedulerPage() {
         duration: '1', // Default duration
         isAllDay: false, // Default value
         location: event.location || undefined,
-        reminder: '30m', // Default reminder
+        reminder: '30', // Default reminder
         repeat: event.repeat,
         memberId: event.memberId,
+        formData: event.formData,
       }))
     )
 

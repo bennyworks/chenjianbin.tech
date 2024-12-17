@@ -138,7 +138,7 @@ model Event {
   user   User  @relation(fields: [userId], references: [id])
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
-  @@map(name: "evnets")
+  @@map(name: "events")
 }
 
 model Member {

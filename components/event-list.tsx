@@ -89,7 +89,7 @@ export function EventList({
           if (!open) setEditingEvent(undefined)
         }}
         onSubmit={editingEvent ? handleEdit : handleAdd}
-        initialData={editingEvent}
+        initialData={JSON.parse(editingEvent?.formData?.toString() || '{}')}
       />
     </div>
   )

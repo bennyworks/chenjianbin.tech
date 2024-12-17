@@ -1,5 +1,6 @@
 import { RepeatType } from '@prisma/client'
 import { FamilyMember } from '@/types/family'
+import { JsonValue } from 'next-auth/adapters'
 
 export interface Event {
   id: string
@@ -16,6 +17,7 @@ export interface Event {
   repeat: RepeatType
   attachments?: File[]
   memberId: string
+  formData?: JsonValue
 }
 
 export interface EventFormData {
