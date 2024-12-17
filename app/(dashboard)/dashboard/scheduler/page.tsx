@@ -97,16 +97,28 @@ async function handleDeleteMember(id: string) {
 
 async function handleAddEvent(data: EventFormData) {
   'use server'
+
+  const user = await getCurrentUser()
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
   try {
+    const newEvent = {
+      title: data.title,
+      startTime: new Date(`${data.startDate}T${data.startTime}`),
+      endTime: new Date(`${data.endDate || data.startDate}T${data.endTime || data.startTime}`),
+      location: data.location,
+      repeat: data.repeat,
+      memberId: data.memberId,
+      formData: JSON.stringify(data),
+      userId: user.id,
+    }
+
+    console.log(newEvent)
+
     await db.event.create({
-      data: {
-        title: data.title,
-        startTime: new Date(`${data.startDate}T${data.startTime}`),
-        endTime: new Date(`${data.endDate || data.startDate}T${data.endTime || data.startTime}`),
-        location: data.location,
-        repeat: data.repeat,
-        memberId: data.memberId,
-      },
+      data: newEvent,
     })
     revalidatePath('/dashboard/scheduler')
   } catch (error) {
@@ -116,12 +128,28 @@ async function handleAddEvent(data: EventFormData) {
 
 async function handleEditEvent(id: string, data: EventFormData) {
   'use server'
+
+  const user = await getCurrentUser()
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
   try {
+    const newEvent = {
+      title: data.title,
+      startTime: new Date(`${data.startDate}T${data.startTime}`),
+      endTime: new Date(`${data.endDate || data.startDate}T${data.endTime || data.startTime}`),
+      location: data.location,
+      repeat: data.repeat,
+      memberId: data.memberId,
+      formData: JSON.stringify(data),
+    }
+
+    console.log(newEvent)
+
     await db.event.update({
       where: { id: id },
-      data: {
-        ...data,
-      },
+      data: newEvent,
     })
     revalidatePath('/dashboard/scheduler')
   } catch (error) {
@@ -168,6 +196,45 @@ export default async function SchedulerPage() {
       }))
     )
 
+  const events = await db.event
+    .findMany({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        id: true,
+        title: true,
+        startTime: true,
+        endTime: true,
+        location: true,
+        repeat: true,
+        memberId: true,
+        formData: true,
+      },
+    })
+    .then((events) =>
+      events.map((event) => ({
+        id: event.id,
+        title: event.title,
+        startDate: event.startTime
+          ? new Date(event.startTime).toISOString().split('T')[0]
+          : new Date().toISOString().split('T')[0],
+        startTime: event.startTime
+          ? new Date(event.startTime).toISOString().split('T')[1].substring(0, 5)
+          : '00:00',
+        endDate: event.endTime ? new Date(event.endTime).toISOString().split('T')[0] : undefined,
+        endTime: event.endTime
+          ? new Date(event.endTime).toISOString().split('T')[1].substring(0, 5)
+          : undefined,
+        duration: '1', // Default duration
+        isAllDay: false, // Default value
+        location: event.location || undefined,
+        reminder: '30m', // Default reminder
+        repeat: event.repeat,
+        memberId: event.memberId,
+      }))
+    )
+
   const tabs = [
     {
       id: 'settings',
@@ -205,7 +272,7 @@ export default async function SchedulerPage() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">事项</h2>
           <EventList
-            initialEvents={[]}
+            initialEvents={events}
             members={members}
             onAdd={handleAddEvent}
             onEdit={handleEditEvent}

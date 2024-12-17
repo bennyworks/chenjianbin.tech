@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Upload } from 'lucide-react'
 import type { EventFormProps } from '@/types/event'
 import * as z from 'zod'
 import {
@@ -31,18 +30,17 @@ import {
 const formSchema = z.object({
   title: z.string().min(1, '事项标题不能为空'),
   memberId: z.string().min(1, '参与人不能为空'),
-  startDate: z.string(),
-  startTime: z.string(),
+  startDate: z.string().min(1, '开始日期不能为空'),
+  startTime: z.string().min(1, '开始时间不能为空'),
   endDate: z.string().optional(),
   endTime: z.string().optional(),
   duration: z.string(),
-  isAllDay: z.boolean(),
-  location: z.string(),
-  description: z.string(),
-  calendar: z.string(),
+  isAllDay: z.boolean(), 
+  location: z.string().optional(),
+  description: z.string().optional(),
   reminder: z.string(),
   repeat: z.enum(['NoRepeat', 'Daily', 'Weekly', 'Monthly', 'Yearly']),
-  attachments: z.array(z.instanceof(File)),
+  attachments: z.array(z.instanceof(File)).optional(),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -54,11 +52,17 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
       title: initialData?.title || '',
       memberId: initialData?.memberId || '',
       startDate: initialData?.startDate || new Date().toISOString().split('T')[0],
-      startTime: initialData?.startTime || '13:00',
+      startTime:
+        initialData?.startTime ||
+        new Date().toLocaleTimeString('zh-CN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        }),
       endDate: initialData?.endDate || '',
       endTime: initialData?.endTime || '',
       duration: initialData?.duration || '1',
-      isAllDay: initialData?.isAllDay || false,
+      isAllDay: initialData?.isAllDay || false, 
       location: initialData?.location || '',
       description: initialData?.description || '',
       reminder: initialData?.reminder || '15',
@@ -69,11 +73,27 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
 
   const [isCustomDuration, setIsCustomDuration] = useState(false)
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     form.setValue('attachments', [...(form.getValues('attachments') || []), ...files])
+  }
+
+  const handleAllDayChange = (checked: boolean) => {
+    form.setValue('isAllDay', checked)
+    if (checked) {
+      form.setValue('startTime', '00:00')
+      form.setValue('endTime', '23:59')
+    } else {
+      const now = new Date()
+      const hours = now.getHours()
+      const minutes = now.getMinutes() >= 30 ? '30' : '00'
+      const currentTime = `${hours.toString().padStart(2, '0')}:${minutes}`
+      form.setValue('startTime', currentTime)
+      
+      const endDate = new Date(now.setHours(hours + 1))
+      const endHours = endDate.getHours()
+      form.setValue('endTime', `${endHours.toString().padStart(2, '0')}:${minutes}`)
+    }
   }
 
   useEffect(() => {
@@ -103,13 +123,14 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
   }, [form, isCustomDuration])
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log(data)
     onSubmit(data)
     form.reset()
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 scrollbar-track-transparent">
         <DialogHeader>
           <DialogTitle>{initialData ? '编辑事件' : '添加事项'}</DialogTitle>
         </DialogHeader>
@@ -124,9 +145,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
                   <FormControl>
                     <Input {...field} className="col-span-8" />
                   </FormControl>
-                  {form.formState.errors.title && (
-                    <FormMessage>{form.formState.errors.title.message}</FormMessage>
-                  )}
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -136,27 +155,35 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>开始</FormLabel>
-                  <FormControl>
-                    <div className="col-span-8 flex items-center gap-2">
-                      <Input id="startDate" type="date" className="w-[139px]" {...field} required />
-                      <Input
-                        id="startTime"
-                        type="time"
-                        className="w-[89px]"
-                        {...form.register('startTime')}
-                        required
-                        disabled={form.getValues('isAllDay')}
-                      />
-                      <div className="flex items-center gap-3">
-                        <Checkbox id="isAllDay" {...form.register('isAllDay')} />
-                        <Label htmlFor="isAllDay">全天</Label>
-                      </div>
-                    </div>
-                  </FormControl>
+                  <div className="flex items-center gap-2">
+                    <Input id="startDate" type="date" className="w-[139px]" {...field} required />
+                    <Input
+                      id="startTime"
+                      type="time"
+                      className="w-[89px]"
+                      {...form.register('startTime')}
+                      required
+                      disabled={form.watch('isAllDay')}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="isAllDay"
+                      render={({ field }) => (
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id="isAllDay"
+                            checked={field.value}
+                            onCheckedChange={handleAllDayChange}
+                          />
+                          <Label htmlFor="isAllDay">全天</Label>
+                        </div>
+                      )}
+                    />
+                  </div>
                 </FormItem>
               )}
             />
-            {!form.getValues('isAllDay') && (
+            {!form.watch('isAllDay') && (
               <FormField
                 control={form.control}
                 name="duration"
@@ -206,10 +233,10 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
                             <SelectValue placeholder="选择时长" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="-1.5">30分钟</SelectItem>
-                            <SelectItem value="0">1小时</SelectItem>
-                            <SelectItem value="0.5">1小时30分钟</SelectItem>
-                            <SelectItem value="1">2小时</SelectItem>
+                            <SelectItem value="0.5">30分钟</SelectItem>
+                            <SelectItem value="1">1小时</SelectItem>
+                            <SelectItem value="1.5">1小时30分钟</SelectItem>
+                            <SelectItem value="2">2小时</SelectItem>
                             <SelectItem value="custom">自定义</SelectItem>
                           </SelectContent>
                         </Select>
@@ -274,7 +301,43 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
                 <FormItem>
                   <FormLabel>附件</FormLabel>
                   <FormControl>
-                    <Input type="file" onChange={handleFileSelect} multiple />
+                    <div className="space-y-4">
+                      <Input
+                        type="file"
+                        onChange={handleFileSelect}
+                        multiple
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png"
+                      />
+                      {field.value && field.value.length > 0 && (
+                        <div className="space-y-2">
+                          {field.value.map((file: File, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-2 border rounded"
+                            >
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm">{file.name}</span>
+                                <span className="text-xs text-gray-500">
+                                  ({(file.size / 1024).toFixed(2)} KB)
+                                </span>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  const newFiles = field.value ? [...field.value] : []
+                                  newFiles.splice(index, 1)
+                                  form.setValue('attachments', newFiles)
+                                }}
+                              >
+                                删除
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </FormControl>
                 </FormItem>
               )}
@@ -292,11 +355,11 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="-1">不提醒</SelectItem>
-                        <SelectItem value="4">5分钟前</SelectItem>
-                        <SelectItem value="14">15分钟前</SelectItem>
-                        <SelectItem value="29">30分钟前</SelectItem>
-                        <SelectItem value="59">1小时前</SelectItem>
-                        <SelectItem value="1439">1天前</SelectItem>
+                        <SelectItem value="5">5分钟前</SelectItem>
+                        <SelectItem value="15">15分钟前</SelectItem>
+                        <SelectItem value="30">30分钟前</SelectItem>
+                        <SelectItem value="60">1小时前</SelectItem>
+                        <SelectItem value="1440">1天前</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

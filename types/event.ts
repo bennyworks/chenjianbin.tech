@@ -10,11 +10,11 @@ export interface Event {
   endTime?: string
   duration: string
   isAllDay: boolean
-  location: string
-  description: string
+  location?: string
+  description?: string
   reminder: string
   repeat: RepeatType
-  attachments: File[]
+  attachments?: File[]
   memberId: string
 }
 
@@ -26,11 +26,11 @@ export interface EventFormData {
   endTime?: string
   duration: string
   isAllDay: boolean
-  location: string
-  description: string
+  location?: string
+  description?: string
   reminder: string
   repeat: RepeatType
-  attachments: File[]
+  attachments?: File[]
   memberId: string
 }
 

@@ -57,6 +57,7 @@ model User {
   Post     Post[]
   families Family[]
   members  Member[] // 用户可能绑定多个成员
+  events   Event[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -126,11 +127,15 @@ model Event {
   repeat    RepeatType @default(NoRepeat)
   startTime DateTime?  @map(name: "start_time")
   endTime   DateTime?  @map(name: "end_time")
+  formData  Json
   memberId  String
+  userId    String
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
+
+  user   User  @relation(fields: [userId], references: [id])
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
   @@map(name: "evnets")
@@ -144,13 +149,13 @@ model Member {
   age         Int?
   lifeStage LifeStage @map(name: "life_stage")
   familyId    String
-  userId      String?
+  userId      String
   events      Event[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
-  user   User?  @relation(fields: [userId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
   family Family @relation(fields: [familyId], references: [id])
 
   @@map(name: "members")
