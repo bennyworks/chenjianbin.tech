@@ -3,7 +3,7 @@ import { FamilyMember } from '@/types/family'
 import { JsonValue } from 'next-auth/adapters'
 
 export interface Event {
-  id: string
+  id?: string
   title: string
   startDate: string
   startTime: string

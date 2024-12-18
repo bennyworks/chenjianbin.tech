@@ -8,13 +8,17 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import '@fullcalendar/core/locales/zh-cn'
+import { EventForm } from '@/components/event-form'
+import { FamilyMember } from '@/types/family'
 
-interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+  members: FamilyMember[]
+  onAddEvent: (data: any) => void
+}
 
-export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
+export function FamilyCalendar({ className, members, onAddEvent, ...props }: FamilyCalendarProps) {
   const [currentEvents, setCurrentEvents] = React.useState<EventApi[]>([])
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false)
-  const [newEventTitle, setNewEventTitle] = React.useState<string>('')
   const [selectedDate, setSelectedDate] = React.useState<DateSelectArg | null>(null)
 
   React.useEffect(() => {
@@ -37,33 +41,26 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
     setIsDialogOpen(true)
   }
 
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false)
-    setNewEventTitle('')
-  }
-
   const handleEventClick = (clickInfo: EventClickArg) => {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove()
     }
   }
 
-  const handleAddEvent = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (newEventTitle && selectedDate) {
-      const calendarApi = selectedDate.view.calendar
-      calendarApi.unselect()
-
-      const newEvent = {
-        id: `${selectedDate?.start.toISOString()}-${newEventTitle}`,
-        title: newEventTitle,
-        start: selectedDate?.start,
-        end: selectedDate?.end,
-        allDay: selectedDate?.allDay,
-      }
-
-      calendarApi.addEvent(newEvent)
-      handleCloseDialog()
+  const handleAddEvent = async (data: any) => {
+    if (selectedDate && data) {
+      await onAddEvent({
+        ...data,
+        startDate: selectedDate.start.toISOString().split('T')[0],
+        endDate:
+          data.endDate ||
+          formatDate(selectedDate.end || selectedDate.start, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          }),
+      })
+      setIsDialogOpen(false)
     }
   }
 
@@ -99,21 +96,24 @@ export function FamilyCalendar({ className, ...props }: FamilyCalendarProps) {
         dayHeaderClassNames="text-sm font-medium"
         dayCellClassNames="text-sm"
         eventClassNames="text-sm font-medium"
-        titleFormat={{ year: 'numeric', month: 'long' }}
-        views={{
-          dayGridMonth: {
-            titleFormat: { year: 'numeric', month: 'long' },
-            dayHeaderFormat: { weekday: 'short' },
-          },
-          timeGridWeek: {
-            titleFormat: { year: 'numeric', month: 'long' },
-            dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric' },
-          },
-          timeGridDay: {
-            titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
-          },
+      />
+
+      <EventForm
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSubmit={handleAddEvent}
+        members={members}
+        initialData={{
+          startDate: selectedDate ? selectedDate.start.toISOString().split('T')[0] : '',
+          startTime: selectedDate ? selectedDate.start.toISOString().split('T')[1].slice(0, 5) : '',
+          isAllDay: false,
+          title: '',
+          memberId: '',
+          duration: '30',
+          reminder: '15',
+          repeat: 'NoRepeat',
         }}
-      ></FullCalendar>
+      />
     </div>
   )
 }

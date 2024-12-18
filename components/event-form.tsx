@@ -35,7 +35,7 @@ const formSchema = z.object({
   endDate: z.string().optional(),
   endTime: z.string().optional(),
   duration: z.string(),
-  isAllDay: z.boolean(), 
+  isAllDay: z.boolean(),
   location: z.string().optional(),
   description: z.string().optional(),
   reminder: z.string(),
@@ -62,7 +62,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
       endDate: initialData?.endDate || '',
       endTime: initialData?.endTime || '',
       duration: initialData?.duration || '1',
-      isAllDay: initialData?.isAllDay || false, 
+      isAllDay: initialData?.isAllDay || false,
       location: initialData?.location || '',
       description: initialData?.description || '',
       reminder: initialData?.reminder || '15',
@@ -89,7 +89,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
       const minutes = now.getMinutes() >= 30 ? '30' : '00'
       const currentTime = `${hours.toString().padStart(2, '0')}:${minutes}`
       form.setValue('startTime', currentTime)
-      
+
       const endDate = new Date(now.setHours(hours + 1))
       const endHours = endDate.getHours()
       form.setValue('endTime', `${endHours.toString().padStart(2, '0')}:${minutes}`)

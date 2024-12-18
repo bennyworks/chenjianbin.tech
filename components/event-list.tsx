@@ -39,14 +39,14 @@ export function EventList({
   }
 
   const handleEdit = (data: EventFormData) => {
-    if (!editingEvent) return
+    if (!editingEvent?.id) return
     const updatedEvents = events.map((event) =>
       event.id === editingEvent.id ? { ...event, ...data } : event
     )
 
     setEvents(updatedEvents)
     setEditingEvent(undefined)
-    onEdit?.(editingEvent.id, data)
+    onEdit(editingEvent.id, data)
   }
 
   const handleDelete = (id: string) => {
