@@ -52,13 +52,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
       title: initialData?.title || '',
       memberId: initialData?.memberId || '',
       startDate: initialData?.startDate || new Date().toISOString().split('T')[0],
-      startTime:
-        initialData?.startTime ||
-        new Date().toLocaleTimeString('zh-CN', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }),
+      startTime: initialData?.startTime || new Date().toTimeString().slice(0, 5),
       endDate: initialData?.endDate || '',
       endTime: initialData?.endTime || '',
       duration: initialData?.duration || '1',
@@ -98,6 +92,13 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
 
   useEffect(() => {
     if (initialData) {
+      const startDateTime = new Date(`${initialData.startDate}T${initialData.startTime}`)
+      const endDateTime = new Date(
+        startDateTime.getTime() + parseFloat(form.getValues('duration') ?? '1') * 60 * 60 * 1000
+      )
+      initialData.endDate = initialData.startDate
+      initialData.endTime = endDateTime.toTimeString().slice(0, 5)
+
       form.reset(initialData)
       setIsCustomDuration(initialData.duration === 'custom')
     }
@@ -123,7 +124,6 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
   }, [form, isCustomDuration])
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
     onSubmit(data)
     form.reset()
   }
@@ -132,7 +132,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 scrollbar-track-transparent">
         <DialogHeader>
-          <DialogTitle>{initialData ? '编辑事件' : '添加事项'}</DialogTitle>
+          <DialogTitle>{initialData?.id ? '编辑事件' : '添加事项'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -390,7 +390,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
               )}
             />
             <div className="flex justify-end gap-2">
-              <Button type="submit">{initialData ? '保存更改' : '创建事件'}</Button>
+              <Button type="submit">{initialData?.id ? '保存更改' : '创建事件'}</Button>
             </div>
           </form>
         </Form>

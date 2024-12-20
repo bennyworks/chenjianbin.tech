@@ -1,33 +1,5 @@
 import { DashboardConfig } from 'types'
-import { Icons } from '@/components/icons'
-import { set } from 'zod'
-import {
-  AudioWaveform,
-  BadgeCheck,
-  Bell,
-  BookOpen,
-  Bot,
-  ChevronRight,
-  ChevronsUpDown,
-  Command,
-  CreditCard,
-  Folder,
-  Forward,
-  Frame,
-  GalleryVerticalEnd,
-  LogOut,
-  Map,
-  MoreHorizontal,
-  PieChart,
-  Plus,
-  Settings2,
-  Sparkles,
-  SquareTerminal,
-  Trash2,
-  LifeBuoy,
-  Send,
-  Share,
-} from 'lucide-react'
+import { BookOpen, Settings2, LifeBuoy, Send, Calendar, Home } from 'lucide-react'
 
 export const dashboardConfig: DashboardConfig = {
   navMain: [
@@ -35,7 +7,7 @@ export const dashboardConfig: DashboardConfig = {
       title: 'Documentation',
       href: '#',
       icon: BookOpen,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: 'Introduction',
@@ -96,17 +68,12 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: '首页',
       href: '/dashboard',
-      icon: Frame,
+      icon: Home,
     },
     {
       title: '日程管理',
       href: '/dashboard/scheduler',
-      icon: PieChart,
-    },
-    {
-      title: 'Travel',
-      href: '#',
-      icon: Map,
+      icon: Calendar,
     },
   ],
 }

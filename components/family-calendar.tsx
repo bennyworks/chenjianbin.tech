@@ -48,17 +48,9 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
   }
 
   const handleAddEvent = async (data: any) => {
-    if (selectedDate && data) {
-      await onAddEvent({
+    if (data) {
+      onAddEvent({
         ...data,
-        startDate: selectedDate.start.toISOString().split('T')[0],
-        endDate:
-          data.endDate ||
-          formatDate(selectedDate.end || selectedDate.start, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          }),
       })
       setIsDialogOpen(false)
     }
@@ -67,6 +59,7 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
   return (
     <div className={cn('flew w-full', className)} {...props}>
       <FullCalendar
+        timeZone="Asia/Shanghai"
         locale={'zh-CN'}
         height={'60vh'}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -104,12 +97,24 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
         onSubmit={handleAddEvent}
         members={members}
         initialData={{
-          startDate: selectedDate ? selectedDate.start.toISOString().split('T')[0] : '',
-          startTime: selectedDate ? selectedDate.start.toISOString().split('T')[1].slice(0, 5) : '',
+          startDate: selectedDate
+            ? selectedDate.start.toLocaleString('en-CA', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+            : '',
+          startTime: selectedDate
+            ? selectedDate.start.toLocaleString('en-CA', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              })
+            : '',
           isAllDay: false,
           title: '',
           memberId: '',
-          duration: '30',
+          duration: '1',
           reminder: '15',
           repeat: 'NoRepeat',
         }}
