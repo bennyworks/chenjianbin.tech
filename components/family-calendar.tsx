@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { formatDate, DateSelectArg, EventClickArg, EventApi, EventInput } from '@fullcalendar/core'
+import { DateSelectArg, EventClickArg, EventApi, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -60,10 +60,25 @@ export function FamilyCalendar({
   }
 
   const handleAddEvent = async (data: any) => {
-    if (data) {
+    if (selectedDate && data) {
+      const calendarApi = selectedDate?.view.calendar
       onAddEvent({
         ...data,
       })
+      const newEvent = {
+        id: data.id,
+        title: data.title,
+        start: new Date(`${data.startDate}T${data.startTime}`),
+        end: new Date(`${data.endDate}T${data.endTime}`),
+        allDay: data.isAllDay,
+        extendedProps: {
+          location: data.location,
+          memberId: data.memberId,
+          repeat: data.repeat,
+          formData: data.formData,
+        },
+      }
+      calendarApi.addEvent(newEvent)
       setIsDialogOpen(false)
     }
   }
@@ -118,10 +133,10 @@ export function FamilyCalendar({
         onSubmit={handleAddEvent}
         members={members}
         initialData={{
-          startDate: selectedDate ? selectedDate.start.toLocaleString('en-CA') : '',
-          startTime: new Date().toLocaleTimeString('zh-CN'),
+          startDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
+          startTime: new Date().toLocaleTimeString('zh-CN').slice(0, 5),
           endDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
-          endTime: new Date().toLocaleTimeString('zh-CN'),
+          endTime: new Date().toLocaleTimeString('zh-CN').slice(0, 5),
           isAllDay: false,
           title: '',
           memberId: '',

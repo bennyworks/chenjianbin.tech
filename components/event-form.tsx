@@ -46,7 +46,6 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function EventForm({ initialData, members, onSubmit, onOpenChange, open }: EventFormProps) {
-  console.log('initialData', initialData)
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
