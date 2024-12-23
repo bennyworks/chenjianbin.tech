@@ -125,8 +125,8 @@ model Event {
   type      EventType  @default(None)
   location  String?
   repeat    RepeatType @default(NoRepeat)
-  startTime DateTime?  @map(name: "start_time")
-  endTime   DateTime?  @map(name: "end_time")
+  startTime DateTime  @map(name: "start_time")
+  endTime   DateTime  @map(name: "end_time")
   formData  Json
   memberId  String
   userId    String

@@ -5,21 +5,22 @@ import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
 import { FamilyMemberFormData } from '@/types/family'
 import { EventFormData } from '@/types/event'
+import { authOptions } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export async function handleAddMember(data: FamilyMemberFormData) {
   const user = await getCurrentUser()
+
   if (!user) {
-    throw new Error('Unauthorized')
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
-  // Check if user has a family record
   let family = await db.family.findFirst({
     where: {
       ownerId: user.id,
     },
   })
 
-  // If no family exists, create one
   if (!family) {
     family = await db.family.create({
       data: {
@@ -29,7 +30,6 @@ export async function handleAddMember(data: FamilyMemberFormData) {
     })
   }
 
-  // Create the member
   await db.member.create({
     data: {
       name: data.name,
@@ -47,8 +47,9 @@ export async function handleAddMember(data: FamilyMemberFormData) {
 
 export async function handleEditMember(id: string, data: FamilyMemberFormData) {
   const user = await getCurrentUser()
+
   if (!user) {
-    throw new Error('Unauthorized')
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
   await db.member.update({
@@ -69,8 +70,9 @@ export async function handleEditMember(id: string, data: FamilyMemberFormData) {
 
 export async function handleDeleteMember(id: string) {
   const user = await getCurrentUser()
+
   if (!user) {
-    throw new Error('Unauthorized')
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
   await db.member.delete({
@@ -85,15 +87,16 @@ export async function handleDeleteMember(id: string) {
 
 export async function handleAddEvent(data: EventFormData) {
   const user = await getCurrentUser()
+
   if (!user) {
-    throw new Error('Unauthorized')
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
   try {
     const newEvent = {
       title: data.title,
       startTime: new Date(`${data.startDate}T${data.startTime}`),
-      endTime: new Date(`${data.endDate || data.startDate}T${data.endTime || data.startTime}`),
+      endTime: new Date(`${data.endDate}T${data.endTime}`),
       location: data.location,
       repeat: data.repeat,
       memberId: data.memberId,
@@ -112,22 +115,21 @@ export async function handleAddEvent(data: EventFormData) {
 
 export async function handleEditEvent(id: string, data: EventFormData) {
   const user = await getCurrentUser()
+
   if (!user) {
-    throw new Error('Unauthorized')
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
   try {
     const newEvent = {
       title: data.title,
       startTime: new Date(`${data.startDate}T${data.startTime}`),
-      endTime: new Date(`${data.endDate || data.startDate}T${data.endTime || data.startTime}`),
+      endTime: new Date(`${data.endDate}T${data.endTime}`),
       location: data.location,
       repeat: data.repeat,
       memberId: data.memberId,
       formData: JSON.stringify(data),
     }
-
-    console.log(newEvent)
 
     await db.event.update({
       where: { id: id },

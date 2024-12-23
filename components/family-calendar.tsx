@@ -44,8 +44,6 @@ export function FamilyCalendar({
     },
   }))
 
-  console.log(calendarEvents)
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('events', JSON.stringify(currentEvents))
@@ -120,14 +118,10 @@ export function FamilyCalendar({
         onSubmit={handleAddEvent}
         members={members}
         initialData={{
-          startDate: selectedDate
-            ? selectedDate.start.toLocaleString('en-CA', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })
-            : '',
-          startTime: new Date().toLocaleTimeString().slice(0, 5),
+          startDate: selectedDate ? selectedDate.start.toLocaleString('en-CA') : '',
+          startTime: new Date().toLocaleTimeString('zh-CN'),
+          endDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
+          endTime: new Date().toLocaleTimeString('zh-CN'),
           isAllDay: false,
           title: '',
           memberId: '',

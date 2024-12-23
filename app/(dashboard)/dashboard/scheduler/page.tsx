@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation'
-import { authOptions } from '@/lib/auth'
 import { getCurrentUser } from '@/lib/session'
 import { DashboardShell } from '@/components/shell'
 import { FamilyCalendar } from '@/components/family-calendar'
@@ -7,10 +5,9 @@ import { CollapsibleTabs } from '@/components/collapsible-tabs'
 import { Settings, Users, ListTodo } from 'lucide-react'
 import { FamilyList } from '@/components/family-list'
 import { db } from '@/lib/db'
-import { revalidatePath } from 'next/cache'
-import { FamilyMemberFormData, LifeStage, MemberType } from '@/types/family'
+import { authOptions } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 import { EventList } from '@/components/event-list'
-import { Event, EventFormData } from '@/types/event'
 import {
   handleAddMember,
   handleEditMember,
@@ -19,12 +16,13 @@ import {
   handleEditEvent,
   handleDeleteEvent,
 } from './actions'
+import { create } from 'domain'
 
 export default async function SchedulerPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    throw new Error('Unauthorized')
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
   const members = await db.member
@@ -43,7 +41,8 @@ export default async function SchedulerPage() {
     .then((members) =>
       members.map((member) => ({
         ...member,
-        birthday: member.birthday?.toISOString() || new Date().toISOString(),
+        birthday:
+          member.birthday?.toLocaleDateString('en-CA') || new Date().toLocaleDateString('en-CA'),
       }))
     )
 
@@ -62,21 +61,18 @@ export default async function SchedulerPage() {
         memberId: true,
         formData: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
     .then((events) =>
       events.map((event) => ({
         id: event.id,
         title: event.title,
-        startDate: event.startTime
-          ? new Date(event.startTime).toISOString().split('T')[0]
-          : new Date().toISOString().split('T')[0],
-        startTime: event.startTime
-          ? new Date(event.startTime).toISOString().split('T')[1].substring(0, 5)
-          : '00:00',
-        endDate: event.endTime ? new Date(event.endTime).toISOString().split('T')[0] : undefined,
-        endTime: event.endTime
-          ? new Date(event.endTime).toISOString().split('T')[1].substring(0, 5)
-          : undefined,
+        startDate: new Date(event.startTime).toLocaleDateString('en-CA'),
+        startTime: new Date(event.startTime).toLocaleTimeString('zh-CN'),
+        endDate: new Date(event.endTime).toLocaleDateString('en-CA'),
+        endTime: new Date(event.endTime).toLocaleTimeString('zh-CN'),
         duration: '1', // Default duration
         isAllDay: false, // Default value
         location: event.location || undefined,

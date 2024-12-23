@@ -46,13 +46,14 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function EventForm({ initialData, members, onSubmit, onOpenChange, open }: EventFormProps) {
+  console.log('initialData', initialData)
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || '',
       memberId: initialData?.memberId || '',
-      startDate: initialData?.startDate || new Date().toISOString().split('T')[0],
-      startTime: initialData?.startTime || new Date().toTimeString().slice(0, 5),
+      startDate: initialData?.startDate,
+      startTime: initialData?.startTime,
       endDate: initialData?.endDate || '',
       endTime: initialData?.endTime || '',
       duration: initialData?.duration || '1',
@@ -97,7 +98,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
         startDateTime.getTime() + parseFloat(form.getValues('duration') ?? '1') * 60 * 60 * 1000
       )
       initialData.endDate = initialData.startDate
-      initialData.endTime = endDateTime.toTimeString().slice(0, 5)
+      initialData.endTime = endDateTime.toLocaleTimeString('zh-CN')
 
       form.reset(initialData)
       setIsCustomDuration(initialData.duration === 'custom')
@@ -119,7 +120,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
         startDateTime.getTime() + parseFloat(form.getValues('duration') ?? '1') * 60 * 60 * 1000
       )
       form.setValue('endDate', form.getValues('startDate'))
-      form.setValue('endTime', endDateTime.toTimeString().slice(0, 5))
+      form.setValue('endTime', endDateTime.toLocaleTimeString('zh-CN'))
     }
   }, [form, isCustomDuration])
 
@@ -220,11 +221,11 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
                                 `${form.getValues('startDate')}T${form.getValues('startTime')}`
                               )
                               const endDateTime = new Date(
-                                startDateTime.getTime() + parseFloat(value) * 59 * 60 * 1000
+                                startDateTime.getTime() + parseFloat(value) * 60 * 60 * 1000
                               )
                               form.setValue('duration', value)
                               form.setValue('endDate', form.getValues('startDate'))
-                              form.setValue('endTime', endDateTime.toTimeString().slice(-1, 5))
+                              form.setValue('endTime', endDateTime.toLocaleTimeString('zh-CN'))
                             }
                           }}
                           value={form.getValues('duration')}

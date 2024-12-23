@@ -31,11 +31,13 @@ export function EventList({
   const handleAdd = (data: EventFormData) => {
     const newEvent: Event = {
       id: Math.random().toString(36).substr(2, 9),
+      endDate: data.endDate ? data.endDate : data.startDate,
+      endTime: data.endTime ? data.endTime : data.startTime,
       ...data,
     }
     setEvents([...events, newEvent])
     setFormOpen(false)
-    onAdd?.(data)
+    onAdd(newEvent)
   }
 
   const handleEdit = (data: EventFormData) => {
@@ -51,7 +53,7 @@ export function EventList({
 
   const handleDelete = (id: string) => {
     setEvents(events.filter((event) => event.id !== id))
-    onDelete?.(id)
+    onDelete(id)
   }
 
   return (
@@ -76,7 +78,10 @@ export function EventList({
           key={event.id}
           event={event}
           members={members}
-          onEdit={(event) => setEditingEvent(event)}
+          onEdit={(event) => {
+            console.log(event)
+            setEditingEvent(event)
+          }}
           onDelete={handleDelete}
         />
       ))}
@@ -89,9 +94,7 @@ export function EventList({
           if (!open) setEditingEvent(undefined)
         }}
         onSubmit={editingEvent ? handleEdit : handleAdd}
-        initialData={
-          editingEvent ? JSON.parse(editingEvent?.formData?.toString() || '{}') : undefined
-        }
+        initialData={editingEvent ? editingEvent : undefined}
       />
     </div>
   )

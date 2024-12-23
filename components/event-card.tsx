@@ -16,33 +16,14 @@ const formatTimeRange = (event: Event) => {
   if (event.isAllDay) {
     return `${event.startDate} 全天`
   }
-  const startDateTime = `${event.startDate} ${event.startTime}`
-  const endDateTime =
-    event.endDate && event.endTime
-      ? `${event.endDate} ${event.endTime}`
-      : new Date(
-          new Date(`${event.startDate}T${event.startTime}`).getTime() +
-            parseInt(event.duration) * 60 * 60 * 1000
-        )
-          .toLocaleString('zh-CN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-          .replace(/\//g, '-')
+  const startDateTime = `${event.startDate} ${event.startTime.slice(0, 5)}`
+  const endDateTime = `${event.endDate} ${event.endTime.slice(0, 5)}`
+
   return `${startDateTime} - ${endDateTime}`
 }
 
 export function EventCard({ event, members, onEdit, onDelete }: EventCardProps) {
-  const [showEditForm, setShowEditForm] = useState(false)
   const member = members.find((m) => m.id === event.memberId)
-
-  const handleEdit = (updatedEvent: Event) => {
-    onEdit(updatedEvent)
-    setShowEditForm(false)
-  }
 
   return (
     <>
@@ -89,7 +70,7 @@ export function EventCard({ event, members, onEdit, onDelete }: EventCardProps) 
             <Button variant="ghost" size="icon" onClick={() => onEdit(event)}>
               <Edit2 className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => onDelete(event.id)}>
+            <Button variant="ghost" size="icon" onClick={() => event.id && onDelete(event.id)}>
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>

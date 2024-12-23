@@ -7,8 +7,8 @@ export interface Event {
   title: string
   startDate: string
   startTime: string
-  endDate?: string
-  endTime?: string
+  endDate: string
+  endTime: string
   duration: string
   isAllDay: boolean
   location?: string
