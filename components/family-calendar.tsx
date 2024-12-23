@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import { formatDate, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core'
+import { formatDate, DateSelectArg, EventClickArg, EventApi, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -17,17 +17,38 @@ interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function FamilyCalendar({ className, members, onAddEvent, ...props }: FamilyCalendarProps) {
-  const [currentEvents, setCurrentEvents] = React.useState<EventApi[]>([])
+  const [currentEvents, setCurrentEvents] = React.useState<EventInput[]>([])
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false)
   const [selectedDate, setSelectedDate] = React.useState<DateSelectArg | null>(null)
 
   React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saveedEvents = JSON.parse(localStorage.getItem('events') || '[]')
-      if (saveedEvents) {
-        setCurrentEvents(saveedEvents)
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('/api/events')
+        if (!response.ok) {
+          throw new Error('Failed to fetch events')
+        }
+        const data = await response.json()
+        const calendarEvents = data.map((event: any) => ({
+          id: event.id,
+          title: event.title,
+          start: new Date(event.startTime),
+          end: new Date(event.endTime),
+          allDay: false,
+          extendedProps: {
+            location: event.location,
+            memberId: event.memberId,
+            repeat: event.repeat,
+            formData: event.formData,
+          },
+        }))
+        setCurrentEvents(calendarEvents)
+      } catch (error) {
+        console.error('Error fetching events:', error)
       }
     }
+
+    fetchEvents()
   }, [])
 
   React.useEffect(() => {
@@ -81,10 +102,19 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
         dayMaxEvents={true}
         select={handleDateSelect}
         eventClick={handleEventClick}
-        eventsSet={(events) => setCurrentEvents(events)}
-        initialEvents={
-          typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('events') || '[]') : []
+        eventsSet={(events) =>
+          setCurrentEvents(
+            events.map((event) => ({
+              id: event.id,
+              title: event.title,
+              start: event.start || undefined,
+              end: event.end || undefined,
+              allDay: event.allDay,
+              extendedProps: event.extendedProps,
+            }))
+          )
         }
+        initialEvents={currentEvents}
         contentHeight="auto"
         dayHeaderClassNames="text-sm font-medium"
         dayCellClassNames="text-sm"
