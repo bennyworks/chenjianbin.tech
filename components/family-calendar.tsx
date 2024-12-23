@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { formatDate, DateSelectArg, EventClickArg, EventApi, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
@@ -10,48 +11,42 @@ import interactionPlugin from '@fullcalendar/interaction'
 import '@fullcalendar/core/locales/zh-cn'
 import { EventForm } from '@/components/event-form'
 import { FamilyMember } from '@/types/family'
+import { Event } from '@/types/event'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   members: FamilyMember[]
+  events: Event[]
   onAddEvent: (data: any) => void
 }
 
-export function FamilyCalendar({ className, members, onAddEvent, ...props }: FamilyCalendarProps) {
-  const [currentEvents, setCurrentEvents] = React.useState<EventInput[]>([])
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false)
-  const [selectedDate, setSelectedDate] = React.useState<DateSelectArg | null>(null)
+export function FamilyCalendar({
+  className,
+  members,
+  events,
+  onAddEvent,
+  ...props
+}: FamilyCalendarProps) {
+  const [currentEvents, setCurrentEvents] = useState<EventInput[]>([])
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null)
 
-  React.useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('/api/events')
-        if (!response.ok) {
-          throw new Error('Failed to fetch events')
-        }
-        const data = await response.json()
-        const calendarEvents = data.map((event: any) => ({
-          id: event.id,
-          title: event.title,
-          start: new Date(event.startTime),
-          end: new Date(event.endTime),
-          allDay: false,
-          extendedProps: {
-            location: event.location,
-            memberId: event.memberId,
-            repeat: event.repeat,
-            formData: event.formData,
-          },
-        }))
-        setCurrentEvents(calendarEvents)
-      } catch (error) {
-        console.error('Error fetching events:', error)
-      }
-    }
+  const calendarEvents = events.map((event: any) => ({
+    id: event.id,
+    title: event.title,
+    start: new Date(event.startDate + 'T' + event.startTime),
+    end: new Date(event.endDate + 'T' + event.endTime),
+    allDay: false,
+    extendedProps: {
+      location: event.location,
+      memberId: event.memberId,
+      repeat: event.repeat,
+      formData: event.formData,
+    },
+  }))
 
-    fetchEvents()
-  }, [])
+  console.log(calendarEvents)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('events', JSON.stringify(currentEvents))
     }
@@ -63,9 +58,7 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
   }
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove()
-    }
+    // TODO：查看事项详情
   }
 
   const handleAddEvent = async (data: any) => {
@@ -80,7 +73,7 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
   return (
     <div className={cn('flew w-full', className)} {...props}>
       <FullCalendar
-        timeZone="Asia/Shanghai"
+        timeZone="local"
         locale={'zh-CN'}
         height={'60vh'}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -114,7 +107,7 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
             }))
           )
         }
-        initialEvents={currentEvents}
+        initialEvents={calendarEvents}
         contentHeight="auto"
         dayHeaderClassNames="text-sm font-medium"
         dayCellClassNames="text-sm"
@@ -134,13 +127,7 @@ export function FamilyCalendar({ className, members, onAddEvent, ...props }: Fam
                 day: '2-digit',
               })
             : '',
-          startTime: selectedDate
-            ? selectedDate.start.toLocaleString('en-CA', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              })
-            : '',
+          startTime: new Date().toLocaleTimeString().slice(0, 5),
           isAllDay: false,
           title: '',
           memberId: '',

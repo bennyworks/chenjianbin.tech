@@ -11,13 +11,13 @@ import { revalidatePath } from 'next/cache'
 import { FamilyMemberFormData, LifeStage, MemberType } from '@/types/family'
 import { EventList } from '@/components/event-list'
 import { Event, EventFormData } from '@/types/event'
-import { 
-  handleAddMember, 
-  handleEditMember, 
+import {
+  handleAddMember,
+  handleEditMember,
   handleDeleteMember,
   handleAddEvent,
   handleEditEvent,
-  handleDeleteEvent 
+  handleDeleteEvent,
 } from './actions'
 
 export default async function SchedulerPage() {
@@ -139,7 +139,7 @@ export default async function SchedulerPage() {
     <DashboardShell>
       <div className="relative min-h-[calc(100vh-4rem)]">
         <div className="absolute inset-0 pr-[76px] transition-[padding] duration-300">
-          <FamilyCalendar members={members} onAddEvent={handleAddEvent} />
+          <FamilyCalendar members={members} events={events} onAddEvent={handleAddEvent} />
         </div>
         <div className="absolute right-0 top-0 bottom-0 z-10">
           <CollapsibleTabs tabs={tabs} className="h-[90vh] bg-white shadow-lg rounded-l-lg" />
