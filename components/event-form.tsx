@@ -26,6 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { formatTime } from '@/lib/utils'
 
 const formSchema = z.object({
   title: z.string().min(1, '事项标题不能为空'),
@@ -46,26 +47,62 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export function EventForm({ initialData, members, onSubmit, onOpenChange, open }: EventFormProps) {
+  const [isCustomDuration, setIsCustomDuration] = useState(false)
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: initialData?.title || '',
-      memberId: initialData?.memberId || '',
-      startDate: initialData?.startDate,
-      startTime: initialData?.startTime,
-      endDate: initialData?.endDate || '',
-      endTime: initialData?.endTime || '',
-      duration: initialData?.duration || '1',
-      isAllDay: initialData?.isAllDay || false,
-      location: initialData?.location || '',
-      description: initialData?.description || '',
-      reminder: initialData?.reminder || '15',
-      repeat: (initialData?.repeat as FormData['repeat']) || 'NoRepeat',
-      attachments: initialData?.attachments || [],
+      title: '',
+      memberId: '',
+      startDate: undefined,
+      startTime: undefined,
+      endDate: '',
+      endTime: '',
+      duration: '1',
+      isAllDay: false,
+      location: '',
+      description: '',
+      reminder: '15',
+      repeat: 'NoRepeat',
+      attachments: [],
     },
   })
 
-  const [isCustomDuration, setIsCustomDuration] = useState(false)
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        title: initialData.title || '',
+        memberId: initialData.memberId || '',
+        startDate: initialData.startDate,
+        startTime: initialData.startTime,
+        endDate: initialData.endDate || '',
+        endTime: initialData.endTime || '',
+        duration: initialData.duration || '1',
+        isAllDay: initialData.isAllDay || false,
+        location: initialData.location || '',
+        description: initialData.description || '',
+        reminder: initialData.reminder || '15',
+        repeat: (initialData.repeat as FormData['repeat']) || 'NoRepeat',
+        attachments: initialData.attachments || [],
+      })
+    } else {
+      form.reset({
+        title: '',
+        memberId: '',
+        startDate: new Date().toLocaleDateString('en-CA'),
+        startTime: formatTime(new Date()),
+        endDate: '',
+        endTime: '',
+        duration: '1',
+        isAllDay: false,
+        location: '',
+        description: '',
+        reminder: '15',
+        repeat: 'NoRepeat',
+        attachments: [],
+      })
+    }
+  }, [initialData, form])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -79,30 +116,14 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
       form.setValue('endTime', '23:59')
     } else {
       const now = new Date()
-      const hours = now.getHours()
-      const minutes = now.getMinutes() >= 30 ? '30' : '00'
-      const currentTime = `${hours.toString().padStart(2, '0')}:${minutes}`
-      form.setValue('startTime', currentTime)
+      form.setValue('startTime', formatTime(now))
 
-      const endDate = new Date(now.setHours(hours + 1))
-      const endHours = endDate.getHours()
-      form.setValue('endTime', `${endHours.toString().padStart(2, '0')}:${minutes}`)
+      const endDate = new Date(
+        now.setHours(now.getHours() + parseFloat(form.getValues('duration') ?? '1'))
+      )
+      form.setValue('endTime', formatTime(endDate))
     }
   }
-
-  useEffect(() => {
-    if (initialData) {
-      const startDateTime = new Date(`${initialData.startDate}T${initialData.startTime}`)
-      const endDateTime = new Date(
-        startDateTime.getTime() + parseFloat(form.getValues('duration') ?? '1') * 60 * 60 * 1000
-      )
-      initialData.endDate = initialData.startDate
-      initialData.endTime = endDateTime.toLocaleTimeString('zh-CN')
-
-      form.reset(initialData)
-      setIsCustomDuration(initialData.duration === 'custom')
-    }
-  }, [initialData, form])
 
   useEffect(() => {
     if (form.getValues('isAllDay')) {
@@ -119,7 +140,7 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
         startDateTime.getTime() + parseFloat(form.getValues('duration') ?? '1') * 60 * 60 * 1000
       )
       form.setValue('endDate', form.getValues('startDate'))
-      form.setValue('endTime', endDateTime.toLocaleTimeString('zh-CN'))
+      form.setValue('endTime', formatTime(endDateTime))
     }
   }, [form, isCustomDuration])
 

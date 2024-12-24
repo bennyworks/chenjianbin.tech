@@ -19,7 +19,7 @@ export function EventList({
   const [events, setEvents] = useState<Event[]>(initialEvents)
   const [searchTerm, setSearchTerm] = useState('')
   const [formOpen, setFormOpen] = useState(false)
-  const [editingEvent, setEditingEvent] = useState<Event | undefined>(undefined)
+  const [optingEvent, setOptingEvent] = useState<Event | undefined>(undefined)
 
   const filteredEvents = initialEvents.filter(
     (event) =>
@@ -30,7 +30,7 @@ export function EventList({
 
   const handleAdd = async (data: EventFormData) => {
     const newEvent: Event = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36),
       endDate: data.endDate ? data.endDate : data.startDate,
       endTime: data.endTime ? data.endTime : data.startTime,
       ...data,
@@ -41,14 +41,14 @@ export function EventList({
   }
 
   const handleEdit = async (data: EventFormData) => {
-    if (!editingEvent?.id) return
+    if (!optingEvent?.id) return
     const updatedEvents = events.map((event) =>
-      event.id === editingEvent.id ? { ...event, ...data } : event
+      event.id === optingEvent.id ? { ...event, ...data } : event
     )
 
     setEvents(updatedEvents)
-    await onEditEvent(editingEvent.id, data)
-    setEditingEvent(undefined)
+    await onEditEvent(optingEvent.id, data)
+    setOptingEvent(undefined)
   }
 
   const handleDelete = async (id: string) => {
@@ -78,20 +78,20 @@ export function EventList({
           key={event.id}
           event={event}
           members={members}
-          onEdit={(event) => setEditingEvent(event)}
+          onEdit={(event) => setOptingEvent(event)}
           onDelete={handleDelete}
         />
       ))}
 
       <EventForm
         members={members}
-        open={formOpen || !!editingEvent}
+        open={formOpen || !!optingEvent}
         onOpenChange={(open) => {
           setFormOpen(open)
-          if (!open) setEditingEvent(undefined)
+          if (!open) setOptingEvent(undefined)
         }}
-        onSubmit={editingEvent ? handleEdit : handleAdd}
-        initialData={editingEvent ? editingEvent : undefined}
+        onSubmit={optingEvent ? handleEdit : handleAdd}
+        initialData={optingEvent ? optingEvent : undefined}
       />
     </div>
   )

@@ -3,12 +3,12 @@
 import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
-import { FamilyMemberFormData } from '@/types/family'
+import { MemberFormData } from '@/types/family'
 import { EventFormData } from '@/types/event'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
-export async function handleAddMember(data: FamilyMemberFormData) {
+export async function handleAddMember(data: MemberFormData) {
   const user = await getCurrentUser()
 
   if (!user) {
@@ -45,7 +45,7 @@ export async function handleAddMember(data: FamilyMemberFormData) {
   revalidatePath('/dashboard/scheduler')
 }
 
-export async function handleEditMember(id: string, data: FamilyMemberFormData) {
+export async function handleEditMember(id: string, data: MemberFormData) {
   const user = await getCurrentUser()
 
   if (!user) {

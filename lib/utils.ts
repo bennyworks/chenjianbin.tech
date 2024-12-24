@@ -23,6 +23,13 @@ export function formatDate(input: string | number): string {
   })
 }
 
+export function formatTime(input: Date): string {
+  const hours = input.getHours()
+  const minutes = input.getMinutes() >= 30 ? '30' : '00'
+  const currentTime = `${hours.toString().padStart(2, '0')}:${minutes}`
+  return currentTime
+}
+
 export function absoluteUrl(path: string) {
   return `${env.NEXT_PUBLIC_APP_URL}${path}`
 }

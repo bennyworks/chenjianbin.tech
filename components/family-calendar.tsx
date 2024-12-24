@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+import { cn, formatTime } from '@/lib/utils'
 import { DateSelectArg, EventClickArg, EventApi, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -14,6 +14,7 @@ import { Member } from '@/types/family'
 import { Event } from '@/types/event'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { EventCard } from './event-card'
+import { format } from 'path'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   members: Member[]
@@ -159,9 +160,9 @@ export function FamilyCalendar({
         members={members}
         initialData={{
           startDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
-          startTime: new Date().toLocaleTimeString('zh-CN').slice(0, 5),
+          startTime: formatTime(new Date()),
           endDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
-          endTime: new Date().toLocaleTimeString('zh-CN').slice(0, 5),
+          endTime: formatTime(new Date()),
           isAllDay: false,
           title: '',
           memberId: '',
