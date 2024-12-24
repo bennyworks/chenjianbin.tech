@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,7 +21,12 @@ export function EventList({
   const [formOpen, setFormOpen] = useState(false)
   const [optingEvent, setOptingEvent] = useState<Event | undefined>(undefined)
 
-  const filteredEvents = initialEvents.filter(
+  // 同步 initialEvents 到本地状态
+  useEffect(() => {
+    setEvents(initialEvents)
+  }, [initialEvents])
+
+  const filteredEvents = events.filter(
     (event) =>
       event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
