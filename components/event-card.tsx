@@ -2,14 +2,16 @@ import { MapPin, Paperclip, Edit2, Trash2, Calendar, ReceiptText, User } from 'l
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Event } from '@/types/event'
-import { useState } from 'react'
 import { FamilyMember } from '@/types/family'
+import { cn } from '@/lib/utils'
 
 interface EventCardProps {
   event: Event
   members: FamilyMember[]
   onEdit: (event: Event) => void
   onDelete: (id: string) => void
+  className?: string
+  style?: React.CSSProperties
 }
 
 const formatTimeRange = (event: Event) => {
@@ -22,12 +24,12 @@ const formatTimeRange = (event: Event) => {
   return `${startDateTime} - ${endDateTime}`
 }
 
-export function EventCard({ event, members, onEdit, onDelete }: EventCardProps) {
+export function EventCard({ event, members, onEdit, onDelete, className, style }: EventCardProps) {
   const member = members.find((m) => m.id === event.memberId)
 
   return (
-    <>
-      <Card>
+    <div>
+      <Card className={cn('', className)}>
         <CardContent className="flex items-start p-6">
           <div className="flex-1">
             <div className="flex items-center justify-start gap-2 mb-1">
@@ -76,6 +78,6 @@ export function EventCard({ event, members, onEdit, onDelete }: EventCardProps) 
           </div>
         </CardContent>
       </Card>
-    </>
+    </div>
   )
 }

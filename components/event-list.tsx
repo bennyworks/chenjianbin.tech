@@ -19,7 +19,22 @@ export function EventList({
   const [events, setEvents] = useState<Event[]>(initialEvents)
   const [searchTerm, setSearchTerm] = useState('')
   const [formOpen, setFormOpen] = useState(false)
-  const [editingEvent, setEditingEvent] = useState<Event | undefined>()
+  const [editingEvent, setEditingEvent] = useState<Event | undefined>({
+    id: '',
+    title: '',
+    startDate: new Date().toLocaleDateString('en-CA'),
+    startTime: new Date().toLocaleTimeString('zh-CN').slice(0, 5),
+    endDate: '',
+    endTime: '',
+    duration: '',
+    isAllDay: false,
+    location: '',
+    description: '',
+    reminder: '',
+    repeat: 'NoRepeat',
+    attachments: [],
+    memberId: '',
+  })
 
   const filteredEvents = initialEvents.filter(
     (event) =>
@@ -78,10 +93,7 @@ export function EventList({
           key={event.id}
           event={event}
           members={members}
-          onEdit={(event) => {
-            console.log(event)
-            setEditingEvent(event)
-          }}
+          onEdit={(event) => setEditingEvent(event)}
           onDelete={handleDelete}
         />
       ))}
