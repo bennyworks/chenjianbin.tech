@@ -10,15 +10,17 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import '@fullcalendar/core/locales/zh-cn'
 import { EventForm } from '@/components/event-form'
-import { FamilyMember } from '@/types/family'
+import { Member } from '@/types/family'
 import { Event } from '@/types/event'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { EventCard } from './event-card'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
-  members: FamilyMember[]
+  members: Member[]
   events: Event[]
   onAddEvent: (data: any) => void
+  onEditEvent: (id: string, data: any) => void
+  onDeleteEvent: (id: string) => void
 }
 
 export function FamilyCalendar({
@@ -26,27 +28,29 @@ export function FamilyCalendar({
   members,
   events,
   onAddEvent,
+  onEditEvent,
+  onDeleteEvent,
   ...props
 }: FamilyCalendarProps) {
-  const [currentEvents, setCurrentEvents] = useState<EventInput[]>(
-    events.map((event: any) => ({
-      id: event.id,
-      title: event.title,
-      start: new Date(event.startDate + 'T' + event.startTime),
-      end: new Date(event.endDate + 'T' + event.endTime),
-      allDay: false,
-      extendedProps: {
-        location: event.location,
-        memberId: event.memberId,
-        repeat: event.repeat,
-        formData: event.formData,
-      },
-    }))
-  )
+  const [currentEvents, setCurrentEvents] = useState<Event[]>(events)
   const [isEventFormDialogOpen, setIsEventFormDialogOpen] = useState<boolean>(false)
   const [isEventCardDialogOpen, setIsEventCardDialogOpen] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null)
   const [clickedEvent, setClickedEvent] = useState<Event | null>(null)
+
+  const initialEvents: EventInput[] = events.map((event) => ({
+    id: event.id,
+    title: event.title,
+    start: new Date(`${event.startDate}T${event.startTime}`),
+    end: new Date(`${event.endDate}T${event.endTime}`),
+    allDay: event.isAllDay,
+    extendedProps: {
+      location: event.location,
+      memberId: event.memberId,
+      repeat: event.repeat,
+      formData: event.formData,
+    },
+  }))
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     setSelectedDate(selectInfo)
@@ -127,14 +131,21 @@ export function FamilyCalendar({
             events.map((event) => ({
               id: event.id,
               title: event.title,
-              start: event.start || undefined,
-              end: event.end || undefined,
-              allDay: event.allDay,
-              extendedProps: event.extendedProps,
+              startDate: event.start?.toLocaleDateString('en-CA') || '',
+              startTime: event.start?.toLocaleTimeString('zh-CN').slice(0, 5) || '',
+              endDate: event.end?.toLocaleDateString('en-CA') || '',
+              endTime: event.end?.toLocaleTimeString().slice(0, 5) || '',
+              isAllDay: event.allDay,
+              duration: event.extendedProps.duration,
+              reminder: event.extendedProps.reminder,
+              location: event.extendedProps.location,
+              memberId: event.extendedProps.memberId,
+              repeat: event.extendedProps.repeat,
+              formData: event.extendedProps.formData,
             }))
           )
         }
-        initialEvents={currentEvents}
+        initialEvents={initialEvents}
         contentHeight="auto"
         dayHeaderClassNames="text-sm font-medium"
         dayCellClassNames="text-sm"

@@ -16,7 +16,6 @@ import {
   handleEditEvent,
   handleDeleteEvent,
 } from './actions'
-import { create } from 'domain'
 
 export default async function SchedulerPage() {
   const user = await getCurrentUser()
@@ -122,9 +121,9 @@ export default async function SchedulerPage() {
           <EventList
             initialEvents={events}
             members={members}
-            onAdd={handleAddEvent}
-            onEdit={handleEditEvent}
-            onDelete={handleDeleteEvent}
+            onAddEvent={handleAddEvent}
+            onEditEvent={handleEditEvent}
+            onDeleteEvent={handleDeleteEvent}
           />
         </div>
       ),
@@ -135,7 +134,13 @@ export default async function SchedulerPage() {
     <DashboardShell>
       <div className="relative min-h-[calc(100vh-4rem)]">
         <div className="absolute inset-0 pr-[76px] transition-[padding] duration-300">
-          <FamilyCalendar members={members} events={events} onAddEvent={handleAddEvent} />
+          <FamilyCalendar
+            members={members}
+            events={events}
+            onAddEvent={handleAddEvent}
+            onEditEvent={handleEditEvent}
+            onDeleteEvent={handleDeleteEvent}
+          />
         </div>
         <div className="absolute right-0 top-0 bottom-0 z-10">
           <CollapsibleTabs tabs={tabs} className="h-[90vh] bg-white shadow-lg rounded-l-lg" />

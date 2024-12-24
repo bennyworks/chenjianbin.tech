@@ -2,12 +2,12 @@ import { MapPin, Paperclip, Edit2, Trash2, Calendar, ReceiptText, User } from 'l
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Event } from '@/types/event'
-import { FamilyMember } from '@/types/family'
+import { Member } from '@/types/family'
 import { cn } from '@/lib/utils'
 
 interface EventCardProps {
   event: Event
-  members: FamilyMember[]
+  members: Member[]
   onEdit: (event: Event) => void
   onDelete: (id: string) => void
   className?: string

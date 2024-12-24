@@ -1,5 +1,5 @@
 import { RepeatType } from '@prisma/client'
-import { FamilyMember } from '@/types/family'
+import { Member } from '@/types/family'
 import { JsonValue } from 'next-auth/adapters'
 
 export interface Event {
@@ -38,10 +38,10 @@ export interface EventFormData {
 
 export interface EventListProps {
   initialEvents?: Event[]
-  members: FamilyMember[]
-  onAdd: (event: EventFormData) => void
-  onEdit: (id: string, event: EventFormData) => void
-  onDelete: (id: string) => void
+  members: Member[]
+  onAddEvent: (event: EventFormData) => Promise<void>
+  onEditEvent: (id: string, event: EventFormData) => Promise<void>
+  onDeleteEvent: (id: string) => Promise<void>
 }
 
 export interface EventFormProps {
@@ -49,5 +49,5 @@ export interface EventFormProps {
   onSubmit: (event: EventFormData) => void
   onOpenChange: (open: boolean) => void
   open: boolean
-  members: FamilyMember[]
+  members: Member[]
 }

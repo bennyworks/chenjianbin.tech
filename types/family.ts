@@ -1,7 +1,7 @@
 export type MemberType = 'Parent' | 'Child'
 export type LifeStage = 'PrimaryStudent' | 'JuniorStudent' | 'SeniorStudent' | 'Parent'
 
-export interface FamilyMember {
+export interface Member {
   id: string
   name: string
   type: MemberType
@@ -10,7 +10,7 @@ export interface FamilyMember {
   lifeStage: LifeStage
 }
 
-export interface FamilyMemberFormData {
+export interface MemberFormData {
   name: string
   type: MemberType
   birthday: string

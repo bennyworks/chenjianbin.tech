@@ -12,29 +12,14 @@ import type { EventListProps, Event } from '@/types/event'
 export function EventList({
   initialEvents = [],
   members = [],
-  onAdd,
-  onEdit,
-  onDelete,
+  onAddEvent,
+  onEditEvent,
+  onDeleteEvent,
 }: EventListProps) {
   const [events, setEvents] = useState<Event[]>(initialEvents)
   const [searchTerm, setSearchTerm] = useState('')
   const [formOpen, setFormOpen] = useState(false)
-  const [editingEvent, setEditingEvent] = useState<Event | undefined>({
-    id: '',
-    title: '',
-    startDate: new Date().toLocaleDateString('en-CA'),
-    startTime: new Date().toLocaleTimeString('zh-CN').slice(0, 5),
-    endDate: '',
-    endTime: '',
-    duration: '',
-    isAllDay: false,
-    location: '',
-    description: '',
-    reminder: '',
-    repeat: 'NoRepeat',
-    attachments: [],
-    memberId: '',
-  })
+  const [editingEvent, setEditingEvent] = useState<Event | undefined>(undefined)
 
   const filteredEvents = initialEvents.filter(
     (event) =>
@@ -43,7 +28,7 @@ export function EventList({
       event.location?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const handleAdd = (data: EventFormData) => {
+  const handleAdd = async (data: EventFormData) => {
     const newEvent: Event = {
       id: Math.random().toString(36).substr(2, 9),
       endDate: data.endDate ? data.endDate : data.startDate,
@@ -51,24 +36,24 @@ export function EventList({
       ...data,
     }
     setEvents([...events, newEvent])
+    await onAddEvent(newEvent)
     setFormOpen(false)
-    onAdd(newEvent)
   }
 
-  const handleEdit = (data: EventFormData) => {
+  const handleEdit = async (data: EventFormData) => {
     if (!editingEvent?.id) return
     const updatedEvents = events.map((event) =>
       event.id === editingEvent.id ? { ...event, ...data } : event
     )
 
     setEvents(updatedEvents)
+    await onEditEvent(editingEvent.id, data)
     setEditingEvent(undefined)
-    onEdit(editingEvent.id, data)
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     setEvents(events.filter((event) => event.id !== id))
-    onDelete(id)
+    await onDeleteEvent(id)
   }
 
   return (
