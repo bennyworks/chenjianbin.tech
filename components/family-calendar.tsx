@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+import { cn, getSolarToLunar } from '@/lib/utils'
 import { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -191,7 +191,7 @@ export function FamilyCalendar({
     <div className={cn('flew w-full', className)} {...props}>
       <FullCalendar
         timeZone="local"
-        locale={'zh-CN'}
+        locale="zh-cn"
         height={'60vh'}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         headerToolbar={{
@@ -216,7 +216,30 @@ export function FamilyCalendar({
         contentHeight="auto"
         dayHeaderClassNames="text-sm font-medium"
         dayCellClassNames="text-sm"
-        eventClassNames="text-sm font-medium"
+        dayCellContent={(arg) => {
+          return (
+            <div className="h-full w-full px-1">
+              <div className="flex flex-col items-end text-sm">
+                <div>{arg.dayNumberText}</div>
+                <div className="text-red-300 text-xs">
+                  {getSolarToLunar(arg.date.toISOString())}
+                </div>
+              </div>
+            </div>
+          )
+        }}
+        dayMaxEventRows={true}
+        eventContent={(arg) => {
+          const timeText = !arg.event.allDay
+            ? arg.event.start?.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+            : '全天'
+          return (
+            <div className="text-sm px-1 py-0.5 truncate">
+              {timeText && <span className="text-muted-foreground mr-1">{timeText}</span>}
+              {arg.event.title}
+            </div>
+          )
+        }}
       />
 
       <EventForm

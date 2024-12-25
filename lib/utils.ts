@@ -8,7 +8,28 @@ import { EventFormData } from '@/types/event'
 export function getSolarToLunar(date: string): string {
   const d = new Date(date)
   const lunar = Lunar.fromDate(d)
-  return `农历${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`
+  const solar = lunar.getSolar()
+  
+  // Get lunar festivals
+  const festivals = lunar.getFestivals()
+  if (festivals.length > 0) {
+    return festivals[0]
+  }
+
+  // Get solar festivals
+  const solarFestivals = solar.getFestivals()
+  if (solarFestivals.length > 0) {
+    return solarFestivals[0]
+  }
+
+  // Get traditional festivals (节气)
+  const jieQi = lunar.getJieQi()
+  if (jieQi) {
+    return jieQi
+  }
+
+  // If no festival, return lunar date
+  return `${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`
 }
 
 export function cn(...inputs: ClassValue[]) {
