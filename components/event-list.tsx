@@ -21,7 +21,6 @@ export function EventList({
   const [formOpen, setFormOpen] = useState(false)
   const [optingEvent, setOptingEvent] = useState<Event | undefined>(undefined)
 
-  // 同步 initialEvents 到本地状态
   useEffect(() => {
     setEvents(initialEvents)
   }, [initialEvents])
@@ -34,18 +33,20 @@ export function EventList({
   )
 
   const handleAdd = async (data: EventFormData) => {
+    // 添加事项处理函数
     const newEvent: Event = {
       id: Math.random().toString(36),
-      endDate: data.endDate ? data.endDate : data.startDate,
-      endTime: data.endTime ? data.endTime : data.startTime,
       ...data,
+      formData: JSON.stringify(data),
     }
-    setEvents([...events, newEvent])
+
+    setEvents([newEvent, ...events])
     await onAddEvent(newEvent)
     setFormOpen(false)
   }
 
   const handleEdit = async (data: EventFormData) => {
+    // 编辑事项处理函数
     if (!optingEvent?.id) return
     const updatedEvents = events.map((event) =>
       event.id === optingEvent.id ? { ...event, ...data } : event
@@ -57,6 +58,7 @@ export function EventList({
   }
 
   const handleDelete = async (id: string) => {
+    // 删除事项处理函数
     setEvents(events.filter((event) => event.id !== id))
     await onDeleteEvent(id)
   }

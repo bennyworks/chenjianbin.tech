@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { cn, formatTime } from '@/lib/utils'
-import { DateSelectArg, EventClickArg, EventApi, EventInput } from '@fullcalendar/core'
+import { cn } from '@/lib/utils'
+import { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -11,14 +11,14 @@ import interactionPlugin from '@fullcalendar/interaction'
 import '@fullcalendar/core/locales/zh-cn'
 import { EventForm } from '@/components/event-form'
 import { Member } from '@/types/family'
-import { Event } from '@/types/event'
+import { Event, EventFormData } from '@/types/event'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { EventCard } from './event-card'
-import { format } from 'path'
+import { useToast } from '@/hooks/use-toast'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   members: Member[]
-  events: Event[]
+  initialEvents: Event[]
   onAddEvent: (data: any) => void
   onEditEvent: (id: string, data: any) => void
   onDeleteEvent: (id: string) => void
@@ -27,79 +27,164 @@ interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
 export function FamilyCalendar({
   className,
   members,
-  events,
+  initialEvents,
   onAddEvent,
   onEditEvent,
   onDeleteEvent,
   ...props
 }: FamilyCalendarProps) {
-  const [currentEvents, setCurrentEvents] = useState<Event[]>(events)
+  const [events, setEvents] = useState<EventInput[]>(
+    initialEvents.map((event) => ({
+      id: event.id,
+      title: event.title,
+      start: new Date(`${event.startDate}T${event.startTime}`),
+      end: new Date(`${event.endDate}T${event.endTime}`),
+      allDay: event.isAllDay,
+      extendedProps: {
+        formData: event.formData,
+      },
+    }))
+  )
   const [isEventFormDialogOpen, setIsEventFormDialogOpen] = useState<boolean>(false)
   const [isEventCardDialogOpen, setIsEventCardDialogOpen] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null)
-  const [clickedEvent, setClickedEvent] = useState<Event | null>(null)
+  const [clickedEvent, setClickedEvent] = useState<EventClickArg | null>(null)
+  const [optingEvent, setOptingEvent] = useState<Event | null>(null)
 
-  const initialEvents: EventInput[] = events.map((event) => ({
-    id: event.id,
-    title: event.title,
-    start: new Date(`${event.startDate}T${event.startTime}`),
-    end: new Date(`${event.endDate}T${event.endTime}`),
-    allDay: event.isAllDay,
-    extendedProps: {
-      location: event.location,
-      memberId: event.memberId,
-      repeat: event.repeat,
-      formData: event.formData,
-    },
-  }))
+  const { toast } = useToast()
+
+  useEffect(() => {
+    setEvents(
+      initialEvents.map((event) => ({
+        id: event.id,
+        title: event.title,
+        start: new Date(`${event.startDate}T${event.startTime}`),
+        end: new Date(`${event.endDate}T${event.endTime}`),
+        allDay: event.isAllDay,
+        extendedProps: {
+          formData: event.formData,
+        },
+      }))
+    )
+  }, [initialEvents])
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
+    // 选择日期处理函数
     setSelectedDate(selectInfo)
+    setOptingEvent(null)
     setIsEventFormDialogOpen(true)
   }
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    const clickedEvent: Event = {
-      id: clickInfo.event.id,
-      title: clickInfo.event.title,
-      startDate: clickInfo.event.start?.toLocaleDateString('en-CA') || '',
-      startTime: clickInfo.event.start?.toLocaleTimeString('zh-CN').slice(0, 5) || '',
-      endDate: clickInfo.event.end?.toLocaleDateString('en-CA') || '',
-      endTime: clickInfo.event.end?.toLocaleTimeString().slice(0, 5) || '',
-      isAllDay: clickInfo.event.allDay,
-      duration: clickInfo.event.extendedProps.duration,
-      reminder: clickInfo.event.extendedProps.reminder,
-      location: clickInfo.event.extendedProps.location,
-      memberId: clickInfo.event.extendedProps.memberId,
-      repeat: clickInfo.event.extendedProps.repeat,
-      formData: clickInfo.event.extendedProps.formData,
+    // 点击事项处理函数
+    setClickedEvent(clickInfo) // 保存点击的事件
+
+    if (!clickInfo.event.start) {
+      toast({
+        variant: 'destructive',
+        title: '天呐！出错了！',
+        description: '该事项未正确设置开始时间!',
+      })
+      return
     }
-    setClickedEvent(clickedEvent)
-    setIsEventCardDialogOpen(true)
+
+    let startDate = clickInfo.event.start.toLocaleDateString('en-CA')
+    let startTime = clickInfo.event.start.toLocaleTimeString('zh-CN')
+    let endDate = clickInfo.event.end?.toLocaleDateString('en-CA')
+    let endTime = clickInfo.event.end?.toLocaleTimeString('zh-CN')
+
+    if (clickInfo.event.allDay) {
+      // 全天事项
+      startDate = clickInfo.event.start.toLocaleDateString('en-CA')
+      startTime = '00:00'
+      endDate = startDate
+      endTime = '23:59'
+    } else if (!clickInfo.event.end) {
+      toast({
+        variant: 'destructive',
+        title: '天呐！出错了！',
+        description: '该事项未正确设置结束时间!',
+      })
+      return
+    } else {
+      endDate = clickInfo.event.end.toLocaleDateString('en-CA')
+      endTime = clickInfo.event.end.toLocaleTimeString('zh-CN')
+    }
+
+    // 获取事项的详情数据
+    const formData = JSON.parse(clickInfo.event.extendedProps.formData)
+
+    setOptingEvent({
+      // 设置选中的事项
+      id: clickInfo.event.id as string,
+      title: clickInfo.event.title,
+      startDate: startDate,
+      startTime: startTime,
+      endDate: endDate,
+      endTime: endTime,
+      isAllDay: clickInfo.event.allDay,
+      location: formData.location,
+      memberId: formData.memberId,
+      repeat: formData.repeat,
+      duration: formData.duration,
+      reminder: formData.reminder,
+    })
+
+    setIsEventCardDialogOpen(true) // 打开事项详情卡片
   }
 
-  const handleAddEvent = async (data: any) => {
+  const handleAddEvent = async (data: EventFormData) => {
     if (selectedDate && data) {
       const calendarApi = selectedDate?.view.calendar
       onAddEvent({
         ...data,
       })
       const newEvent = {
-        id: data.id,
+        id: Math.random().toString(36),
         title: data.title,
         start: new Date(`${data.startDate}T${data.startTime}`),
         end: new Date(`${data.endDate}T${data.endTime}`),
         allDay: data.isAllDay,
         extendedProps: {
-          location: data.location,
-          memberId: data.memberId,
-          repeat: data.repeat,
-          formData: data.formData,
+          formData: JSON.stringify(data),
         },
       }
       calendarApi.addEvent(newEvent)
       setIsEventFormDialogOpen(false)
     }
+  }
+
+  const handleEditEvent = async (data: EventFormData) => {
+    if (clickedEvent && optingEvent && data) {
+      onEditEvent(optingEvent.id as string, data) // 更新到数据库
+
+      // 更新日历事项
+      const calendarEvent = clickedEvent.view.calendar.getEventById(optingEvent.id as string)
+      if (calendarEvent) {
+        calendarEvent.setProp('title', data.title)
+        calendarEvent.setProp('start', new Date(`${data.startDate}T${data.startTime}`))
+        calendarEvent.setProp('end', new Date(`${data.endDate}T${data.endTime}`))
+        calendarEvent.setProp('allDay', data.isAllDay)
+        calendarEvent.setProp('extendedProps', {
+          formData: JSON.stringify(data),
+        })
+      }
+
+      setIsEventFormDialogOpen(false)
+    }
+  }
+
+  const handleEditEventCard = () => {
+    // 事项详情卡片编辑处理函数
+    setIsEventCardDialogOpen(false)
+    setIsEventFormDialogOpen(true)
+  }
+
+  const handleDeleteEventCard = async (id: string) => {
+    // 事项详情卡片删除处理函数
+    onDeleteEvent(id)
+    clickedEvent?.view.calendar.getEventById(id)?.remove()
+    setIsEventCardDialogOpen(false)
   }
 
   return (
@@ -127,26 +212,7 @@ export function FamilyCalendar({
         dayMaxEvents={true}
         select={handleDateSelect}
         eventClick={handleEventClick}
-        eventsSet={(events) =>
-          setCurrentEvents(
-            events.map((event) => ({
-              id: event.id,
-              title: event.title,
-              startDate: event.start?.toLocaleDateString('en-CA') || '',
-              startTime: event.start?.toLocaleTimeString('zh-CN').slice(0, 5) || '',
-              endDate: event.end?.toLocaleDateString('en-CA') || '',
-              endTime: event.end?.toLocaleTimeString().slice(0, 5) || '',
-              isAllDay: event.allDay,
-              duration: event.extendedProps.duration,
-              reminder: event.extendedProps.reminder,
-              location: event.extendedProps.location,
-              memberId: event.extendedProps.memberId,
-              repeat: event.extendedProps.repeat,
-              formData: event.extendedProps.formData,
-            }))
-          )
-        }
-        initialEvents={initialEvents}
+        events={events}
         contentHeight="auto"
         dayHeaderClassNames="text-sm font-medium"
         dayCellClassNames="text-sm"
@@ -156,31 +222,22 @@ export function FamilyCalendar({
       <EventForm
         open={isEventFormDialogOpen}
         onOpenChange={setIsEventFormDialogOpen}
-        onSubmit={handleAddEvent}
+        onSubmit={optingEvent ? handleEditEvent : handleAddEvent}
         members={members}
-        initialData={{
-          startDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
-          startTime: formatTime(new Date()),
-          endDate: selectedDate ? selectedDate.start.toLocaleDateString('en-CA') : '',
-          endTime: formatTime(new Date()),
-          isAllDay: false,
-          title: '',
-          memberId: '',
-          duration: '1',
-          reminder: '15',
-          repeat: 'NoRepeat',
-        }}
+        initialData={optingEvent ? optingEvent : undefined}
       />
 
       <Dialog open={isEventCardDialogOpen} onOpenChange={setIsEventCardDialogOpen}>
         <DialogContent className="max-w-2xl">
-          <EventCard
-            className="border-none shadow-none"
-            event={clickedEvent as any}
-            members={members}
-            onEdit={() => {}}
-            onDelete={() => {}}
-          />
+          {optingEvent && (
+            <EventCard
+              className="border-none shadow-none"
+              event={optingEvent}
+              members={members}
+              onEdit={handleEditEventCard}
+              onDelete={handleDeleteEventCard}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

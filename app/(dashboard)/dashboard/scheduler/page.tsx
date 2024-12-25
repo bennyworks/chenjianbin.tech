@@ -69,18 +69,20 @@ export default async function SchedulerPage() {
         id: event.id,
         title: event.title,
         startDate: new Date(event.startTime).toLocaleDateString('en-CA'),
-        startTime: new Date(event.startTime).toLocaleTimeString('zh-CN'),
+        startTime: new Date(event.startTime).toLocaleTimeString('zh-CN').slice(0, 5),
         endDate: new Date(event.endTime).toLocaleDateString('en-CA'),
-        endTime: new Date(event.endTime).toLocaleTimeString('zh-CN'),
-        duration: '1', // Default duration
-        isAllDay: false, // Default value
-        location: event.location || undefined,
-        reminder: '30', // Default reminder
-        repeat: event.repeat,
+        endTime: new Date(event.endTime).toLocaleTimeString('zh-CN').slice(0, 5),
+        location: event.location ? event.location : '',
+        repeat: event.repeat ? event.repeat : 'NoRepeat',
         memberId: event.memberId,
+        duration: event.formData ? JSON.parse(String(event.formData)).duration : '1',
+        reminder: event.formData ? JSON.parse(String(event.formData)).reminder : '15',
+        isAllDay: event.formData ? JSON.parse(String(event.formData)).isAllDay : false,
         formData: event.formData,
       }))
     )
+
+  console.log(events)
 
   const tabs = [
     {
@@ -119,8 +121,8 @@ export default async function SchedulerPage() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">事项</h2>
           <EventList
-            initialEvents={events}
             members={members}
+            initialEvents={events}
             onAddEvent={handleAddEvent}
             onEditEvent={handleEditEvent}
             onDeleteEvent={handleDeleteEvent}
@@ -136,7 +138,7 @@ export default async function SchedulerPage() {
         <div className="absolute inset-0 pr-[76px] transition-[padding] duration-300">
           <FamilyCalendar
             members={members}
-            events={events}
+            initialEvents={events}
             onAddEvent={handleAddEvent}
             onEditEvent={handleEditEvent}
             onDeleteEvent={handleDeleteEvent}
