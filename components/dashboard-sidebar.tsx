@@ -129,7 +129,7 @@ export function DashboardSidebar({ user }: UserAccountNavProps) {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup className="group-data-[collapsible=icon]:visible">
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarMenu>
             {dashboardConfig.projects.map((item) => (
