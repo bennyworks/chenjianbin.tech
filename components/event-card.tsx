@@ -1,6 +1,13 @@
-import { MapPin, Paperclip, Edit2, Trash2, Calendar, ReceiptText, User } from 'lucide-react'
+import { Ellipsis, Edit, Trash, MapPin, Paperclip, Calendar, ReceiptText, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import type { Event } from '@/types/event'
 import { Member } from '@/types/family'
 import { cn } from '@/lib/utils'
@@ -30,16 +37,35 @@ export function EventCard({ event, members, onEdit, onDelete, className, style }
   return (
     <div>
       <Card className={cn('', className)}>
-        <CardContent className="flex items-start p-6">
+        <CardHeader className="flex flex-row items-center justify-between pb-0">
+          <div className="flex items-center justify-start gap-2 mb-1">
+            <h3 className="font-semibold flex items-center">{event.title}</h3>
+            {event.repeat !== 'NoRepeat' && <Badge variant="secondary">{event.repeat}</Badge>}
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Ellipsis className="h-6 w-6" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(event)}>
+                <Edit className="mr-2 h-4 w-4" />
+                编辑
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => event.id && onDelete(event.id)}
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                删除
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardHeader>
+        <CardContent className="flex items-start p-6 pt-0">
           <div className="flex-1">
-            <div className="flex items-center justify-start gap-2 mb-1">
-              <h3 className="font-semibold flex items-center">{event.title}</h3>
-              {event.repeat !== 'NoRepeat' && (
-                <span className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
-                  {event.repeat}
-                </span>
-              )}
-            </div>
             <div className="flex items-center text-sm text-muted-foreground mb-2">
               <Calendar className="h-4 w-4 mr-1" />
               <span>{formatTimeRange(event)}</span>
@@ -66,15 +92,6 @@ export function EventCard({ event, members, onEdit, onDelete, className, style }
                 </span>
               </div>
             )}
-          </div>
-
-          <div className="flex items-center gap-2 ml-4">
-            <Button variant="ghost" size="icon" onClick={() => onEdit(event)}>
-              <Edit2 className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => event.id && onDelete(event.id)}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
           </div>
         </CardContent>
       </Card>
