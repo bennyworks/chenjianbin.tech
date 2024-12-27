@@ -1,9 +1,10 @@
 'use client'
 
 import * as React from 'react'
-import { PanelRightOpen, PanelRightClose } from 'lucide-react'
+import { PanelRightOpen, PanelRightClose, Scroll } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface Tab {
   id: string
@@ -54,7 +55,7 @@ export function CollapsibleTabs({ tabs, className, style }: CollapsibleTabsProps
           isExpanded ? 'opacity-100 mr-[60px]' : 'opacity-0 w-0'
         )}
       >
-        <div className="flex-1 p-4 overflow-auto">
+        <ScrollArea className="flex-1 p-4 overflow-auto">
           {isLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-8 w-[200px]" />
@@ -65,7 +66,7 @@ export function CollapsibleTabs({ tabs, className, style }: CollapsibleTabsProps
           ) : (
             selectedTabContent
           )}
-        </div>
+        </ScrollArea>
       </div>
 
       <div className="absolute right-0 top-0 bottom-0 w-[60px] flex flex-col border-l bg-background">
@@ -87,7 +88,7 @@ export function CollapsibleTabs({ tabs, className, style }: CollapsibleTabsProps
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
               className={cn(
-                'group relative flex items-center justify-center w-12 h-12 rounded-lg transition-colors',
+                'group relative flex items-center justify-center w-12 h-12 transition-colors',
                 tab.id === selectedTab
                   ? 'bg-primary/10 text-primary'
                   : 'hover:bg-muted text-muted-foreground hover:text-foreground'

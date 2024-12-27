@@ -37,7 +37,6 @@ export function EventList({
     const newEvent: Event = {
       id: Math.random().toString(36),
       ...data,
-      formData: JSON.stringify(data),
     }
 
     setEvents([newEvent, ...events])
@@ -64,7 +63,7 @@ export function EventList({
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
+    <div className="w-full mx-auto p-4 space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div className="flex-1 mr-4">
           <Input

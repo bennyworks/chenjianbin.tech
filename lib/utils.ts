@@ -9,7 +9,7 @@ export function getSolarToLunar(date: string): string {
   const d = new Date(date)
   const lunar = Lunar.fromDate(d)
   const solar = lunar.getSolar()
-  
+
   // Get lunar festivals
   const festivals = lunar.getFestivals()
   if (festivals.length > 0) {
@@ -59,7 +59,7 @@ export function absoluteUrl(path: string) {
 export function getDefaultEventData(): EventFormData {
   // 获取默认的事项数据
   const now = new Date()
-  const endDateTime = new Date(now.setHours(now.getHours() + 1))
+  const endDateTime = new Date(now.getTime() + 60 * 60 * 1000)
 
   const event: EventFormData = {
     title: '',
@@ -76,5 +76,7 @@ export function getDefaultEventData(): EventFormData {
     repeat: 'NoRepeat', // 不重复，即不用按照一定的周期重复处理，
     attachments: [], // 附件
   }
+
+  console.log('event', event)
   return event
 }

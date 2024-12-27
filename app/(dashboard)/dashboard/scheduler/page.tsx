@@ -85,6 +85,8 @@ export default async function SchedulerPage() {
       }))
     )
 
+  console.log(events)
+
   const tabs = [
     {
       id: 'settings',
