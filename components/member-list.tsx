@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MemberCard } from '@/components/member-card'
@@ -9,24 +9,31 @@ import { Member, MemberFormData } from '@/types/family'
 
 interface MemberListProps {
   initialMembers?: Member[]
-  onAdd?: (member: MemberFormData) => void
-  onEdit?: (id: string, member: MemberFormData) => void
-  onDelete?: (id: string) => void
+  onAddMember: (member: MemberFormData) => void
+  onEditMember: (id: string, member: MemberFormData) => void
+  onDeleteMember: (id: string) => void
 }
 
-export function MemberList({ initialMembers = [], onAdd, onEdit, onDelete }: MemberListProps) {
+export function MemberList({
+  initialMembers = [],
+  onAddMember,
+  onEditMember,
+  onDeleteMember,
+}: MemberListProps) {
   const [members, setMembers] = useState<Member[]>(initialMembers)
   const [formOpen, setFormOpen] = useState(false)
   const [editingMember, setEditingMember] = useState<Member | undefined>()
 
+  console.log('members', members)
+
   const handleAdd = (data: MemberFormData) => {
     const newMember: Member = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36),
       ...data,
     }
     setMembers([...members, newMember])
     setFormOpen(false)
-    onAdd?.(data)
+    onAddMember(data)
   }
 
   const handleEdit = (data: MemberFormData) => {
@@ -36,12 +43,12 @@ export function MemberList({ initialMembers = [], onAdd, onEdit, onDelete }: Mem
     )
     setMembers(updatedMembers)
     setEditingMember(undefined)
-    onEdit?.(editingMember.id, data)
+    onEditMember(editingMember.id, data)
   }
 
   const handleDelete = (id: string) => {
     setMembers(members.filter((member) => member.id !== id))
-    onDelete?.(id)
+    onDeleteMember(id)
   }
 
   return (

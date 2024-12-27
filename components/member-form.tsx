@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -19,7 +20,7 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { FamilyMember, FamilyMemberFormData } from '@/types/family'
+import { Member, MemberFormData } from '@/types/family'
 
 const formSchema = z.object({
   name: z.string().min(1, '姓名不能为空'),
@@ -41,8 +42,8 @@ const formSchema = z.object({
 interface MemberFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (data: FamilyMemberFormData) => void
-  initialData?: FamilyMember
+  onSubmit: (data: MemberFormData) => void
+  initialData?: Member
 }
 
 export function MemberForm({ open, onOpenChange, onSubmit, initialData }: MemberFormProps) {
@@ -60,6 +61,19 @@ export function MemberForm({ open, onOpenChange, onSubmit, initialData }: Member
     onSubmit(data)
     form.reset()
   }
+
+  useEffect(() => {
+    if (initialData) {
+      // 转换生日格式为 YYYY-MM-DD
+      const formattedData = {
+        ...initialData,
+        birthday: new Date(initialData.birthday).toLocaleDateString('en-CA'), // en-CA 格式会输出 YYYY-MM-DD
+      }
+      form.reset(formattedData)
+    } else {
+      form.reset()
+    }
+  }, [initialData, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

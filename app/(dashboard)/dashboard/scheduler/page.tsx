@@ -36,6 +36,9 @@ export default async function SchedulerPage() {
         birthday: true,
         lifeStage: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
     .then((members) =>
       members.map((member) => ({
@@ -82,8 +85,6 @@ export default async function SchedulerPage() {
       }))
     )
 
-  console.log(events)
-
   const tabs = [
     {
       id: 'settings',
@@ -91,7 +92,7 @@ export default async function SchedulerPage() {
       icon: <Settings />,
       content: (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">设置</h2>
+          <h2 className="text-lg font-semibold"></h2>
           <p>事项内容区域</p>
           <p>这里可以列出待办事项或任务列表。</p>
         </div>
@@ -106,9 +107,9 @@ export default async function SchedulerPage() {
           <h2 className="text-lg font-semibold">家庭</h2>
           <MemberList
             initialMembers={members}
-            onAdd={handleAddMember}
-            onEdit={handleEditMember}
-            onDelete={handleDeleteMember}
+            onAddMember={handleAddMember}
+            onEditMember={handleEditMember}
+            onDeleteMember={handleDeleteMember}
           />
         </div>
       ),
