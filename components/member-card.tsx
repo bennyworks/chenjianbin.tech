@@ -8,12 +8,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { FamilyMember } from '@/types/family'
+import { Member } from '@/types/family'
 import { getSolarToLunar } from '@/lib/utils'
 
 interface MemberCardProps {
-  member: FamilyMember
-  onEdit: (member: FamilyMember) => void
+  member: Member
+  onEdit: (member: Member) => void
   onDelete: (id: string) => void
 }
 
@@ -23,9 +23,9 @@ export function MemberCard({ member, onEdit, onDelete }: MemberCardProps) {
 
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="flex items-center space-x-2">
-          <Avatar className="bg-primary">
+          <Avatar className="bg-primary size-8">
             <AvatarFallback>{member.name[0]}</AvatarFallback>
           </Avatar>
           <h3 className="font-medium">{member.name}</h3>
@@ -50,7 +50,7 @@ export function MemberCard({ member, onEdit, onDelete }: MemberCardProps) {
         </DropdownMenu>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between items-start pl-4 pr-2">
+        <div className="flex justify-between items-start pr-2">
           <div className="space-y-1">
             <div className="text-sm">
               <span className="text-muted-foreground">生日：</span>

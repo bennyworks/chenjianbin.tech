@@ -3,7 +3,7 @@ import { DashboardShell } from '@/components/shell'
 import { FamilyCalendar } from '@/components/family-calendar'
 import { CollapsibleTabs } from '@/components/collapsible-tabs'
 import { Settings, Users, ListTodo } from 'lucide-react'
-import { FamilyList } from '@/components/family-list'
+import { MemberList } from '@/components/member-list'
 import { db } from '@/lib/db'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -99,12 +99,12 @@ export default async function SchedulerPage() {
     },
     {
       id: 'family',
-      title: '家庭',
+      title: '家庭成员',
       icon: <Users />,
       content: (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">家庭</h2>
-          <FamilyList
+          <MemberList
             initialMembers={members}
             onAdd={handleAddMember}
             onEdit={handleEditMember}
@@ -115,7 +115,7 @@ export default async function SchedulerPage() {
     },
     {
       id: 'tasks',
-      title: '事项',
+      title: '事项列表',
       icon: <ListTodo />,
       content: (
         <div className="space-y-4">

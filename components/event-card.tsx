@@ -33,7 +33,7 @@ export function EventCard({ event, members, onEdit, onDelete, className, style }
         <CardContent className="flex items-start p-6">
           <div className="flex-1">
             <div className="flex items-center justify-start gap-2 mb-1">
-              <h3 className="text-xl font-semibold flex items-center">{event.title}</h3>
+              <h3 className="font-semibold flex items-center">{event.title}</h3>
               {event.repeat !== 'NoRepeat' && (
                 <span className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
                   {event.repeat}

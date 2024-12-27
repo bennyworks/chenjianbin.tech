@@ -5,22 +5,22 @@ import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MemberCard } from '@/components/member-card'
 import { MemberForm } from '@/components/member-form'
-import { FamilyMember, FamilyMemberFormData } from '@/types/family'
+import { Member, MemberFormData } from '@/types/family'
 
-interface FamilyListProps {
-  initialMembers?: FamilyMember[]
-  onAdd?: (member: FamilyMemberFormData) => void
-  onEdit?: (id: string, member: FamilyMemberFormData) => void
+interface MemberListProps {
+  initialMembers?: Member[]
+  onAdd?: (member: MemberFormData) => void
+  onEdit?: (id: string, member: MemberFormData) => void
   onDelete?: (id: string) => void
 }
 
-export function FamilyList({ initialMembers = [], onAdd, onEdit, onDelete }: FamilyListProps) {
-  const [members, setMembers] = useState<FamilyMember[]>(initialMembers)
+export function MemberList({ initialMembers = [], onAdd, onEdit, onDelete }: MemberListProps) {
+  const [members, setMembers] = useState<Member[]>(initialMembers)
   const [formOpen, setFormOpen] = useState(false)
-  const [editingMember, setEditingMember] = useState<FamilyMember | undefined>()
+  const [editingMember, setEditingMember] = useState<Member | undefined>()
 
-  const handleAdd = (data: FamilyMemberFormData) => {
-    const newMember: FamilyMember = {
+  const handleAdd = (data: MemberFormData) => {
+    const newMember: Member = {
       id: Math.random().toString(36).substr(2, 9),
       ...data,
     }
@@ -29,7 +29,7 @@ export function FamilyList({ initialMembers = [], onAdd, onEdit, onDelete }: Fam
     onAdd?.(data)
   }
 
-  const handleEdit = (data: FamilyMemberFormData) => {
+  const handleEdit = (data: MemberFormData) => {
     if (!editingMember) return
     const updatedMembers = members.map((member) =>
       member.id === editingMember.id ? { ...member, ...data } : member
