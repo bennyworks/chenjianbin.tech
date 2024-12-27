@@ -30,6 +30,7 @@ export function CollapsibleTabs({ tabs, className, style }: CollapsibleTabsProps
   const handleTabChange = (tabId: string) => {
     setIsLoading(true)
     setSelectedTab(tabId)
+    setIsExpanded(true) // 自动展开侧边栏
     setTimeout(() => setIsLoading(false), 500) // Simulate loading
   }
 
