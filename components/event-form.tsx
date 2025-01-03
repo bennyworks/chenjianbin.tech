@@ -45,6 +45,7 @@ const formSchema = z.object({
 })
 
 export function EventForm({ initialData, members, onSubmit, onOpenChange, open }: EventFormProps) {
+  console.log('initialData', initialData)
   const [isCustomDuration, setIsCustomDuration] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -226,6 +227,30 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
             )}
             <FormField
               control={form.control}
+              name="memberId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>负责人</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="请选择家庭成员" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {members.map((member) => (
+                          <SelectItem key={member.id} value={member.id}>
+                            {member.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="location"
               render={({ field }) => (
                 <FormItem>
@@ -244,78 +269,6 @@ export function EventForm({ initialData, members, onSubmit, onOpenChange, open }
                   <FormLabel className="pt-3">描述</FormLabel>
                   <FormControl>
                     <Textarea {...field} placeholder="请输入描述" className="col-span-8" rows={2} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="memberId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>家庭成员</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value} required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="选择家庭成员" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {members.map((member) => (
-                          <SelectItem key={member.id} value={member.id}>
-                            {member.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="attachments"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>附件</FormLabel>
-                  <FormControl>
-                    <div className="space-y-4">
-                      <Input
-                        type="file"
-                        onChange={handleFileSelect}
-                        multiple
-                        accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png"
-                      />
-                      {field.value && field.value.length > 0 && (
-                        <div className="space-y-2">
-                          {field.value.map((file: File, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-between p-2 border rounded"
-                            >
-                              <div className="flex items-center space-x-2">
-                                <span className="text-sm">{file.name}</span>
-                                <span className="text-xs text-gray-500">
-                                  ({(file.size / 1024).toFixed(2)} KB)
-                                </span>
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  const newFiles = field.value ? [...field.value] : []
-                                  newFiles.splice(index, 1)
-                                  form.setValue('attachments', newFiles)
-                                }}
-                              >
-                                删除
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
                   </FormControl>
                 </FormItem>
               )}

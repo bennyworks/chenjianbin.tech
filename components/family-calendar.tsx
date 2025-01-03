@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { cn, getSolarToLunar } from '@/lib/utils'
+import { cn, getSolarToLunar, getDefaultEventData } from '@/lib/utils'
 import { DateSelectArg, EventClickArg, EventInput } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -12,16 +12,23 @@ import '@fullcalendar/core/locales/zh-cn'
 import { EventForm } from '@/components/event-form'
 import { Member } from '@/types/family'
 import { Event, EventFormData } from '@/types/event'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog'
 import { EventCard } from './event-card'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
+import { generateCUID } from '@/lib/cuid'
 
 interface FamilyCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   members: Member[]
   initialEvents: Event[]
-  onAddEvent: (data: any) => void
-  onEditEvent: (id: string, data: any) => void
-  onDeleteEvent: (id: string) => void
+  onAddEvent: (data: any) => Promise<void>
+  onEditEvent: (id: string, data: any) => Promise<void>
+  onDeleteEvent: (id: string) => Promise<void>
 }
 
 export function FamilyCalendar({
@@ -51,8 +58,6 @@ export function FamilyCalendar({
   const [clickedEvent, setClickedEvent] = useState<EventClickArg | null>(null)
   const [optingEvent, setOptingEvent] = useState<Event | null>(null)
 
-  const { toast } = useToast()
-
   useEffect(() => {
     setEvents(
       initialEvents.map((event) => ({
@@ -71,7 +76,8 @@ export function FamilyCalendar({
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     // 选择日期处理函数
     setSelectedDate(selectInfo)
-    setOptingEvent(null)
+    const newEvent = getDefaultEventData(selectInfo.start)
+    setOptingEvent(newEvent)
     setIsEventFormDialogOpen(true)
   }
 
@@ -80,11 +86,7 @@ export function FamilyCalendar({
     setClickedEvent(clickInfo) // 保存点击的事件
 
     if (!clickInfo.event.start) {
-      toast({
-        variant: 'destructive',
-        title: '天呐！出错了！',
-        description: '该事项未正确设置开始时间!',
-      })
+      toast.error('该事项未正确设置开始时间!')
       return
     }
 
@@ -100,11 +102,7 @@ export function FamilyCalendar({
       endDate = startDate
       endTime = '23:59'
     } else if (!clickInfo.event.end) {
-      toast({
-        variant: 'destructive',
-        title: '天呐！出错了！',
-        description: '该事项未正确设置结束时间!',
-      })
+      toast.error('该事项未正确设置结束时间!')
       return
     } else {
       endDate = clickInfo.event.end.toLocaleDateString('en-CA')
@@ -136,11 +134,8 @@ export function FamilyCalendar({
   const handleAddEvent = async (data: EventFormData) => {
     if (selectedDate && data) {
       const calendarApi = selectedDate?.view.calendar
-      onAddEvent({
-        ...data,
-      })
       const newEvent = {
-        id: Math.random().toString(36),
+        id: generateCUID(),
         title: data.title,
         start: new Date(`${data.startDate}T${data.startTime}`),
         end: new Date(`${data.endDate}T${data.endTime}`),
@@ -150,27 +145,38 @@ export function FamilyCalendar({
         },
       }
       calendarApi.addEvent(newEvent)
-      setIsEventFormDialogOpen(false)
+
+      try {
+        setIsEventFormDialogOpen(false)
+        await onAddEvent({ id: newEvent.id, ...data })
+        toast.success('事项已成功添加')
+      } catch (error) {
+        toast.error('添加失败，请重试')
+      }
     }
   }
 
   const handleEditEvent = async (data: EventFormData) => {
     if (clickedEvent && optingEvent && data) {
-      onEditEvent(optingEvent.id as string, data) // 更新到数据库
+      try {
+        setIsEventFormDialogOpen(false)
+        await onEditEvent(optingEvent.id as string, data) // 更新到数据库
+        // 更新日历事项
+        const calendarEvent = clickedEvent.view.calendar.getEventById(optingEvent.id as string)
+        if (calendarEvent) {
+          calendarEvent.setProp('title', data.title)
+          calendarEvent.setProp('start', new Date(`${data.startDate}T${data.startTime}`))
+          calendarEvent.setProp('end', new Date(`${data.endDate}T${data.endTime}`))
+          calendarEvent.setProp('allDay', data.isAllDay)
+          calendarEvent.setProp('extendedProps', {
+            formData: JSON.stringify(data),
+          })
+        }
 
-      // 更新日历事项
-      const calendarEvent = clickedEvent.view.calendar.getEventById(optingEvent.id as string)
-      if (calendarEvent) {
-        calendarEvent.setProp('title', data.title)
-        calendarEvent.setProp('start', new Date(`${data.startDate}T${data.startTime}`))
-        calendarEvent.setProp('end', new Date(`${data.endDate}T${data.endTime}`))
-        calendarEvent.setProp('allDay', data.isAllDay)
-        calendarEvent.setProp('extendedProps', {
-          formData: JSON.stringify(data),
-        })
+        toast.success('事项已成功编辑')
+      } catch (error) {
+        toast.error('编辑失败，请重试')
       }
-
-      setIsEventFormDialogOpen(false)
     }
   }
 
@@ -181,10 +187,14 @@ export function FamilyCalendar({
   }
 
   const handleDeleteEventCard = async (id: string) => {
-    // 事项详情卡片删除处理函数
-    onDeleteEvent(id)
-    clickedEvent?.view.calendar.getEventById(id)?.remove()
-    setIsEventCardDialogOpen(false)
+    try {
+      await onDeleteEvent(id)
+      setIsEventCardDialogOpen(false)
+      clickedEvent?.view.calendar.getEventById(id)?.remove()
+      toast.success('事项已成功删除')
+    } catch (error) {
+      toast.error('删除失败，请重试')
+    }
   }
 
   return (
@@ -245,13 +255,16 @@ export function FamilyCalendar({
       <EventForm
         open={isEventFormDialogOpen}
         onOpenChange={setIsEventFormDialogOpen}
-        onSubmit={optingEvent ? handleEditEvent : handleAddEvent}
+        onSubmit={optingEvent?.id ? handleEditEvent : handleAddEvent}
         members={members}
         initialData={optingEvent ? optingEvent : undefined}
       />
 
       <Dialog open={isEventCardDialogOpen} onOpenChange={setIsEventCardDialogOpen}>
         <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>基本信息</DialogTitle>
+          </DialogHeader>
           {optingEvent && (
             <EventCard
               className="border-none shadow-none"

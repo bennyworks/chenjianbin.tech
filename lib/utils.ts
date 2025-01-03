@@ -56,16 +56,23 @@ export function absoluteUrl(path: string) {
   return `${env.NEXT_PUBLIC_APP_URL}${path}`
 }
 
-export function getDefaultEventData(): EventFormData {
+export function getDefaultEventData(value?: number | string | Date): EventFormData {
+  if (!value) {
+    // 如果没有传入时间，默认为当前日期的08:00
+    value = new Date()
+  } else {
+    value =
+      new Date(value).toLocaleDateString('en-CA') + 'T' + new Date().toLocaleTimeString('zh-CN')
+  }
   // 获取默认的事项数据
-  const now = new Date()
-  const endDateTime = new Date(now.getTime() + 60 * 60 * 1000)
+  const startDateTime = new Date(value)
+  const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000)
 
   const event: EventFormData = {
     title: '',
     memberId: '',
-    startDate: now.toLocaleDateString('en-CA'),
-    startTime: formatTime(now),
+    startDate: startDateTime.toLocaleDateString('en-CA'),
+    startTime: formatTime(startDateTime),
     endDate: endDateTime.toLocaleDateString('en-CA'),
     endTime: formatTime(endDateTime),
     duration: '1', // 处理时长1小时
@@ -77,6 +84,5 @@ export function getDefaultEventData(): EventFormData {
     attachments: [], // 附件
   }
 
-  console.log('event', event)
   return event
 }

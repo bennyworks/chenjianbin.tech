@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
 import { MemberFormData } from '@/types/family'
-import { EventFormData } from '@/types/event'
+import { Event } from '@/types/event'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
@@ -85,7 +85,7 @@ export async function handleDeleteMember(id: string) {
   revalidatePath('/dashboard/scheduler')
 }
 
-export async function handleAddEvent(data: EventFormData) {
+export async function handleAddEvent(data: Event) {
   const user = await getCurrentUser()
 
   if (!user) {
@@ -94,6 +94,7 @@ export async function handleAddEvent(data: EventFormData) {
 
   try {
     const newEvent = {
+      id: data.id,
       title: data.title,
       startTime: new Date(`${data.startDate}T${data.startTime}`),
       endTime: new Date(`${data.endDate}T${data.endTime}`),
@@ -113,7 +114,7 @@ export async function handleAddEvent(data: EventFormData) {
   }
 }
 
-export async function handleEditEvent(id: string, data: EventFormData) {
+export async function handleEditEvent(id: string, data: Event) {
   const user = await getCurrentUser()
 
   if (!user) {

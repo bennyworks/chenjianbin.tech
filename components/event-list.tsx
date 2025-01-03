@@ -8,6 +8,8 @@ import { EventCard } from '@/components/event-card'
 import { EventForm } from '@/components/event-form'
 import type { EventFormData } from '@/types/event'
 import type { EventListProps, Event } from '@/types/event'
+import { toast } from 'sonner'
+import { generateCUID } from '@/lib/cuid'
 
 export function EventList({
   initialEvents = [],
@@ -35,13 +37,14 @@ export function EventList({
   const handleAdd = async (data: EventFormData) => {
     // 添加事项处理函数
     const newEvent: Event = {
-      id: Math.random().toString(36),
+      id: generateCUID(),
       ...data,
     }
 
     setEvents([newEvent, ...events])
-    await onAddEvent(newEvent)
     setFormOpen(false)
+    await onAddEvent(newEvent)
+    toast.success('事项已成功添加')
   }
 
   const handleEdit = async (data: EventFormData) => {
@@ -52,14 +55,16 @@ export function EventList({
     )
 
     setEvents(updatedEvents)
-    await onEditEvent(optingEvent.id, data)
     setOptingEvent(undefined)
+    await onEditEvent(optingEvent.id, data)
+    toast.success('事项已成功编辑')
   }
 
   const handleDelete = async (id: string) => {
     // 删除事项处理函数
     setEvents(events.filter((event) => event.id !== id))
     await onDeleteEvent(id)
+    toast.success('事项已成功删除')
   }
 
   return (
