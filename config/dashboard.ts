@@ -1,5 +1,5 @@
 import { DashboardConfig } from 'types'
-import { BookOpen, Settings2, LifeBuoy, Send, Calendar, Home } from 'lucide-react'
+import { BookOpen, Settings2, LifeBuoy, Send, Calendar, Home, School } from 'lucide-react'
 
 export const dashboardConfig: DashboardConfig = {
   navMain: [
@@ -74,6 +74,11 @@ export const dashboardConfig: DashboardConfig = {
       title: '日程管理',
       href: '/dashboard/scheduler',
       icon: Calendar,
+    },
+    {
+      title: '课程管理',
+      href: '/dashboard/courser',
+      icon: School,
     },
   ],
 }
