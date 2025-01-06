@@ -1,16 +1,16 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import { ChevronDown, MoreVertical, Plus, Trash, Edit, Calendar, Upload } from 'lucide-react'
-import { Schedule } from "../types/schedule"
-import { Switch } from "@/components/ui/switch"
+import { Schedule } from '@/types/schedule'
+import { Switch } from '@/components/ui/switch'
 import { format, getWeek } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 
@@ -48,16 +48,16 @@ export function ScheduleHeader({
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2 bg-black text-white hover:bg-black hover:text-gray-200">
+            <Button
+              variant="outline"
+              className="gap-2 bg-black text-white hover:bg-black hover:text-gray-200"
+            >
               {currentSchedule.title} <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[200px]">
             {schedules.map((schedule) => (
-              <DropdownMenuItem
-                key={schedule.id}
-                onClick={() => onScheduleChange(schedule.id)}
-              >
+              <DropdownMenuItem key={schedule.id} onClick={() => onScheduleChange(schedule.id)}>
                 {schedule.title}
               </DropdownMenuItem>
             ))}
@@ -94,10 +94,7 @@ export function ScheduleHeader({
                   <Calendar className="h-4 w-4 mr-2" />
                   显示当前日期
                 </div>
-                <Switch
-                  checked={showCurrentDate}
-                  onCheckedChange={onToggleShowCurrentDate}
-                />
+                <Switch checked={showCurrentDate} onCheckedChange={onToggleShowCurrentDate} />
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -115,4 +112,3 @@ export function ScheduleHeader({
     </div>
   )
 }
-

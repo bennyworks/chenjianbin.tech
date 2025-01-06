@@ -19,7 +19,7 @@ export interface Schedule {
   startDate: string
   endDate: string
   location: string
+  participant: string
   timeSlots: TimeSlot[]
   courses: Course[]
 }
-

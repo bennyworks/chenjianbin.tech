@@ -1,23 +1,24 @@
 'use client'
 
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Schedule } from "../types/schedule"
+} from '@/components/ui/select'
+import { Schedule } from '@/types/schedule'
+import { Member } from '@/types/family'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -28,27 +29,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from '@/components/ui/form'
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: "标题不能为空" }),
-  startDate: z.string().min(1, { message: "开始日期不能为空" }),
-  endDate: z.string().min(1, { message: "结束日期不能为空" }),
+  title: z.string().min(1, { message: '标题不能为空' }),
+  startDate: z.string().min(1, { message: '开始日期不能为空' }),
+  endDate: z.string().min(1, { message: '结束日期不能为空' }),
   participant: z.string().optional(),
   location: z.string().optional(),
 })
 
 interface EditScheduleDialogProps {
   schedule: Schedule
+  participants: { id: string; name: string }[]
   open: boolean
   onClose: () => void
   onSave: (schedule: Partial<Schedule>) => void
 }
 
-const participants = ["张三", "李四", "王五", "赵六"]
-
 export function EditScheduleDialog({
   schedule,
+  participants,
   open,
   onClose,
   onSave,
@@ -59,7 +60,7 @@ export function EditScheduleDialog({
       title: schedule.title,
       startDate: schedule.startDate,
       endDate: schedule.endDate,
-      participant: schedule.participant || "",
+      participant: schedule.participant || '',
       location: schedule.location,
     },
   })
@@ -70,7 +71,7 @@ export function EditScheduleDialog({
         title: schedule.title,
         startDate: schedule.startDate,
         endDate: schedule.endDate,
-        participant: schedule.participant || "",
+        participant: schedule.participant || '',
         location: schedule.location,
       })
     }
@@ -141,8 +142,8 @@ export function EditScheduleDialog({
                     </FormControl>
                     <SelectContent>
                       {participants.map((participant) => (
-                        <SelectItem key={participant} value={participant}>
-                          {participant}
+                        <SelectItem key={participant.id} value={participant.id}>
+                          {participant.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -168,9 +169,7 @@ export function EditScheduleDialog({
               <Button type="button" variant="outline" onClick={onClose}>
                 取消
               </Button>
-              <Button type="submit">
-                保存
-              </Button>
+              <Button type="submit">保存</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -178,4 +177,3 @@ export function EditScheduleDialog({
     </Dialog>
   )
 }
-

@@ -2,15 +2,15 @@
 
 import { useState } from 'react'
 import { MoreHorizontal } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Course } from "../types/schedule"
-import { DeleteCourseDialog } from "./delete-course-dialog"
+} from '@/components/ui/dropdown-menu'
+import { Course } from '@/types/schedule'
+import { DeleteCourseDialog } from '@/components/course/delete-course-dialog'
 
 interface CourseMenuProps {
   course: Course
@@ -30,13 +30,8 @@ export function CourseMenu({ course, onEdit, onDelete }: CourseMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => onEdit(course)}>
-            编辑课程
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={() => setDeleteDialogOpen(true)}
-            className="text-destructive"
-          >
+          <DropdownMenuItem onClick={() => onEdit(course)}>编辑课程</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} className="text-destructive">
             删除课程
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -54,4 +49,3 @@ export function CourseMenu({ course, onEdit, onDelete }: CourseMenuProps) {
     </>
   )
 }
-

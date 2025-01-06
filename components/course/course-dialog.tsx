@@ -1,23 +1,23 @@
 'use client'
 
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
+} from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Course, TimeSlot } from "../types/schedule"
+} from '@/components/ui/select'
+import { Course, TimeSlot } from '../../types/schedule'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -28,13 +28,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: "课程名称不能为空" }),
+  title: z.string().min(1, { message: '课程名称不能为空' }),
   description: z.string().optional(),
-  timeSlotId: z.string().min(1, { message: "请选择所属节次" }),
+  timeSlotId: z.string().min(1, { message: '请选择所属节次' }),
   dayOfWeek: z.number().min(0).max(6),
 })
 
@@ -49,9 +49,7 @@ interface CourseDialogProps {
   existingCourses: Course[]
 }
 
-const daysOfWeek = [
-  "周日", "周一", "周二", "周三", "周四", "周五", "周六"
-]
+const daysOfWeek = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
 export function CourseDialog({
   course,
@@ -66,9 +64,9 @@ export function CourseDialog({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: course?.title || "",
-      description: course?.description || "",
-      timeSlotId: course?.timeSlotId || timeSlotId || "",
+      title: course?.title || '',
+      description: course?.description || '',
+      timeSlotId: course?.timeSlotId || timeSlotId || '',
       dayOfWeek: course?.dayOfWeek || dayOfWeek || 1,
     },
   })
@@ -76,9 +74,9 @@ export function CourseDialog({
   useEffect(() => {
     if (open) {
       form.reset({
-        title: course?.title || "",
-        description: course?.description || "",
-        timeSlotId: course?.timeSlotId || timeSlotId || "",
+        title: course?.title || '',
+        description: course?.description || '',
+        timeSlotId: course?.timeSlotId || timeSlotId || '',
         dayOfWeek: course?.dayOfWeek || dayOfWeek || 1,
       })
     }
@@ -87,29 +85,27 @@ export function CourseDialog({
   const validateCourse = (values: z.infer<typeof formSchema>) => {
     const existingCourse = existingCourses.find(
       (c) => c.dayOfWeek === values.dayOfWeek && c.timeSlotId === values.timeSlotId
-    );
+    )
     if (existingCourse && existingCourse.id !== course?.id) {
-      return { error: `该时间段已存在课程 "${existingCourse.title}"，无需重复添加。` };
+      return { error: `该时间段已存在课程 "${existingCourse.title}"，无需重复添加。` }
     }
-    return { error: null };
-  };
+    return { error: null }
+  }
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const validation = validateCourse(values);
+    const validation = validateCourse(values)
     if (validation.error) {
-      alert(validation.error);
-      return;
+      alert(validation.error)
+      return
     }
-    onSave(values);
+    onSave(values)
   }
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {course ? "编辑课程" : "添加课程"}
-          </DialogTitle>
+          <DialogTitle>{course ? '编辑课程' : '添加课程'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -132,7 +128,10 @@ export function CourseDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>星期</FormLabel>
-                  <Select onValueChange={(value) => field.onChange(parseInt(value))} defaultValue={field.value.toString()}>
+                  <Select
+                    onValueChange={(value) => field.onChange(parseInt(value))}
+                    defaultValue={field.value.toString()}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="选择星期" />
@@ -191,9 +190,7 @@ export function CourseDialog({
               <Button type="button" variant="outline" onClick={onClose}>
                 取消
               </Button>
-              <Button type="submit">
-                保存
-              </Button>
+              <Button type="submit">保存</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -201,4 +198,3 @@ export function CourseDialog({
     </Dialog>
   )
 }
-

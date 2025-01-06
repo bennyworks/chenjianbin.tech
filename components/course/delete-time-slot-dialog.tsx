@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { TimeSlot } from "../types/schedule"
+} from '@/components/ui/dialog'
+import { TimeSlot } from '@/types/schedule'
 
 interface DeleteTimeSlotDialogProps {
   timeSlot: TimeSlot
@@ -45,4 +45,3 @@ export function DeleteTimeSlotDialog({
     </Dialog>
   )
 }
-

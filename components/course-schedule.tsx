@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from "react"
-import { ScheduleHeader } from "./schedule-header"
-import { ScheduleGrid } from "./schedule-grid"
-import { DeleteScheduleDialog } from "./delete-schedule-dialog"
-import { CourseDialog } from "./course-dialog"
-import { TimeSlotDialog } from "./time-slot-dialog"
-import { EditScheduleDialog } from "./edit-schedule-dialog"
-import { FileUploadDialog } from "./file-upload-dialog"
-import { Schedule, Course, TimeSlot } from "../types/schedule"
+import { useState } from 'react'
+import { ScheduleHeader } from '@/components/course/schedule-header'
+import { ScheduleGrid } from '@/components/course/schedule-grid'
+import { DeleteScheduleDialog } from '@/components/course/delete-schedule-dialog'
+import { CourseDialog } from '@/components/course/course-dialog'
+import { TimeSlotDialog } from '@/components/course/time-slot-dialog'
+import { EditScheduleDialog } from '@/components/course/edit-schedule-dialog'
+import { FileUploadDialog } from '@/components/course/file-upload-dialog'
+import { Schedule, Course, TimeSlot } from '@/types/schedule'
+import { Member } from '@/types/family'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,11 +19,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog'
 
 interface CourseScheduleProps {
   initialSchedules: Schedule[]
-  participants: string[]
+  participants: { id: string; name: string }[]
   onAddSchedule: (schedule: Schedule) => void
   onUpdateSchedule: (schedule: Schedule) => void
   onDeleteSchedule: (scheduleId: string) => void
@@ -59,16 +60,20 @@ export function CourseSchedule({
   const [editScheduleDialogOpen, setEditScheduleDialogOpen] = useState(false)
   const [showCurrentDate, setShowCurrentDate] = useState(false)
   const [fileUploadDialogOpen, setFileUploadDialogOpen] = useState(false)
-  const [prefilledCourseData, setPrefilledCourseData] = useState<{ dayOfWeek?: number; timeSlotId?: string }>({})
+  const [prefilledCourseData, setPrefilledCourseData] = useState<{
+    dayOfWeek?: number
+    timeSlotId?: string
+  }>({})
   const [confirmImportDialogOpen, setConfirmImportDialogOpen] = useState(false)
 
   const handleAddSchedule = () => {
     const newSchedule: Schedule = {
       id: String(Date.now()),
       title: `课程表${schedules.length + 1}`,
-      startDate: "",
-      endDate: "",
-      location: "",
+      startDate: '',
+      endDate: '',
+      location: '',
+      participant: '',
       timeSlots: [],
       courses: [],
     }
@@ -84,7 +89,7 @@ export function CourseSchedule({
   const handleConfirmDelete = () => {
     if (schedules.length > 1) {
       onDeleteSchedule(currentSchedule.id)
-      const updatedSchedules = schedules.filter(s => s.id !== currentSchedule.id)
+      const updatedSchedules = schedules.filter((s) => s.id !== currentSchedule.id)
       setSchedules(updatedSchedules)
       setCurrentSchedule(updatedSchedules[0])
     }
@@ -93,7 +98,7 @@ export function CourseSchedule({
 
   const handleAddCourse = (dayOfWeek?: number, timeSlotId?: string) => {
     if (currentSchedule.timeSlots.length === 0) {
-      alert("请先添加节次")
+      alert('请先添加节次')
       return
     }
     setEditingCourse(undefined)
@@ -108,18 +113,19 @@ export function CourseSchedule({
 
   const handleDeleteCourse = (course: Course) => {
     onDeleteCourse(currentSchedule.id, course.id)
-    const updatedCourses = currentSchedule.courses.filter(c => c.id !== course.id)
+    const updatedCourses = currentSchedule.courses.filter((c) => c.id !== course.id)
     const updatedSchedule = { ...currentSchedule, courses: updatedCourses }
     setCurrentSchedule(updatedSchedule)
-    setSchedules(schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s))
+    setSchedules(schedules.map((s) => (s.id === updatedSchedule.id ? updatedSchedule : s)))
   }
 
   const handleSaveCourse = (courseData: Partial<Course>) => {
+    setCourseDialogOpen(false)
     const newCourse = {
       id: editingCourse?.id || String(Date.now()),
-      title: courseData.title || "",
-      description: courseData.description || "",
-      timeSlotId: courseData.timeSlotId || "",
+      title: courseData.title || '',
+      description: courseData.description || '',
+      timeSlotId: courseData.timeSlotId || '',
       dayOfWeek: courseData.dayOfWeek || 1,
     }
 
@@ -130,13 +136,12 @@ export function CourseSchedule({
     }
 
     const updatedCourses = editingCourse
-      ? currentSchedule.courses.map(c => c.id === editingCourse.id ? newCourse : c)
+      ? currentSchedule.courses.map((c) => (c.id === editingCourse.id ? newCourse : c))
       : [...currentSchedule.courses, newCourse]
 
     const updatedSchedule = { ...currentSchedule, courses: updatedCourses }
     setCurrentSchedule(updatedSchedule)
-    setSchedules(schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s))
-    setCourseDialogOpen(false)
+    setSchedules(schedules.map((s) => (s.id === updatedSchedule.id ? updatedSchedule : s)))
   }
 
   const handleAddTimeSlot = () => {
@@ -151,19 +156,23 @@ export function CourseSchedule({
 
   const handleDeleteTimeSlot = (timeSlot: TimeSlot) => {
     onDeleteTimeSlot(currentSchedule.id, timeSlot.id)
-    const updatedTimeSlots = currentSchedule.timeSlots.filter(t => t.id !== timeSlot.id)
-    const updatedCourses = currentSchedule.courses.filter(c => c.timeSlotId !== timeSlot.id)
-    const updatedSchedule = { ...currentSchedule, timeSlots: updatedTimeSlots, courses: updatedCourses }
+    const updatedTimeSlots = currentSchedule.timeSlots.filter((t) => t.id !== timeSlot.id)
+    const updatedCourses = currentSchedule.courses.filter((c) => c.timeSlotId !== timeSlot.id)
+    const updatedSchedule = {
+      ...currentSchedule,
+      timeSlots: updatedTimeSlots,
+      courses: updatedCourses,
+    }
     setCurrentSchedule(updatedSchedule)
-    setSchedules(schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s))
+    setSchedules(schedules.map((s) => (s.id === updatedSchedule.id ? updatedSchedule : s)))
   }
 
   const handleSaveTimeSlot = (timeSlotData: Partial<TimeSlot>) => {
     const newTimeSlot = {
       id: editingTimeSlot?.id || String(Date.now()),
-      title: timeSlotData.title || "",
-      startTime: timeSlotData.startTime || "",
-      endTime: timeSlotData.endTime || "",
+      title: timeSlotData.title || '',
+      startTime: timeSlotData.startTime || '',
+      endTime: timeSlotData.endTime || '',
     }
 
     if (editingTimeSlot) {
@@ -173,7 +182,7 @@ export function CourseSchedule({
     }
 
     const updatedTimeSlots = editingTimeSlot
-      ? currentSchedule.timeSlots.map(t => t.id === editingTimeSlot.id ? newTimeSlot : t)
+      ? currentSchedule.timeSlots.map((t) => (t.id === editingTimeSlot.id ? newTimeSlot : t))
       : [...currentSchedule.timeSlots, newTimeSlot]
 
     // Sort time slots by title (which is now a number)
@@ -181,7 +190,7 @@ export function CourseSchedule({
 
     const updatedSchedule = { ...currentSchedule, timeSlots: updatedTimeSlots }
     setCurrentSchedule(updatedSchedule)
-    setSchedules(schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s))
+    setSchedules(schedules.map((s) => (s.id === updatedSchedule.id ? updatedSchedule : s)))
     setTimeSlotDialogOpen(false)
   }
 
@@ -193,7 +202,7 @@ export function CourseSchedule({
     const updatedSchedule = { ...currentSchedule, ...scheduleData }
     onUpdateSchedule(updatedSchedule)
     setCurrentSchedule(updatedSchedule)
-    setSchedules(schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s))
+    setSchedules(schedules.map((s) => (s.id === updatedSchedule.id ? updatedSchedule : s)))
     setEditScheduleDialogOpen(false)
   }
 
@@ -230,7 +239,7 @@ export function CourseSchedule({
         schedules={schedules}
         currentSchedule={currentSchedule}
         onScheduleChange={(id) => {
-          const schedule = schedules.find(s => s.id === id)
+          const schedule = schedules.find((s) => s.id === id)
           if (schedule) setCurrentSchedule(schedule)
         }}
         onAddSchedule={handleAddSchedule}
@@ -311,4 +320,3 @@ export function CourseSchedule({
     </div>
   )
 }
-

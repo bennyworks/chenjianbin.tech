@@ -2,15 +2,15 @@
 
 import { useState } from 'react'
 import { MoreHorizontal } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { TimeSlot } from "../types/schedule"
-import { DeleteTimeSlotDialog } from "./delete-time-slot-dialog"
+} from '@/components/ui/dropdown-menu'
+import { TimeSlot } from '@/types/schedule'
+import { DeleteTimeSlotDialog } from '@/components/course/delete-time-slot-dialog'
 
 interface TimeSlotMenuProps {
   timeSlot: TimeSlot
@@ -30,13 +30,8 @@ export function TimeSlotMenu({ timeSlot, onEdit, onDelete }: TimeSlotMenuProps) 
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => onEdit(timeSlot)}>
-            编辑节次
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={() => setDeleteDialogOpen(true)}
-            className="text-destructive"
-          >
+          <DropdownMenuItem onClick={() => onEdit(timeSlot)}>编辑节次</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)} className="text-destructive">
             删除节次
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -54,4 +49,3 @@ export function TimeSlotMenu({ timeSlot, onEdit, onDelete }: TimeSlotMenuProps) 
     </>
   )
 }
-

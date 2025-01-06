@@ -1,16 +1,16 @@
 'use client'
 
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { TimeSlot } from "../types/schedule"
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { TimeSlot } from '@/types/schedule'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -21,14 +21,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from '@/components/ui/form'
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: "节次标题不能为空" }).refine((val) => !isNaN(Number(val)), {
-    message: "节次标题必须为数字",
-  }),
-  startTime: z.string().min(1, { message: "开始时间不能为空" }),
-  endTime: z.string().min(1, { message: "结束时间不能为空" }),
+  title: z
+    .string()
+    .min(1, { message: '节次标题不能为空' })
+    .refine((val) => !isNaN(Number(val)), {
+      message: '节次标题必须为数字',
+    }),
+  startTime: z.string().min(1, { message: '开始时间不能为空' }),
+  endTime: z.string().min(1, { message: '结束时间不能为空' }),
 })
 
 interface TimeSlotDialogProps {
@@ -49,37 +52,35 @@ export function TimeSlotDialog({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: timeSlot?.title || "",
-      startTime: timeSlot?.startTime || "",
-      endTime: timeSlot?.endTime || "",
+      title: timeSlot?.title || '',
+      startTime: timeSlot?.startTime || '',
+      endTime: timeSlot?.endTime || '',
     },
   })
 
   useEffect(() => {
     if (open) {
       form.reset({
-        title: timeSlot?.title || "",
-        startTime: timeSlot?.startTime || "",
-        endTime: timeSlot?.endTime || "",
+        title: timeSlot?.title || '',
+        startTime: timeSlot?.startTime || '',
+        endTime: timeSlot?.endTime || '',
       })
     }
   }, [open, timeSlot, form])
 
   const validateTimeSlot = (values: z.infer<typeof formSchema>) => {
-    const existingTimeSlot = existingTimeSlots.find(
-      (t) => t.title === values.title
-    );
+    const existingTimeSlot = existingTimeSlots.find((t) => t.title === values.title)
     if (existingTimeSlot && existingTimeSlot.id !== timeSlot?.id) {
-      return { error: `已经存在第 ${existingTimeSlot.title} 节课，无需重复添加。` };
+      return { error: `已经存在第 ${existingTimeSlot.title} 节课，无需重复添加。` }
     }
-    return { error: null };
-  };
+    return { error: null }
+  }
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const validation = validateTimeSlot(values);
+    const validation = validateTimeSlot(values)
     if (validation.error) {
-      alert(validation.error);
-      return;
+      alert(validation.error)
+      return
     }
     onSave(values)
   }
@@ -88,9 +89,7 @@ export function TimeSlotDialog({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {timeSlot ? "编辑节次" : "添加节次"}
-          </DialogTitle>
+          <DialogTitle>{timeSlot ? '编辑节次' : '添加节次'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -137,9 +136,7 @@ export function TimeSlotDialog({
               <Button type="button" variant="outline" onClick={onClose}>
                 取消
               </Button>
-              <Button type="submit">
-                保存
-              </Button>
+              <Button type="submit">保存</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -147,4 +144,3 @@ export function TimeSlotDialog({
     </Dialog>
   )
 }
-

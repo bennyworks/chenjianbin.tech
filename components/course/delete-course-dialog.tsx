@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Course } from "../types/schedule"
+} from '@/components/ui/dialog'
+import { Course } from '@/types/schedule'
 
 interface DeleteCourseDialogProps {
   course: Course
@@ -18,19 +18,14 @@ interface DeleteCourseDialogProps {
   onConfirm: () => void
 }
 
-export function DeleteCourseDialog({
-  course,
-  open,
-  onClose,
-  onConfirm,
-}: DeleteCourseDialogProps) {
+export function DeleteCourseDialog({ course, open, onClose, onConfirm }: DeleteCourseDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>删除课程</DialogTitle>
           <DialogDescription>
-            确定要删除课程 "{course.title}" 吗？此操作不可撤销。
+            确定要删除课程 <b>{course.title}</b> 吗？此操作不可撤销。
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -45,4 +40,3 @@ export function DeleteCourseDialog({
     </Dialog>
   )
 }
-

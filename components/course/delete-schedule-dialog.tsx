@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,9 +9,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Schedule } from "../types/schedule"
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Schedule } from '@/types/schedule'
 
 interface DeleteScheduleDialogProps {
   schedule: Schedule
@@ -26,7 +26,7 @@ export function DeleteScheduleDialog({
   onClose,
   onConfirm,
 }: DeleteScheduleDialogProps) {
-  const [confirmText, setConfirmText] = useState("")
+  const [confirmText, setConfirmText] = useState('')
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -34,7 +34,7 @@ export function DeleteScheduleDialog({
         <DialogHeader>
           <DialogTitle>删除课程表</DialogTitle>
           <DialogDescription>
-            此操作不可撤销。请输入课程表名称 "{schedule.title}" 以确认删除。
+            此操作不可撤销。请输入课程表名称 <b>{schedule.title}</b> 以确认删除。
           </DialogDescription>
         </DialogHeader>
         <Input
@@ -58,4 +58,3 @@ export function DeleteScheduleDialog({
     </Dialog>
   )
 }
-
