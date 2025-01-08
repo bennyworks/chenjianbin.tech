@@ -34,17 +34,17 @@ export function MainBreadcrumb() {
       )
       const matchedProject = dashboardConfig.projects.find((item) => item.href === currentPath)
 
-      if (matchedMainNav) {
+      if (matchedMainNav?.title && matchedMainNav?.href) {
         breadcrumbs.push({
           title: matchedMainNav.title,
           href: matchedMainNav.href,
         })
-      } else if (matchedSecondaryNav) {
+      } else if (matchedSecondaryNav?.title && matchedSecondaryNav?.href) {
         breadcrumbs.push({
           title: matchedSecondaryNav.title,
           href: matchedSecondaryNav.href,
         })
-      } else if (matchedProject) {
+      } else if (matchedProject?.title && matchedProject?.href) {
         breadcrumbs.push({
           title: matchedProject.title,
           href: matchedProject.href,
