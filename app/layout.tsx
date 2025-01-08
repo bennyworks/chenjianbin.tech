@@ -8,6 +8,7 @@ import { Toaster } from 'sonner'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
 import type { Viewport } from 'next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Toaster />
           <TailwindIndicator />
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   )
