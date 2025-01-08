@@ -25,6 +25,10 @@ export const docsConfig: DocsConfig = {
       title: 'English',
       items: [
         {
+          title: '具体名词',
+          href: '/docs/english/concrete-nouns',
+        },
+        {
           title: 'ag',
           href: '/docs/english/roots/ag',
         },
