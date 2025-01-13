@@ -174,5 +174,38 @@ model Family {
 
   // 创建联合唯一索引
   @@unique([name, ownerId])
-  @@map("families")
+  @@map(name: "families")
+}
+
+// 单词类型表模型
+model WordType {
+  id       Int       @id @default(autoincrement())
+  name     String
+  parentTypeId Int?   @map(name: "parent_type_id")   // 外键关联自身id字段，表示父类型
+  description String?
+  words    Word[]    @relation("WordTypeRelation")    // 与单词表的关联关系，一对多
+  @@index([parentTypeId])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+
+  @@map(name: "word_types")
+}
+
+// 单词表模型
+model Word {
+  id          Int       @id @default(autoincrement())
+  typeId      Int       @map(name: "type_id") 
+  word        String
+  parseJson   Json?     @map(name: "parse_json")
+  relatedImage String?  @map(name: "related_image") // 假设存储图片的 URL 地址
+  wordType    WordType  @relation(name: "WordTypeRelation", fields: [typeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+
+  @@map(name: "words")
+
 }
