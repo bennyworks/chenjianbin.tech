@@ -71,6 +71,7 @@
     "clsx": "^2.1.1",
     "contentlayer2": "^0.4.6",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
     "embla-carousel-react": "^8.5.2",
     "lucide-react": "^0.453.0",
     "mdast-util-toc": "^7.1.0",

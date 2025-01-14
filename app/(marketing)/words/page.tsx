@@ -7,7 +7,7 @@ export const metadata = {
   description: '只要理解这1368个单词，你就能说一口流利的英语了。',
 }
 
-export async function WordsPage() {
+export default async function WordsPage() {
   const wordTypes = await db.wordType.findMany()
 
   const words = await db.word.findMany({ orderBy: { id: 'asc' } })
@@ -18,5 +18,3 @@ export async function WordsPage() {
     </main>
   )
 }
-
-export default WordsPage

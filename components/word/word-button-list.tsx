@@ -15,7 +15,7 @@ interface WordButtonListProps {
 
 export function WordButtonList({ words, onSelectWord }: WordButtonListProps) {
   return (
-    <div className="relative mb-6">
+    <div className="relative mb-6 font-serif">
       <Carousel
         opts={{
           align: 'start',
