@@ -41,9 +41,9 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
     [initialWords]
   )
 
-  const handleWordSelect = (word: Word) => {
+  const handleWordSelect = useCallback((word: Word) => {
     setSelectedWord(word)
-  }
+  }, [])
 
   if (isLoading) {
     return (

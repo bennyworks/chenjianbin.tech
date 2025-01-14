@@ -62,7 +62,7 @@ export function WordTypeNav({ wordTypes, onSelectType }: WordTypeNavProps) {
         if (defaultLevel3) onSelectType(defaultLevel3)
       }
     }
-  }, [level1Types, level2Types, wordTypes])
+  }, [level1Types, level2Types, wordTypes, onSelectType])
 
   return (
     <div className="flex space-x-2 mb-6">

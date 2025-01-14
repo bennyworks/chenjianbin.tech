@@ -20,7 +20,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "contentlayer2 build && next build",
+    "build": "prisma migrate deploy && contentlayer2 build && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",

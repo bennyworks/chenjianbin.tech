@@ -1,5 +1,4 @@
 import WordAnalysis from '@/components/word/word-analysis'
-import { WordType, Word } from '@/types/word'
 import { db } from '@/lib/db'
 
 export const metadata = {
