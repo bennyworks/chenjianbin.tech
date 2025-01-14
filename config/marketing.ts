@@ -7,6 +7,10 @@ export const marketingConfig: MarketingConfig = {
       href: '/#features',
     },
     {
+      title: '口语单词',
+      href: '/words',
+    },
+    {
       title: 'Pricing',
       href: '/pricing',
     },
