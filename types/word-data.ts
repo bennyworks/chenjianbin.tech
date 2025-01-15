@@ -13,18 +13,40 @@ export interface WordData {
   }[]
   root_analysis: {
     root: string
-    derived_words: string[]
+    derived_words: {
+      word: string
+      translation: string
+    }[]
   }
   affix_analysis: {
     prefix: string
     root: string
     suffix: string
-    similar_words: string[]
+    similar_words: {
+      word: string
+      translation: string
+    }[]
   }
   word_forms: {
-    noun: string
-    plural: string
-    adjective: string
-    phrases: string[]
+    noun: {
+      word: string
+      translation: string
+    }
+    plural: {
+      word: string
+      translation: string
+    }
+    adjective: {
+      word: string
+      translation: string
+    }
+    adverb: {
+      word: string
+      translation: string
+    }
+    phrases: {
+      phrase: string
+      translation: string
+    }[]
   }
 }

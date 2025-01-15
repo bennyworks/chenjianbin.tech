@@ -134,15 +134,18 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
                       {selectedWord.parseJson?.root_analysis?.root || 'N/A'}
                     </span>
                   </p>
-                  <div className="flex flex-wrap gap-2 ">
-                    <span className="font-medium text-gray-500">衍生词:</span>
+                  <p className="font-medium mb-2 text-gray-500">衍生词：</p>
+                  <div className="flex flex-wrap gap-4 font-serif">
                     {selectedWord.parseJson?.root_analysis?.derived_words?.map(
-                      (word: string, index: number) => (
-                        <Badge key={index} variant="secondary" className="text-base">
-                          {word}
-                        </Badge>
+                      (word: any, index: number) => (
+                        <div key={index} className="text-center">
+                          <Badge variant="secondary" className="text-base mb-1">
+                            {word.word}
+                          </Badge>
+                          <p className="text-sm text-gray-500">{word.translation}</p>
+                        </div>
                       )
-                    ) || 'No derived words available.'}
+                    ) || <p>No derived words available</p>}
                   </div>
                 </section>
 
@@ -151,47 +154,110 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
                   <div className="space-y-2">
                     <p>
                       <span className="font-medium text-gray-500">前缀：</span>
-                      {selectedWord.parseJson?.affix_analysis?.prefix || 'N/A'}
+                      <span className="font-medium font-serif">
+                        {selectedWord.parseJson?.affix_analysis?.prefix || 'N/A'}
+                      </span>
                     </p>
                     <p>
                       <span className="font-medium text-gray-500">后缀：</span>
-                      {selectedWord.parseJson?.affix_analysis?.suffix || 'N/A'}
+                      <span className="font-medium font-serif">
+                        {selectedWord.parseJson?.affix_analysis?.suffix || 'N/A'}
+                      </span>
                     </p>
+                  </div>
+                  <div className="mt-2">
+                    <p className="font-medium mb-2 text-gray-500">相关词：</p>
+                    <div className="flex flex-wrap gap-4">
+                      {selectedWord.parseJson?.affix_analysis?.similar_words?.map(
+                        (word: any, index: number) => (
+                          <div key={index} className="text-center">
+                            <Badge variant="secondary" className="text-base mb-1 font-serif">
+                              {word.word}
+                            </Badge>
+                            <p className="text-sm text-gray-500">{word.translation}</p>
+                          </div>
+                        )
+                      ) || <p>No similar words available</p>}
+                    </div>
                   </div>
                 </section>
 
                 <section>
                   <h4 className="text-md font-semibold mb-3">单词变形</h4>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium text-gray-500">名词：</span>
-                      {selectedWord.parseJson?.word_forms?.noun || 'N/A'}
-                    </p>
-                    <p>
-                      <span className="font-medium text-gray-500">复数：</span>
-                      {selectedWord.parseJson?.word_forms?.plural || 'N/A'}
-                    </p>
-                    <p>
-                      <span className="font-medium text-gray-500">形容词：</span>
-                      {selectedWord.parseJson?.word_forms?.adjective || 'N/A'}
-                    </p>
+                    {selectedWord.parseJson?.word_forms?.noun?.word && (
+                      <div>
+                        <p>
+                          <span className="font-medium text-gray-500">名词：</span>
+                          <span className="font-medium font-serif">
+                            {selectedWord.parseJson.word_forms.noun.word}
+                          </span>
+                        </p>
+                        <p className="text-sm text-gray-500 ml-12">
+                          {selectedWord.parseJson.word_forms.noun.translation}
+                        </p>
+                      </div>
+                    )}
+                    {selectedWord.parseJson?.word_forms?.plural?.word && (
+                      <div>
+                        <p>
+                          <span className="font-medium text-gray-500">复数：</span>
+                          <span className="font-medium font-serif">
+                            {selectedWord.parseJson.word_forms.plural.word}
+                          </span>
+                        </p>
+                        <p className="text-sm text-gray-500 ml-12">
+                          {selectedWord.parseJson.word_forms.plural.translation}
+                        </p>
+                      </div>
+                    )}
+                    {selectedWord.parseJson?.word_forms?.adjective?.word && (
+                      <div>
+                        <p>
+                          <span className="font-medium text-gray-500">形容词：</span>
+                          <span className="font-medium font-serif">
+                            {selectedWord.parseJson.word_forms.adjective.word}
+                          </span>
+                        </p>
+                        <p className="text-sm text-gray-500 ml-12">
+                          {selectedWord.parseJson.word_forms.adjective.translation}
+                        </p>
+                      </div>
+                    )}
+                    {selectedWord.parseJson?.word_forms?.adverb?.word && (
+                      <div>
+                        <p>
+                          <span className="font-medium text-gray-500">副词：</span>
+                          <span className="font-medium font-serif">
+                            {selectedWord.parseJson.word_forms.adverb.word}
+                          </span>
+                        </p>
+                        <p className="text-sm text-gray-500 ml-12">
+                          {selectedWord.parseJson.word_forms.adverb.translation}
+                        </p>
+                      </div>
+                    )}
                   </div>
                   <div className="mt-4">
                     <p className="font-medium mb-2 text-gray-500">常见短语：</p>
                     <div className="space-y-2 font-serif">
                       {selectedWord.parseJson?.word_forms?.phrases?.map(
-                        (phrase: string, index: number) => (
+                        (phrase: any, index: number) => (
                           <Card key={index} className="border-none bg-muted">
                             <CardContent className="p-3">
                               <p
                                 dangerouslySetInnerHTML={{
-                                  __html: phrase.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+                                  __html: phrase.phrase.replace(
+                                    /\*\*(.*?)\*\*/g,
+                                    '<strong>$1</strong>'
+                                  ),
                                 }}
                               />
+                              <p className="text-sm text-gray-500">{phrase.translation}</p>
                             </CardContent>
                           </Card>
                         )
-                      ) || 'No common phrases available.'}
+                      ) || <p>No common phrases available</p>}
                     </div>
                   </div>
                 </section>
