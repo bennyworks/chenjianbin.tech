@@ -206,7 +206,7 @@ async function main() {
         console.log(`Updated word: ${row.word}`)
 
         // Add a small delay to avoid rate limiting
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 500))
       } else {
         console.log(`Failed to get parse result for word: ${row.word}`)
       }
