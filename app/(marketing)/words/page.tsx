@@ -11,11 +11,9 @@ export const dynamic = 'force-static'
 export default async function WordsPage() {
   const wordTypes = await db.wordType.findMany()
 
-  const words = await db.word.findMany({ orderBy: { id: 'asc' } })
-
   return (
-    <main className="min-h-screen bg-background">
-      <WordAnalysis initialWordTypes={wordTypes} initialWords={words} />
+    <main className="bg-background">
+      <WordAnalysis initialWordTypes={wordTypes} />
     </main>
   )
 }

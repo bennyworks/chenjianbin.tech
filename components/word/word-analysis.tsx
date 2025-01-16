@@ -3,21 +3,38 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Volume2, BookOpen } from 'lucide-react'
+import { Volume2, BookOpen, FileQuestion } from 'lucide-react'
 import { WordTypeNav } from '@/components/word/word-type-nav'
 import { WordButtonList } from '@/components/word/word-button-list'
 import { Word, WordType } from '@/types/word'
 import { useState, useEffect, useCallback } from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface WordAnalysisProps {
   initialWordTypes: WordType[]
-  initialWords: Word[]
 }
 
-export default function WordAnalysis({ initialWordTypes, initialWords }: WordAnalysisProps) {
+export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
   const [selectedWord, setSelectedWord] = useState<Word | null>(null)
   const [currentWords, setCurrentWords] = useState<Word[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
+  const handleTypeSelect = useCallback(async (typeId: number) => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(`/api/words?typeId=${typeId}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch words')
+      }
+      const words = await response.json()
+      setCurrentWords(words)
+      setSelectedWord(null)
+    } catch (error) {
+      console.error('Error fetching words:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     const firstLevel3Type = initialWordTypes.find(
@@ -25,21 +42,9 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
         type.parentTypeId && initialWordTypes.find((t) => t.id === type.parentTypeId)?.parentTypeId
     )
     if (firstLevel3Type) {
-      const filteredWords = initialWords.filter((word) => word.typeId === firstLevel3Type.id)
-      setCurrentWords(filteredWords)
+      handleTypeSelect(firstLevel3Type.id)
     }
-  }, [initialWordTypes, initialWords])
-
-  const handleTypeSelect = useCallback(
-    (typeId: number) => {
-      setIsLoading(true)
-      const filteredWords = initialWords.filter((word) => word.typeId === typeId)
-      setCurrentWords(filteredWords)
-      setSelectedWord(null)
-      setIsLoading(false)
-    },
-    [initialWords]
-  )
+  }, [initialWordTypes, handleTypeSelect])
 
   const handleWordSelect = useCallback((word: Word) => {
     setSelectedWord(word)
@@ -49,7 +54,12 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
     return (
       <div className="container mx-auto px-4 py-8 max-w-[1200px]">
         <WordTypeNav wordTypes={initialWordTypes} onSelectType={handleTypeSelect} />
-        <div className="text-center py-12">加载中...</div>
+        <div className="space-y-3">
+          <Skeleton className="h-[40px] w-full" />
+          <div>
+            <Skeleton className="w-full min-h-[360px] h-[calc(100vh-360px)]" />
+          </div>
+        </div>
       </div>
     )
   }
@@ -58,7 +68,10 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
     return (
       <div className="container mx-auto px-4 py-8 max-w-[1200px]">
         <WordTypeNav wordTypes={initialWordTypes} onSelectType={handleTypeSelect} />
-        <div className="text-center py-12">该分类下暂无单词</div>
+        <div className="text-center py-12">
+          <FileQuestion className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <div>该分类下暂无单词</div>
+        </div>
       </div>
     )
   }
@@ -70,9 +83,11 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
       <WordButtonList words={currentWords} onSelectWord={handleWordSelect} />
 
       {!selectedWord ? (
-        <div className="text-center py-12">
-          <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-          <p className="text-lg text-muted-foreground">请选择一个单词查看详细信息</p>
+        <div className="h-[calc(100vh-400px)] flex items-center justify-center">
+          <div className="text-center">
+            <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+            <p className="text-lg text-muted-foreground">请选择一个单词查看详细信息</p>
+          </div>
         </div>
       ) : (
         <Card className="overflow-hidden">
@@ -243,16 +258,19 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
                     <div className="space-y-2 font-serif">
                       {selectedWord.parseJson?.word_forms?.phrases?.map(
                         (phrase: any, index: number) => (
-                          <Card key={index} className="border-none bg-muted">
+                          <Card key={index} className="shadow-none border-none bg-muted">
                             <CardContent className="p-3">
-                              <p
-                                dangerouslySetInnerHTML={{
-                                  __html: phrase.phrase.replace(
-                                    /\*\*(.*?)\*\*/g,
-                                    '<strong>$1</strong>'
-                                  ),
-                                }}
-                              />
+                              <p>
+                                {phrase.phrase.split(/\*\*(.*?)\*\*/).map((part: any, i: number) =>
+                                  i % 2 === 0 ? (
+                                    part
+                                  ) : (
+                                    <strong className="text-red-500" key={i}>
+                                      {part}
+                                    </strong>
+                                  )
+                                )}
+                              </p>
                               <p className="text-sm text-gray-500">{phrase.translation}</p>
                             </CardContent>
                           </Card>
@@ -265,7 +283,7 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
 
               {/* Right Column - Examples */}
               <div>
-                <h4 className="text-lg font-semibold mb-3">列举例句</h4>
+                <h4 className="text-md font-semibold mb-3">列举例句</h4>
                 <div className="space-y-4">
                   {selectedWord.parseJson?.examples?.map((example: any, index: number) => (
                     <Card key={index}>
@@ -274,16 +292,18 @@ export default function WordAnalysis({ initialWordTypes, initialWords }: WordAna
                           {example.context}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-3 pt-0">
-                        <p
-                          className="mb-2 font-serif"
-                          dangerouslySetInnerHTML={{
-                            __html: example.sentence.replace(
-                              /\*\*(.*?)\*\*/g,
-                              '<strong>$1</strong>'
-                            ),
-                          }}
-                        />
+                      <CardContent className="p-3 pt-0 font-serif">
+                        <p>
+                          {example.sentence.split(/\*\*(.*?)\*\*/).map((part: any, i: number) =>
+                            i % 2 === 0 ? (
+                              part
+                            ) : (
+                              <strong className="text-red-500" key={i}>
+                                {part}
+                              </strong>
+                            )
+                          )}
+                        </p>
                         <p className="text-gray-500">{example.translation}</p>
                       </CardContent>
                     </Card>

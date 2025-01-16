@@ -23,7 +23,7 @@ export function WordButtonList({ words, onSelectWord }: WordButtonListProps) {
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-2 px-10">
+        <CarouselContent className="-ml-2">
           {words.map((word) => (
             <CarouselItem key={word.id} className="pl-2 basis-auto">
               <Button
