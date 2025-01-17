@@ -50,6 +50,26 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
     setSelectedWord(word)
   }, [])
 
+  // 辅助函数：处理分析文本中的目标词
+  const highlightTargetWord = (text: string, targetWord: string) => {
+    if (!text || !targetWord) return text
+
+    const regex = new RegExp(targetWord, 'gi')
+    return text.split(regex).reduce(
+      (prev, current, i, arr) => {
+        if (i === arr.length - 1) return [...prev, current]
+        return [
+          ...prev,
+          current,
+          <span key={i} className="font-serif font-bold text-red-500">
+            {targetWord.toLowerCase()}
+          </span>,
+        ]
+      },
+      [] as (string | JSX.Element)[]
+    )
+  }
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-[1200px]">
@@ -137,7 +157,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                 <section>
                   <h4 className="text-md font-semibold mb-3">分析词义</h4>
                   <p className="text-base leading-relaxed">
-                    {selectedWord.parseJson?.analysis || 'No analysis available.'}
+                    {highlightTargetWord(selectedWord.parseJson?.analysis, selectedWord.word)}
                   </p>
                 </section>
 
@@ -150,11 +170,11 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                     </span>
                   </p>
                   <p className="font-medium mb-2 text-gray-500">衍生词：</p>
-                  <div className="flex flex-wrap gap-4 font-serif">
+                  <div className="flex flex-wrap gap-4">
                     {selectedWord.parseJson?.root_analysis?.derived_words?.map(
                       (word: any, index: number) => (
                         <div key={index} className="text-center">
-                          <Badge variant="secondary" className="text-base mb-1">
+                          <Badge variant="secondary" className="text-base mb-1 font-serif">
                             {word.word}
                           </Badge>
                           <p className="text-sm text-gray-500">{word.translation}</p>
@@ -288,12 +308,10 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                   {selectedWord.parseJson?.examples?.map((example: any, index: number) => (
                     <Card key={index}>
                       <CardHeader className="p-3">
-                        <CardTitle className="text-base font-medium text-gray-500">
-                          {example.context}
-                        </CardTitle>
+                        <CardTitle className="text-base font-semibold">{example.context}</CardTitle>
                       </CardHeader>
-                      <CardContent className="p-3 pt-0 font-serif">
-                        <p>
+                      <CardContent className="p-3 pt-0">
+                        <p className="font-serif">
                           {example.sentence.split(/\*\*(.*?)\*\*/).map((part: any, i: number) =>
                             i % 2 === 0 ? (
                               part
