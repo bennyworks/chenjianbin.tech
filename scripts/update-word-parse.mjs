@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import * as dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -181,9 +181,13 @@ async function queryDeepseekAPI(word) {
 async function main() {
   // Find all words where parseJson is null
   const words = await prisma.word.findMany({
+    select: {
+      id: true,
+      word: true,
+    },
     where: {
       parseJson: {
-        is: undefined,
+        equals: Prisma.DbNull,
       },
     },
   })
