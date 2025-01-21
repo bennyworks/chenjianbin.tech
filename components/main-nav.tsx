@@ -47,7 +47,7 @@ export function MainNav({ items, children }: MainNavProps) {
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       >
         {showMobileMenu ? <Icons.close /> : <Icons.chenjianbin />}
-        <span className="font-bold">Menu</span>
+        <span className="font-bold">探索</span>
       </button>
       {showMobileMenu && items && <MobileNav items={items}>{children}</MobileNav>}
     </div>
