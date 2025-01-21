@@ -110,7 +110,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
           </div>
         </div>
       ) : (
-        <Card className="overflow-hidden max-sm:border-0">
+        <Card className="overflow-hidden max-sm:border-none max-sm:shadow-none">
           <CardHeader className="text-center">
             <CardTitle className="text-lg font-bold font-serif tracking-wide mb-4">
               {selectedWord.word}
