@@ -110,7 +110,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
           </div>
         </div>
       ) : (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden max-sm:border-0">
           <CardHeader className="text-center">
             <CardTitle className="text-lg font-bold font-serif tracking-wide mb-4">
               {selectedWord.word}
@@ -150,7 +150,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="sm:p-6">
             <div className="grid lg:grid-cols-[1fr,400px] gap-8">
               {/* Left Column - Word Analysis */}
               <div className="space-y-6">
