@@ -106,21 +106,21 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
         <div className="h-[calc(100vh-400px)] flex items-center justify-center">
           <div className="text-center">
             <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-            <p className="text-lg text-muted-foreground">请选择一个单词查看详细信息</p>
+            <p className="text-sm text-muted-foreground">请选择一个单词查看详细信息</p>
           </div>
         </div>
       ) : (
         <Card className="overflow-hidden">
           <CardHeader className="text-center">
-            <CardTitle className="text-4xl font-bold font-serif tracking-wide mb-4">
+            <CardTitle className="text-lg font-bold font-serif tracking-wide mb-4">
               {selectedWord.word}
             </CardTitle>
-            <div className="flex justify-center space-x-4 text-base">
+            <div className="flex justify-center space-x-4 text-sm">
               <div className="flex items-center font-serif">
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="h-8 px-2 mr-2"
+                  className="h-8 px-1 mr-1"
                   onClick={() => {
                     const audio = new Audio(
                       `https://dict.youdao.com/dictvoice?type=1&audio=${selectedWord.word}`
@@ -136,7 +136,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="h-8 px-2 mr-2"
+                  className="h-8 px-1 mr-1"
                   onClick={() => {
                     const audio = new Audio(
                       `https://dict.youdao.com/dictvoice?type=2&audio=${selectedWord.word}`
@@ -155,14 +155,14 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
               {/* Left Column - Word Analysis */}
               <div className="space-y-6">
                 <section>
-                  <h4 className="text-md font-semibold mb-3">分析词义</h4>
-                  <p className="text-base leading-relaxed">
+                  <h4 className="text-sm font-semibold mb-3">分析词义</h4>
+                  <p className="text-sm leading-relaxed">
                     {highlightTargetWord(selectedWord.parseJson?.analysis, selectedWord.word)}
                   </p>
                 </section>
 
                 <section>
-                  <h4 className="text-md font-semibold mb-3">词根分析</h4>
+                  <h4 className="text-sm font-semibold mb-3">词根分析</h4>
                   <p className="mb-2">
                     <span className="font-medium text-gray-500">词根：</span>
                     <span className="font-medium font-serif">
@@ -174,7 +174,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                     {selectedWord.parseJson?.root_analysis?.derived_words?.map(
                       (word: any, index: number) => (
                         <div key={index} className="text-center">
-                          <Badge variant="secondary" className="text-base mb-1 font-serif">
+                          <Badge variant="secondary" className="text-sm mb-1 font-serif">
                             {word.word}
                           </Badge>
                           <p className="text-sm text-gray-500">{word.translation}</p>
@@ -185,7 +185,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                 </section>
 
                 <section>
-                  <h4 className="text-md font-semibold mb-3">词缀分析</h4>
+                  <h4 className="text-sm font-semibold mb-3">词缀分析</h4>
                   <div className="space-y-2">
                     <p>
                       <span className="font-medium text-gray-500">前缀：</span>
@@ -206,7 +206,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                       {selectedWord.parseJson?.affix_analysis?.similar_words?.map(
                         (word: any, index: number) => (
                           <div key={index} className="text-center">
-                            <Badge variant="secondary" className="text-base mb-1 font-serif">
+                            <Badge variant="secondary" className="text-sm mb-1 font-serif">
                               {word.word}
                             </Badge>
                             <p className="text-sm text-gray-500">{word.translation}</p>
@@ -218,7 +218,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                 </section>
 
                 <section>
-                  <h4 className="text-md font-semibold mb-3">单词变形</h4>
+                  <h4 className="text-sm font-semibold mb-3">单词变形</h4>
                   <div className="space-y-2">
                     {selectedWord.parseJson?.word_forms?.noun?.word && (
                       <div>
@@ -308,7 +308,7 @@ export default function WordAnalysis({ initialWordTypes }: WordAnalysisProps) {
                   {selectedWord.parseJson?.examples?.map((example: any, index: number) => (
                     <Card key={index}>
                       <CardHeader className="p-3">
-                        <CardTitle className="text-base font-semibold">{example.context}</CardTitle>
+                        <CardTitle className="text-sm font-semibold">{example.context}</CardTitle>
                       </CardHeader>
                       <CardContent className="p-3 pt-0">
                         <p className="font-serif">

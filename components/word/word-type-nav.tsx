@@ -67,13 +67,13 @@ export function WordTypeNav({ wordTypes, onSelectType }: WordTypeNavProps) {
   return (
     <div className="flex space-x-2 mb-6">
       <Select onValueChange={handleLevel1Change} value={level1.toString()}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] text-sm">
           <SelectValue placeholder="名词家族" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             {level1Types.map((type) => (
-              <SelectItem key={type.id} value={type.id.toString()}>
+              <SelectItem key={type.id} value={type.id.toString()} className="text-sm">
                 {type.name}
               </SelectItem>
             ))}
@@ -86,13 +86,13 @@ export function WordTypeNav({ wordTypes, onSelectType }: WordTypeNavProps) {
         value={level2?.toString() || ''}
         disabled={!level1}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] text-sm">
           <SelectValue placeholder="选择二级分类" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             {level2Types.map((type) => (
-              <SelectItem key={type.id} value={type.id.toString()}>
+              <SelectItem key={type.id} value={type.id.toString()} className="text-sm">
                 {type.name}
               </SelectItem>
             ))}
@@ -105,13 +105,13 @@ export function WordTypeNav({ wordTypes, onSelectType }: WordTypeNavProps) {
         value={level3?.toString() || ''}
         disabled={!level2}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] text-sm">
           <SelectValue placeholder="选择三级分类" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             {level3Types.map((type) => (
-              <SelectItem key={type.id} value={type.id.toString()}>
+              <SelectItem key={type.id} value={type.id.toString()} className="text-sm">
                 {type.name}
               </SelectItem>
             ))}

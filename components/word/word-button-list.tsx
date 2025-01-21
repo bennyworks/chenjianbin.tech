@@ -28,7 +28,7 @@ export function WordButtonList({ words, onSelectWord }: WordButtonListProps) {
             <CarouselItem key={word.id} className="pl-2 basis-auto">
               <Button
                 variant="outline"
-                className="h-9 px-4 rounded-full"
+                className="h-9 px-4 rounded-full text-sm"
                 onClick={() => onSelectWord(word)}
               >
                 {word.word}
