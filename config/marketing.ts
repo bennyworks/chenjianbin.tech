@@ -3,24 +3,28 @@ import { MarketingConfig } from 'types'
 export const marketingConfig: MarketingConfig = {
   mainNav: [
     {
-      title: 'Features',
-      href: '/#features',
+      title: 'AI工具',
+      href: '/tools',
     },
     {
       title: '口语单词',
       href: '/words',
     },
     {
-      title: 'Pricing',
-      href: '/pricing',
+      title: '创新实践',
+      href: '/projects',
     },
     {
-      title: 'Blog',
-      href: '/blog',
+      title: '团队竞赛',
+      href: '/competitions',
     },
     {
-      title: 'Documentation',
-      href: '/docs',
+      title: '教育资讯',
+      href: '/news',
+    },
+    {
+      title: '互动社区',
+      href: '/community',
     },
   ],
 }
