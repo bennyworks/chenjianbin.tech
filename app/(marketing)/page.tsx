@@ -13,12 +13,34 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { ModuleCard, ModuleCardItem } from '@/components/module-card'
 
 const SLIDE_TEXTS = [
   'Learn anytime, anywhere with our online courses.',
   'Study at your own pace with flexible schedules.',
   'Join our global community of learners.',
   'Access quality education from anywhere.',
+]
+
+const cards: ModuleCardItem[] = [
+  {
+    id: 1,
+    title: 'Join My EdSkills To Activate Your Learning',
+    imageUrl: '',
+    color: 'pink',
+  },
+  {
+    id: 2,
+    title: 'Join My EdSkills To Activate Your Teaching',
+    imageUrl: '',
+    color: 'lime',
+  },
+  {
+    id: 3,
+    title: "Support Your Child's Learning Through My skills",
+    imageUrl: '',
+    color: 'purple',
+  },
 ]
 
 export default async function IndexPage() {
@@ -129,7 +151,7 @@ export default async function IndexPage() {
           </Card>
         </div>
       </section>
-      <section id="open-source" className="container py-8 md:py-12 lg:py-24 relative">
+      <section id="students" className="container py-8 md:py-12 lg:py-24 relative">
         {/* Content */}
         <div className="relative flex flex-col items-center justify-center gap-8">
           {/* Icon */}
@@ -174,25 +196,8 @@ export default async function IndexPage() {
     bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_80%,transparent_100%)]"
         ></div>
       </section>
-      <section id="open-source" className="container py-8 md:py-12 lg:py-24">
-        <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
-          <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-            Proudly Open Source
-          </h2>
-          <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            Taxonomy is open source and powered by open source software. <br /> The code is
-            available on{' '}
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="underline underline-offset-4"
-            >
-              GitHub
-            </Link>
-            .{' '}
-          </p>
-        </div>
+      <section id="modules" className="container py-8 md:py-12 lg:py-24 mx-auto md:max-w-[64rem]">
+        <ModuleCard cards={cards} />
       </section>
     </>
   )

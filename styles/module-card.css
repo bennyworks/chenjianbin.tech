@@ -1,0 +1,17 @@
+.clip-path-left {
+  clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+}
+
+.clip-path-right {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 100%);
+}
+
+.clip-path-left-rounded {
+  clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%, 0 10%);
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.clip-path-right-rounded {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 100%, 0 0);
+  border-radius: 0 0 0.5rem 0.5rem;
+}
