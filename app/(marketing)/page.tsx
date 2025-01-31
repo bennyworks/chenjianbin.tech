@@ -48,10 +48,8 @@ export default async function IndexPage() {
     <>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32 relative">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
-          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            通过个性化、互动式学习
-            <br />
-            培养孩子在AI时代的关键技能
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-loose tracking-wider">
+            通过个性化、互动式学习培养孩子在AI时代的关键技能
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             未来教育应注重英语学习、信息筛选、批判性思维与科学精神，帮助孩子在复杂世界中找到真相和正确方向。
@@ -65,17 +63,8 @@ export default async function IndexPage() {
             </Link>
           </div>
         </div>
-        {/* grid background */}
-        <div
-          className="absolute -z-10 inset-0 mx-auto md:h-[600px] md:w-[80rem]
-    bg-[linear-gradient(to_right,#73737320_1px,transparent_1px),linear-gradient(to_bottom,#73737320_1px,transparent_1px)]
-    bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_80%,transparent_100%)]"
-        ></div>
       </section>
-      <section
-        id="features"
-        className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent lg:py-12 relative"
-      >
+      <section id="features" className="container space-y-6 py-8 relative">
         <div className="mx-auto justify-center grid grid-cols-1 md:grid-cols-12 gap-6 md:max-w-[64rem]">
           {/* Middle Section - Two Cards */}
           <Card className="col-span-1 md:col-span-6 relative overflow-hidden h-[400px]">
@@ -103,8 +92,14 @@ export default async function IndexPage() {
           </Card>
           <div className="col-span-1 md:col-span-3 flex flex-col gap-6">
             {/* Top Card */}
-            <Card className="flex-1 bg-[#E8F94C]">
-              <CardContent className="p-6">
+            <Card className="flex-1 bg-[#E8F94C] relative overflow-hidden">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url('/images/bg-green-1.png')`,
+                }}
+              />
+              <CardContent className="p-6 relative z-10">
                 <div className="flex items-center gap-1 mb-2">
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((i) => (
@@ -114,18 +109,24 @@ export default async function IndexPage() {
                       />
                     ))}
                     <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-medium">
-                      40+
+                      3+
                     </div>
                   </div>
                 </div>
-                <h2 className="text-xl font-semibold">Professional Teachers</h2>
+                <h2 className="text-lg pt-4 color-black">具备个性化学习指导实践经验的老师</h2>
               </CardContent>
             </Card>
 
             {/* Bottom Card */}
-            <Card className="flex-1 bg-[#E4DEFF]">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold">Every child deserves the chance to learn</h2>
+            <Card className="flex-1 bg-[#E4DEFF] relative overflow-hidden">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url('/images/bg-purple-1.png')`,
+                }}
+              />
+              <CardContent className="p-6 relative z-10 color-black">
+                <h2 className="text-lg">每个孩子都需要重塑由AI驱动的学习方式和方法</h2>
               </CardContent>
             </Card>
           </div>
@@ -168,7 +169,8 @@ export default async function IndexPage() {
           {/* Text */}
           <div className="text-center">
             <h2 className="text-3xl font-bold">
-              已有<span className="text-red-600">20+</span>位孩子
+              已有<span className="font-extrabold italic text-4xl text-red-500">20 </span>
+              位以上的孩子
             </h2>
             <p className="text-xl mt-4 text-muted-foreground">从该课程中学到提升效率的方法</p>
           </div>
@@ -189,12 +191,6 @@ export default async function IndexPage() {
             ))}
           </div>
         </div>
-        {/* grid background */}
-        <div
-          className="absolute -z-10 inset-0 mx-auto md:h-[400px] md:w-[80rem]
-    bg-[linear-gradient(to_right,#73737320_1px,transparent_1px),linear-gradient(to_bottom,#73737320_1px,transparent_1px)]
-    bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_80%,transparent_100%)]"
-        ></div>
       </section>
       <section id="modules" className="container py-8 md:py-12 lg:py-24 mx-auto md:max-w-[64rem]">
         <ModuleCard cards={cards} />

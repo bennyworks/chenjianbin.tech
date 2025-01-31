@@ -27,16 +27,21 @@ export function ModuleCard({ cards }: ModuleCardProps) {
         {cards.map((card, index) => (
           <Card
             key={card.id}
-            className={`overflow-hidden transition-transform hover:scale-105`}
-            style={{ backgroundColor: moduleColors[card.color] }}
+            className={`overflow-hidden transition-transform hover:scale-105 relative`}
           >
-            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('/images/bg-${card.color}-grid.png')`,
+              }}
+            />
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 relative z-10">
               <h3 className="text-xl font-bold leading-tight pr-8">{card.title}</h3>
               <button className="rounded-full p-2 bg-white hover:bg-white/70 transition-colors">
                 <ArrowRight className="h-5 w-5" />
               </button>
             </CardHeader>
-            <CardContent className="p-2">
+            <CardContent className="p-2 relative z-10">
               <div
                 className={`aspect-[4/3] overflow-hidden rounded-lg ${getImageClasses(index, cards.length)}`}
               >
