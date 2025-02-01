@@ -16,28 +16,28 @@ import {
 import { ModuleCard, ModuleCardItem } from '@/components/module-card'
 
 const SLIDE_TEXTS = [
-  'Learn anytime, anywhere with our online courses.',
-  'Study at your own pace with flexible schedules.',
-  'Join our global community of learners.',
-  'Access quality education from anywhere.',
+  '随时随地参与在线课程学习',
+  '灵活的学习时间，按照自己的节奏学习',
+  '加入我们的全球学习者社区',
+  '随时获取优质教育资源',
 ]
 
 const cards: ModuleCardItem[] = [
   {
     id: 1,
-    title: 'Join My EdSkills To Activate Your Learning',
+    title: '加入 米妮ED，激活你的学习能力',
     imageUrl: '',
     color: 'pink',
   },
   {
     id: 2,
-    title: 'Join My EdSkills To Activate Your Teaching',
+    title: '加入 米妮ED，开启你的教学之旅',
     imageUrl: '',
     color: 'lime',
   },
   {
     id: 3,
-    title: "Support Your Child's Learning Through My skills",
+    title: '通过 米妮ED, 支持孩子的学习成长',
     imageUrl: '',
     color: 'purple',
   },
@@ -46,8 +46,8 @@ const cards: ModuleCardItem[] = [
 export default async function IndexPage() {
   return (
     <>
-      <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32 relative">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
+      <section className="container max-w-[64rem] mx-auto space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32 relative">
+        <div className="flex flex-col items-center gap-4 text-center">
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-loose tracking-wider">
             通过个性化、互动式学习培养孩子在AI时代的关键技能
           </h1>
@@ -64,24 +64,26 @@ export default async function IndexPage() {
           </div>
         </div>
       </section>
-      <section id="features" className="container space-y-6 py-8 relative">
-        <div className="mx-auto justify-center grid grid-cols-1 md:grid-cols-12 gap-6 md:max-w-[64rem]">
+      <section id="features" className="container max-w-[64rem] mx-auto space-y-6 py-8 relative">
+        <div className="justify-center grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
           {/* Middle Section - Two Cards */}
-          <Card className="col-span-1 md:col-span-6 relative overflow-hidden h-[400px]">
+          <Card className="col-span-1 md:col-span-6 relative overflow-hidden">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
                 backgroundImage: `url('/images/bg-use-computer.png')`,
               }}
             />
-            <div className="absolute inset-0 flex items-end justify-end pb-12 pr-12 bg-black/30">
-              <Carousel className="w-[260px]">
+            <div className="absolute inset-0 flex items-start justify-center pt-8">
+              <Carousel className="relative z-10 w-[320px]">
                 <CarouselContent>
                   {SLIDE_TEXTS.map((text, index) => (
                     <CarouselItem key={index}>
-                      <Card className="bg-white/90 backdrop-blur-sm">
-                        <CardContent className="p-4 text-center">
-                          <p className="text-sm font-medium">{text}</p>
+                      <Card className="bg-gray-800/40 backdrop-blur-sm shadow-lg border-none">
+                        <CardContent className="p-4">
+                          <p className="text-md font-medium leading-relaxed text-center text-white">
+                            {text}
+                          </p>
                         </CardContent>
                       </Card>
                     </CarouselItem>
@@ -90,9 +92,9 @@ export default async function IndexPage() {
               </Carousel>
             </div>
           </Card>
-          <div className="col-span-1 md:col-span-3 flex flex-col gap-6">
+          <div className="col-span-1 md:col-span-3 flex flex-col gap-4 md:gap-6">
             {/* Top Card */}
-            <Card className="flex-1 bg-[#E8F94C] relative overflow-hidden">
+            <Card className="flex-1 bg-[#E8F94C] relative overflow-hidden min-h-[180px] md:min-h-[190px]">
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
@@ -118,7 +120,7 @@ export default async function IndexPage() {
             </Card>
 
             {/* Bottom Card */}
-            <Card className="flex-1 bg-[#E4DEFF] relative overflow-hidden">
+            <Card className="flex-1 bg-[#E4DEFF] relative overflow-hidden min-h-[180px] md:min-h-[190px]">
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
@@ -132,27 +134,29 @@ export default async function IndexPage() {
           </div>
 
           {/* Right Section - Background Image Card */}
-          <Card className="col-span-1 md:col-span-3 overflow-hidden h-[400px] relative">
+          <Card className="col-span-1 md:col-span-3 overflow-hidden h-[300px] md:h-[400px] relative">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
                 backgroundImage: `url('/images/bg-course.png')`,
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <CardContent className="relative h-full flex flex-col justify-end p-4">
-              <div className="text-white">
-                <h3 className="font-semibold">Math</h3>
+            <CardContent className="relative p-2 h-full flex flex-col justify-end">
+              <div className="bg-white/70 backdrop-blur-sm p-4 w-full rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">数学</h3>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-200">For Beginner</p>
-                  <div className="text-sm font-medium">12 Weeks</div>
+                  <div className="text-sm font-medium text-gray-600">初学者</div>
+                  <div className="text-sm font-medium text-gray-900">12 周</div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </section>
-      <section id="students" className="container py-8 md:py-12 lg:py-24 relative">
+      <section
+        id="students"
+        className="container max-w-[64rem] mx-auto py-8 md:py-12 lg:py-24 relative"
+      >
         {/* Content */}
         <div className="relative flex flex-col items-center justify-center gap-8">
           {/* Icon */}
@@ -192,7 +196,7 @@ export default async function IndexPage() {
           </div>
         </div>
       </section>
-      <section id="modules" className="container py-8 md:py-12 lg:py-24 mx-auto md:max-w-[64rem]">
+      <section id="modules" className="container max-w-[64rem] mx-auto py-8 md:py-12 lg:py-24">
         <ModuleCard cards={cards} />
       </section>
     </>

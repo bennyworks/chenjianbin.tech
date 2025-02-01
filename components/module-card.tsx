@@ -36,7 +36,7 @@ export function ModuleCard({ cards }: ModuleCardProps) {
               }}
             />
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 relative z-10">
-              <h3 className="text-xl font-bold leading-tight pr-8">{card.title}</h3>
+              <h3 className="text-xl leading-tight pr-8">{card.title}</h3>
               <button className="rounded-full p-2 bg-white hover:bg-white/70 transition-colors">
                 <ArrowRight className="h-5 w-5" />
               </button>
