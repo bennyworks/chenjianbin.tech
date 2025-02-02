@@ -22,16 +22,16 @@ export default function IndexPage() {
   return (
     <>
       <div className="container max-w-[64rem] mx-auto relative">
-        <div className="absolute -left-20 top-20 -z-10">
+        <div className="absolute left-[5%] md:-left-[10%] top-24 md:top-40 -z-10">
           <Image
             src="/images/tag-lime.png"
             alt="Decorative lime tag"
-            width={150}
-            height={150}
+            width={180}
+            height={180}
             className="opacity-100 w-[120px] md:w-[180px] lg:w-[220px] h-auto"
           />
         </div>
-        <div className="absolute -right-20 top-50 -z-10">
+        <div className="absolute right-[5%] md:-right-[10%] top-0 md:top-50 -z-10">
           <Image
             src="/images/tag-purple.png"
             alt="Decorative purple tag"
@@ -41,7 +41,7 @@ export default function IndexPage() {
           />
         </div>
       </div>
-      <section className="container max-w-[64rem] mx-auto space-y-6 py-6 md:py-24">
+      <section className="container max-w-[64rem] mx-auto space-y-6 py-12 md:py-32">
         <div className="flex flex-col items-center gap-4 text-center">
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-normal sm:leading-loose tracking-wider">
             {CONSTANTS.HERO.TITLE}
