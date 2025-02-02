@@ -28,7 +28,7 @@ export default function IndexPage() {
             alt="Decorative lime tag"
             width={150}
             height={150}
-            className="opacity-80 w-[120px] md:w-[180px] lg:w-[220px] h-auto"
+            className="opacity-100 w-[120px] md:w-[180px] lg:w-[220px] h-auto"
           />
         </div>
         <div className="absolute -right-20 top-50 -z-10">
@@ -37,7 +37,7 @@ export default function IndexPage() {
             alt="Decorative purple tag"
             width={150}
             height={150}
-            className="opacity-80 w-[100px] md:w-[150px] lg:w-[200px] h-auto"
+            className="opacity-100 w-[100px] md:w-[150px] lg:w-[200px] h-auto"
           />
         </div>
       </div>
