@@ -43,17 +43,20 @@ export default function IndexPage() {
       </div>
       <section className="container max-w-[64rem] mx-auto space-y-6 py-12 md:py-32">
         <div className="flex flex-col items-center gap-4 text-center">
-          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-normal sm:leading-loose tracking-wider">
+          <h1 className="font-youshe text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-normal sm:leading-loose tracking-wider">
             {CONSTANTS.HERO.TITLE}
           </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          <p className="max-w-[42rem] leading-normal text-muted-foreground font-youshe sm:text-xl sm:leading-8">
             {CONSTANTS.HERO.SUBTITLE}
           </p>
           <Link
             href="/login"
-            className={cn(buttonVariants({ size: 'lg' }), 'bg-red-600 hover:bg-red-700')}
+            className={cn(
+              buttonVariants({ size: 'lg' }),
+              'font-youshe bg-red-600 hover:bg-red-700'
+            )}
           >
-            Get Started
+            开始学习
           </Link>
         </div>
       </section>
@@ -70,17 +73,17 @@ export default function IndexPage() {
         </div>
       </div>
 
-      <section className="container max-w-[64rem] mx-auto py-8">
+      <section className="container font-youshe max-w-[64rem] mx-auto py-8">
         <div className="flex flex-col items-center justify-center gap-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold">
-              已有
+              已有{' '}
               <span className="font-extrabold italic text-4xl text-red-500">
                 {CONSTANTS.STUDENTS.COUNT}{' '}
               </span>
               {CONSTANTS.STUDENTS.TEXT}
             </h2>
-            <p className="text-xl mt-4 text-muted-foreground">{CONSTANTS.STUDENTS.SUBTEXT}</p>
+            <p className="sm:text-xl mt-4 text-muted-foreground">{CONSTANTS.STUDENTS.SUBTEXT}</p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-8">

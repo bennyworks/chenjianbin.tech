@@ -113,3 +113,11 @@
       'calt' 1;
   }
 }
+
+@font-face {
+  font-family: 'YouSheBiaoTiYuan';
+  src: url('../assets/fonts/YouSheBiaoTiYuan-2.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
