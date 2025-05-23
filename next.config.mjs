@@ -1,5 +1,4 @@
 import { withContentlayer } from 'next-contentlayer2'
-
 import './env.mjs'
 
 /** @type {import('next').NextConfig} */
