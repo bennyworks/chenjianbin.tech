@@ -1,104 +1,106 @@
 import Link from 'next/link'
-import Image from 'next/image'
-
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
-const CONSTANTS = {
-  HERO: {
-    TITLE: '通过个性化、互动式学习培养孩子在AI时代的关键技能',
-    SUBTITLE:
-      '未来教育应注重英语学习、信息筛选、批判性思维与科学精神，帮助孩子在复杂世界中找到真相和正确方向。',
+const BLOG_POSTS = [
+  {
+    id: 1,
+    title: '我的技术博客之旅',
+    excerpt: '分享我在技术领域的学习和成长经历，以及我对未来技术发展的思考。',
+    date: '2025-05-20',
+    category: '技术',
   },
-  STUDENTS: {
-    COUNT: 20,
-    TEXT: '位以上的孩子',
-    SUBTEXT: '从该课程中学到提升效率的方法',
+  {
+    id: 2,
+    title: '前端开发最佳实践',
+    excerpt: '探讨现代前端开发中的最佳实践，包括性能优化、代码组织和用户体验设计。',
+    date: '2025-05-15',
+    category: '前端',
   },
-}
+  {
+    id: 3,
+    title: '我的阅读笔记',
+    excerpt: '分享我最近阅读的书籍和文章，以及从中获得的启发和思考。',
+    date: '2025-05-10',
+    category: '阅读',
+  },
+]
 
 export default function IndexPage() {
   return (
     <>
-      <div className="container max-w-[64rem] mx-auto relative">
-        <div className="absolute left-[5%] md:-left-[10%] top-24 md:top-40 -z-10">
-          <Image
-            src="/images/tag-lime.png"
-            alt="Decorative lime tag"
-            width={180}
-            height={180}
-            className="opacity-100 w-[120px] md:w-[180px] lg:w-[220px] h-auto"
-          />
-        </div>
-        <div className="absolute right-[5%] md:-right-[10%] top-0 md:top-50 -z-10">
-          <Image
-            src="/images/tag-purple.png"
-            alt="Decorative purple tag"
-            width={150}
-            height={150}
-            className="opacity-100 w-[100px] md:w-[150px] lg:w-[200px] h-auto"
-          />
-        </div>
-      </div>
-      <section className="container max-w-[64rem] mx-auto space-y-6 py-12 md:py-32">
+      <section className="container max-w-[64rem] mx-auto space-y-6 py-12 md:py-24">
         <div className="flex flex-col items-center gap-4 text-center">
-          <h1 className="font-youshe text-3xl sm:text-5xl md:text-6xl lg:text-7xl leading-normal sm:leading-loose tracking-wider">
-            {CONSTANTS.HERO.TITLE}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tighter">
+            欢迎来到我的个人博客
           </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground font-youshe sm:text-xl sm:leading-8">
-            {CONSTANTS.HERO.SUBTITLE}
+          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+            在这里，我分享我的技术心得、生活感悟和个人思考
           </p>
-          <Link
-            href="/login"
-            className={cn(
-              buttonVariants({ size: 'lg' }),
-              'font-youshe bg-red-600 hover:bg-red-700'
-            )}
-          >
-            开始学习
-          </Link>
+          <div className="flex gap-4">
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ size: 'lg' }),
+                'bg-primary hover:bg-primary/90'
+              )}
+            >
+              登录
+            </Link>
+            <Link
+              href="#blog-posts"
+              className={cn(
+                buttonVariants({ size: 'lg', variant: 'outline' })
+              )}
+            >
+              浏览文章
+            </Link>
+          </div>
         </div>
       </section>
 
-      <div className="container max-w-[64rem] mx-auto relative">
-        <div className="absolute left-2/3 -top-32 -z-10">
-          <Image
-            src="/images/tag-pink.png"
-            alt="Decorative pink tag"
-            width={120}
-            height={120}
-            className="opacity-100 w-[60px] md:w-[80px] lg:w-[100px] h-auto"
-          />
+      <section id="blog-posts" className="container max-w-[64rem] mx-auto py-12">
+        <h2 className="text-3xl font-bold mb-8 text-center">最新文章</h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {BLOG_POSTS.map((post) => (
+            <div key={post.id} className="group relative overflow-hidden rounded-lg border bg-background p-6 shadow-md transition-shadow hover:shadow-lg">
+              <div className="mb-2 text-sm text-muted-foreground">
+                {post.date} · {post.category}
+              </div>
+              <h3 className="text-xl font-bold">{post.title}</h3>
+              <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
+              <Link 
+                href={`#post-${post.id}`} 
+                className="mt-4 inline-block text-primary hover:underline"
+              >
+                阅读更多 →
+              </Link>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
 
-      <section className="container font-youshe max-w-[64rem] mx-auto py-8">
-        <div className="flex flex-col items-center justify-center gap-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold">
-              已有{' '}
-              <span className="font-extrabold italic text-4xl text-red-500">
-                {CONSTANTS.STUDENTS.COUNT}{' '}
-              </span>
-              {CONSTANTS.STUDENTS.TEXT}
-            </h2>
-            <p className="sm:text-xl mt-4 text-muted-foreground">{CONSTANTS.STUDENTS.SUBTEXT}</p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-8">
-            {[...Array(4)].map((_, i) => (
-              <Image
-                key={i}
-                src={`/images/schools/logo-${i + 1}.png`}
-                alt={`孩子所属学校 logo ${i + 1}`}
-                className="object-contain h-16 w-16"
-                width={64}
-                height={64}
-                priority={i === 0}
-              />
-            ))}
-          </div>
+      <section className="container max-w-[64rem] mx-auto py-12 text-center">
+        <h2 className="text-3xl font-bold mb-4">关于我</h2>
+        <p className="max-w-[42rem] mx-auto text-muted-foreground">
+          我是陈剑彬，一名热爱技术和写作的开发者。这个博客是我分享知识、记录成长的地方。
+          欢迎关注我的博客，一起探索技术与生活的无限可能。
+        </p>
+        <div className="mt-6 flex justify-center gap-4">
+          <Link 
+            href="https://github.com/bennyworks" 
+            className={cn(buttonVariants({ variant: 'outline', size: 'sm' }))}
+            target="_blank"
+          >
+            GitHub
+          </Link>
+          <Link 
+            href="#contact" 
+            className={cn(buttonVariants({ variant: 'outline', size: 'sm' }))}
+          >
+            联系我
+          </Link>
         </div>
       </section>
     </>

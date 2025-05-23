@@ -1,9 +1,9 @@
-import { SiteConfig } from 'types'
+import type { SiteConfig } from 'types'
 
 export const siteConfig: SiteConfig = {
-  name: '米妮ED',
+  name: '陈剑彬的博客',
   description:
-    'An open source application built using the new router, server components and everything new in Next.js 13.',
+    '陈剑彬的个人博客网站，分享技术、生活和思考。',
   url: 'https://chenjianbin.tech',
   ogImage: 'https://chenjianbin.tech/og.jpg',
   links: {

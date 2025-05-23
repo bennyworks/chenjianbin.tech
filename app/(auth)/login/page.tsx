@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
@@ -8,8 +8,8 @@ import { UserAuthForm } from '@/components/user-auth-form'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Login',
-  description: 'Login to your account',
+  title: '登录',
+  description: '登录到个人博客后台',
 }
 
 export default function LoginPage() {
@@ -24,23 +24,23 @@ export default function LoginPage() {
       >
         <>
           <Icons.chevronLeft className="mr-2 h-4 w-4" />
-          Back
+          返回首页
         </>
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
           <Icons.chenjianbin className="mx-auto h-6 w-6" />
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">欢迎回来</h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            请输入您的邮箱登录博客后台
           </p>
         </div>
         <Suspense>
           <UserAuthForm />
         </Suspense>
         <p className="px-8 text-center text-sm text-muted-foreground">
-          <Link href="/register" className="hover:text-brand underline underline-offset-4">
-            Don&apos;t have an account? Sign Up
+          <Link href="/" className="hover:text-brand underline underline-offset-4">
+            返回博客首页
           </Link>
         </p>
       </div>

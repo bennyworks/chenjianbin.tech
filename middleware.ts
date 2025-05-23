@@ -6,19 +6,19 @@ export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req })
     const isAuth = !!token
-    const isAuthPage =
+    const isAuthPage = 
       req.nextUrl.pathname.startsWith("/login") ||
       req.nextUrl.pathname.startsWith("/register")
 
     if (isAuthPage) {
       if (isAuth) {
-        return NextResponse.redirect(new URL("/dashboard", req.url))
+        return NextResponse.redirect(new URL("/admin", req.url))
       }
 
       return null
     }
 
-    if (!isAuth) {
+    if (!isAuth && req.nextUrl.pathname.startsWith("/admin")) {
       let from = req.nextUrl.pathname;
       if (req.nextUrl.search) {
         from += req.nextUrl.search;
@@ -32,9 +32,8 @@ export default withAuth(
   {
     callbacks: {
       async authorized() {
-        // This is a work-around for handling redirect on auth pages.
-        // We return true here so that the middleware function above
-        // is always called.
+        // 这是处理身份验证页面重定向的解决方案
+        // 我们在这里返回 true，以便始终调用上面的中间件函数
         return true
       },
     },
@@ -42,5 +41,5 @@ export default withAuth(
 )
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/editor/:path*", "/login", "/register"],
+  matcher: ["/admin/:path*", "/login", "/register"],
 }
