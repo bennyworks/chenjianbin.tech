@@ -8,111 +8,166 @@ export async function addSchedule(schedule: Schedule) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Add schedule:', schedule)
-  // TODO: Implement the logic to add a schedule
-  // await db.schedule.create({
-  //   data: {
-  //     ...schedule,
-  //     userId: user.id,
-  //   },
-  // })
+  try {
+    const result = await db.schedule.create({
+      data: {
+        ...schedule,
+        userId: user.id,
+      },
+    })
+    return result
+  } catch (error) {
+    console.error('Error adding schedule:', error)
+    throw error
+  }
 }
 
 export async function updateSchedule(schedule: Schedule) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Update schedule:', schedule)
-  // TODO: Implement the logic to update a schedule
-  // await db.schedule.update({
-  //   where: { id: schedule.id },
-  //   data: schedule,
-  // })
+  try {
+    const result = await db.schedule.update({
+      where: { id: schedule.id },
+      data: {
+        title: schedule.title,
+        startDate: schedule.startDate,
+        endDate: schedule.endDate,
+        location: schedule.location,
+      },
+    })
+    return result
+  } catch (error) {
+    console.error('Error updating schedule:', error)
+    throw error
+  }
 }
 
 export async function deleteSchedule(scheduleId: string) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Delete schedule:', scheduleId)
-  // TODO: Implement the logic to delete a schedule
-  // await db.schedule.delete({
-  //   where: { id: scheduleId },
-  // })
+  try {
+    await db.schedule.delete({
+      where: { id: scheduleId },
+    })
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting schedule:', error)
+    throw error
+  }
 }
 
 export async function addTimeSlot(scheduleId: string, timeSlot: TimeSlot) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Add time slot:', scheduleId, timeSlot)
-  // TODO: Implement the logic to add a time slot
-  // await db.timeSlot.create({
-  //   data: {
-  //     ...timeSlot,
-  //     scheduleId,
-  //   },
-  // })
+  try {
+    const result = await db.timeSlot.create({
+      data: {
+        title: timeSlot.title,
+        startTime: timeSlot.startTime,
+        endTime: timeSlot.endTime,
+        scheduleId,
+      },
+    })
+    return result
+  } catch (error) {
+    console.error('Error adding time slot:', error)
+    throw error
+  }
 }
 
 export async function updateTimeSlot(scheduleId: string, timeSlot: TimeSlot) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Update time slot:', scheduleId, timeSlot)
-  // TODO: Implement the logic to update a time slot
-  // await db.timeSlot.update({
-  //   where: { id: timeSlot.id },
-  //   data: timeSlot,
-  // })
+  try {
+    const result = await db.timeSlot.update({
+      where: { id: timeSlot.id },
+      data: {
+        title: timeSlot.title,
+        startTime: timeSlot.startTime,
+        endTime: timeSlot.endTime,
+      },
+    })
+    return result
+  } catch (error) {
+    console.error('Error updating time slot:', error)
+    throw error
+  }
 }
 
 export async function deleteTimeSlot(scheduleId: string, timeSlotId: string) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Delete time slot:', scheduleId, timeSlotId)
-  // TODO: Implement the logic to delete a time slot
-  // await db.timeSlot.delete({
-  //   where: { id: timeSlotId },
-  // })
+  try {
+    await db.timeSlot.delete({
+      where: { id: timeSlotId },
+    })
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting time slot:', error)
+    throw error
+  }
 }
 
 export async function addCourse(scheduleId: string, course: Course) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Add course:', scheduleId, course)
-  // TODO: Implement the logic to add a course
-  // await db.course.create({
-  //   data: {
-  //     ...course,
-  //     scheduleId,
-  //   },
-  // })
+  try {
+    const result = await db.course.create({
+      data: {
+        title: course.title,
+        description: course.description,
+        dayOfWeek: course.dayOfWeek,
+        timeSlotId: course.timeSlotId,
+        scheduleId,
+      },
+    })
+    return result
+  } catch (error) {
+    console.error('Error adding course:', error)
+    throw error
+  }
 }
 
 export async function updateCourse(scheduleId: string, course: Course) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Update course:', scheduleId, course)
-  // TODO: Implement the logic to update a course
-  // await db.course.update({
-  //   where: { id: course.id },
-  //   data: course,
-  // })
+  try {
+    const result = await db.course.update({
+      where: { id: course.id },
+      data: {
+        title: course.title,
+        description: course.description,
+        dayOfWeek: course.dayOfWeek,
+        timeSlotId: course.timeSlotId,
+      },
+    })
+    return result
+  } catch (error) {
+    console.error('Error updating course:', error)
+    throw error
+  }
 }
 
 export async function deleteCourse(scheduleId: string, courseId: string) {
   const user = await getCurrentUser()
   if (!user) return
 
-  console.log('Delete course:', scheduleId, courseId)
-  // TODO: Implement the logic to delete a course
-  // await db.course.delete({
-  //   where: { id: courseId },
-  // })
+  try {
+    await db.course.delete({
+      where: { id: courseId },
+    })
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting course:', error)
+    throw error
+  }
 }
 
 export async function importSchedule(scheduleId: string, file: File) {

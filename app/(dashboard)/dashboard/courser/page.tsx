@@ -37,48 +37,22 @@ export default async function Page() {
     },
   })
 
-  const initialSchedule: Schedule = {
-    id: '1',
-    title: '课程表1',
-    startDate: '2024-01-01',
-    endDate: '2024-06-30',
-    location: '教学楼',
-    participant: '',
-    timeSlots: [
-      {
-        id: '1',
-        title: '1',
-        startTime: '08:20',
-        endTime: '09:00',
-      },
-      {
-        id: '2',
-        title: '2',
-        startTime: '09:10',
-        endTime: '09:50',
-      },
-    ],
-    courses: [
-      {
-        id: '1',
-        title: '班会',
-        description: '班级会议',
-        timeSlotId: '1',
-        dayOfWeek: 1,
-      },
-      {
-        id: '2',
-        title: '语文',
-        description: '语文课程',
-        timeSlotId: '2',
-        dayOfWeek: 2,
-      },
-    ],
-  }
+  const schedules = await db.schedule.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      timeSlots: true,
+      courses: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
 
   return (
     <CourseSchedule
-      initialSchedules={[initialSchedule]}
+      initialSchedules={schedules}
       participants={participants}
       onAddSchedule={addSchedule}
       onUpdateSchedule={updateSchedule}

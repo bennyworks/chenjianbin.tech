@@ -15,7 +15,7 @@ import { DeleteCourseDialog } from '@/components/course/delete-course-dialog'
 interface CourseMenuProps {
   course: Course
   onEdit: (course: Course) => void
-  onDelete: (course: Course) => void
+  onDelete: (course: Course) => Promise<void>
 }
 
 export function CourseMenu({ course, onEdit, onDelete }: CourseMenuProps) {
@@ -42,8 +42,7 @@ export function CourseMenu({ course, onEdit, onDelete }: CourseMenuProps) {
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={() => {
-          onDelete(course)
-          setDeleteDialogOpen(false)
+          onDelete(course).then(() => setDeleteDialogOpen(false))
         }}
       />
     </>

@@ -3,14 +3,16 @@ export interface TimeSlot {
   title: string
   startTime: string
   endTime: string
+  scheduleId?: string
 }
 
 export interface Course {
   id: string
   title: string
-  description: string
+  description: string | null
   timeSlotId: string
-  dayOfWeek: number // 0-6, where 0 is Sunday
+  dayOfWeek: number
+  scheduleId?: string
 }
 
 export interface Schedule {
@@ -19,7 +21,6 @@ export interface Schedule {
   startDate: string
   endDate: string
   location: string
-  participant: string
   timeSlots: TimeSlot[]
   courses: Course[]
 }

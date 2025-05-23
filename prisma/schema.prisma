@@ -58,6 +58,7 @@ model User {
   families Family[]
   members  Member[] // 用户可能绑定多个成员
   events   Event[]
+  schedules Schedule[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -175,6 +176,52 @@ model Family {
   // 创建联合唯一索引
   @@unique([name, ownerId])
   @@map(name: "families")
+}
+
+model Schedule {
+  id          String     @id @default(cuid())
+  title       String
+  startDate   String     @map(name: "start_date")
+  endDate     String     @map(name: "end_date")
+  location    String
+  participant String?
+  userId      String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  user        User       @relation(fields: [userId], references: [id])
+  timeSlots   TimeSlot[]
+  courses     Course[]
+
+  @@map(name: "schedules")
+}
+
+model TimeSlot {
+  id        String    @id @default(cuid())
+  title     String
+  startTime String    @map(name: "start_time")
+  endTime   String    @map(name: "end_time")
+  scheduleId String   @map(name: "schedule_id")
+  
+  schedule  Schedule  @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  courses   Course[]
+
+  @@map(name: "time_slots")
+}
+
+model Course {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dayOfWeek   Int
+  scheduleId  String
+  timeSlotId  String
+  
+  schedule    Schedule  @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  timeSlot    TimeSlot  @relation(fields: [timeSlotId], references: [id])
+
+  @@map(name: "courses")
 }
 
 // 单词类型表模型
