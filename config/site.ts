@@ -1,9 +1,9 @@
 import type { SiteConfig } from 'types'
 
 export const siteConfig: SiteConfig = {
-  name: '陈剑彬的博客',
+  name: 'Pulse Analytics',
   description:
-    '陈剑彬的个人博客网站，分享技术、生活和思考。',
+    '模块化的 SaaS 解决方案，帮助用户快速完成数据洞察与业务决策。',
   url: 'https://chenjianbin.tech',
   ogImage: 'https://chenjianbin.tech/og.jpg',
   links: {

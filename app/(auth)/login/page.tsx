@@ -8,8 +8,8 @@ import { UserAuthForm } from '@/components/user-auth-form'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: '登录',
-  description: '登录到个人博客后台',
+  title: '登录 | Pulse Analytics',
+  description: '登录到 Pulse Analytics 平台访问数据分析和舆情监测工具',
 }
 
 export default function LoginPage() {
@@ -30,17 +30,17 @@ export default function LoginPage() {
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
           <Icons.chenjianbin className="mx-auto h-6 w-6" />
-          <h1 className="text-2xl font-semibold tracking-tight">欢迎回来</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Pulse Analytics</h1>
           <p className="text-sm text-muted-foreground">
-            请输入您的邮箱登录博客后台
+            登录您的账户访问数据分析和舆情监测工具
           </p>
         </div>
         <Suspense>
           <UserAuthForm />
         </Suspense>
         <p className="px-8 text-center text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-brand underline underline-offset-4">
-            返回博客首页
+          <Link href="/register" className="hover:text-brand underline underline-offset-4">
+            还没有账户？立即注册
           </Link>
         </p>
       </div>

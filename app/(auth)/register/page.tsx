@@ -8,8 +8,8 @@ import { UserAuthForm } from '@/components/user-auth-form'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: '注册账号',
-  description: '注册一个账号来开始使用博客',
+  title: '注册 | Pulse Analytics',
+  description: '注册 Pulse Analytics 账号体验数据分析和舆情监测工具',
 }
 
 export default function RegisterPage() {
@@ -29,9 +29,9 @@ export default function RegisterPage() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <Icons.chenjianbin className="mx-auto h-6 w-6" />
-            <h1 className="text-2xl font-semibold tracking-tight">创建账号</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Pulse Analytics</h1>
             <p className="text-sm text-muted-foreground">
-              输入您的邮箱以创建账号
+              注册账号开始免费 14 天试用
             </p>
           </div>
           <Suspense>

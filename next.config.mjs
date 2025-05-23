@@ -6,11 +6,15 @@ import './env.mjs'
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['avatars.githubusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+    ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  // Next.js 15 不再需要 serverComponentsExternalPackages 配置
+  // 它现在自动处理外部包
 
   webpack: (config, { dev }) => {
     config.infrastructureLogging = {

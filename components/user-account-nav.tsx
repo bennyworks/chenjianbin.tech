@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { User } from "next-auth"
-import { signOut } from "next-auth/react"
+import type { User } from "next-auth"
+import { signOut } from "@/auth"
 
 import {
   DropdownMenu,
@@ -53,7 +53,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           onSelect={(event) => {
             event.preventDefault()
             signOut({
-              callbackUrl: `${window.location.origin}/login`,
+              redirectTo: `${window.location.origin}/login`,
             })
           }}
         >

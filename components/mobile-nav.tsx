@@ -1,11 +1,12 @@
-import * as React from 'react'
+import type * as React from 'react'
 import Link from 'next/link'
 
-import { MainNavItem } from 'types'
+import type { MainNavItem } from 'types'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import { useLockBody } from '@/hooks/use-lock-body'
 import { Icons } from '@/components/icons'
+import { buttonVariants } from '@/components/ui/button'
 
 interface MobileNavProps {
   items: MainNavItem[]
@@ -23,13 +24,13 @@ export function MobileNav({ items, children }: MobileNavProps) {
     >
       <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
         <Link href="/" className="flex items-center space-x-2">
-          <Icons.chenjianbin />
+          <Icons.chenjianbin className="h-6 w-6" />
           <span className="font-bold">{siteConfig.name}</span>
         </Link>
-        <nav className="grid grid-flow-row auto-rows-max text-sm">
-          {items.map((item, index) => (
+        <nav className="grid grid-flow-row auto-rows-max text-sm gap-2">
+          {items.map((item) => (
             <Link
-              key={index}
+              key={item.href}
               href={item.disabled ? '#' : item.href}
               className={cn(
                 'flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline',
@@ -40,6 +41,20 @@ export function MobileNav({ items, children }: MobileNavProps) {
             </Link>
           ))}
         </nav>
+        <div className="flex flex-col gap-2 mt-2">
+          <Link 
+            href="/login" 
+            className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'w-full')}
+          >
+            登录
+          </Link>
+          <Link 
+            href="/register" 
+            className={cn(buttonVariants({ size: 'sm' }), 'w-full')}
+          >
+            免费注册
+          </Link>
+        </div>
         {children}
       </div>
     </div>

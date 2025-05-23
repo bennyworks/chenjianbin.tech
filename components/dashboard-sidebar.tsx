@@ -1,8 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { User } from 'next-auth'
-import { signOut } from 'next-auth/react'
+import type { User } from 'next-auth'
+import { signOut } from '@/auth'
 import { UserAvatar } from '@/components/user-avatar'
 import { dashboardConfig } from '@/config/dashboard'
 import { siteConfig } from '@/config/site'
@@ -227,7 +227,7 @@ export function DashboardSidebar({ user }: UserAccountNavProps) {
                   onSelect={(event) => {
                     event.preventDefault()
                     signOut({
-                      callbackUrl: `${window.location.origin}/login`,
+                      redirectTo: `${window.location.origin}/login`,
                     })
                   }}
                 >

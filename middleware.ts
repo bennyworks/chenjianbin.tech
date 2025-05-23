@@ -1,44 +1,33 @@
-import { getToken } from "next-auth/jwt"
-import { withAuth } from "next-auth/middleware"
-import { NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
+import { auth } from "./auth"
 
-export default withAuth(
-  async function middleware(req) {
-    const token = await getToken({ req })
-    const isAuth = !!token
-    const isAuthPage = 
-      req.nextUrl.pathname.startsWith("/login") ||
-      req.nextUrl.pathname.startsWith("/register")
+export default async function middleware(req: NextRequest) {
+  const session = await auth({ req })
+  const isAuth = !!session
+  const isAuthPage = 
+    req.nextUrl.pathname.startsWith("/login") ||
+    req.nextUrl.pathname.startsWith("/register")
 
-    if (isAuthPage) {
-      if (isAuth) {
-        return NextResponse.redirect(new URL("/admin", req.url))
-      }
-
-      return null
-    }
-
-    if (!isAuth && req.nextUrl.pathname.startsWith("/admin")) {
-      let from = req.nextUrl.pathname;
-      if (req.nextUrl.search) {
-        from += req.nextUrl.search;
-      }
-
-      return NextResponse.redirect(
-        new URL(`/login?from=${encodeURIComponent(from)}`, req.url)
-      );
-    }
-  },
-  {
-    callbacks: {
-      async authorized() {
-        // 这是处理身份验证页面重定向的解决方案
-        // 我们在这里返回 true，以便始终调用上面的中间件函数
-        return true
-      },
-    },
+  // 如果用户已经登录但访问登录页，重定向到管理页面
+  if (isAuthPage && isAuth) {
+    return NextResponse.redirect(new URL("/admin", req.url))
   }
-)
+
+  // 如果用户未登录但访问需要认证的页面，重定向到登录页
+  if (!isAuth && req.nextUrl.pathname.startsWith("/admin")) {
+    let from = req.nextUrl.pathname;
+    if (req.nextUrl.search) {
+      from += req.nextUrl.search;
+    }
+
+    return NextResponse.redirect(
+      new URL(`/login?from=${encodeURIComponent(from)}`, req.url)
+    );
+  }
+
+  // 其他情况下继续正常访问
+  return NextResponse.next()
+}
 
 export const config = {
   matcher: ["/admin/:path*", "/login", "/register"],

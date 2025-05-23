@@ -3,9 +3,9 @@
 import * as React from 'react'
 import { useSearchParams } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import type * as z from 'zod'
+import { signIn } from '@/auth'
 
 import { cn } from '@/lib/utils'
 import { userAuthSchema } from '@/lib/validations/auth'
@@ -34,26 +34,28 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: FormData) {
     setIsLoading(true)
 
-    const signInResult = await signIn('email', {
-      email: data.email.toLowerCase(),
-      redirect: false,
-      callbackUrl: searchParams?.get('from') || '/dashboard',
-    })
+    try {
+      // NextAuth v5 的 signIn 方法返回值与 v4 不同
+      await signIn('email', {
+        email: data.email.toLowerCase(),
+        redirectTo: searchParams?.get('from') || '/admin',
+      })
 
-    setIsLoading(false)
-
-    if (!signInResult?.ok) {
-      return toast({
-        title: 'Something went wrong.',
-        description: 'Your sign in request failed. Please try again.',
+      // 如果没有抛出错误，则认为发送成功
+      toast({
+        title: '请检查您的邮箱',
+        description: '我们已向您发送登录链接，也请检查垃圾邮件文件夹。',
+      })
+    } catch (error) {
+      // 捕获错误并显示错误消息
+      toast({
+        title: '出现错误',
+        description: '登录请求失败，请重试。',
         variant: 'destructive',
       })
+    } finally {
+      setIsLoading(false)
     }
-
-    return toast({
-      title: 'Check your email',
-      description: 'We sent you a login link. Be sure to check your spam too.',
-    })
   }
 
   return (
@@ -76,9 +78,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             />
             {errors?.email && <p className="px-1 text-xs text-red-600">{errors.email.message}</p>}
           </div>
-          <button className={cn(buttonVariants())} disabled={isLoading}>
+          <button type="submit" className={cn(buttonVariants())} disabled={isLoading}>
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In with Email
+            登录
           </button>
         </div>
       </form>
@@ -94,9 +96,21 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <button
           type="button"
           className={cn(buttonVariants({ variant: 'outline' }))}
-          onClick={() => {
-            setIsGitHubLoading(true)
-            signIn('github')
+          onClick={async () => {
+            try {
+              setIsGitHubLoading(true)
+              await signIn('github', {
+                redirectTo: searchParams?.get('from') || '/admin',
+              })
+            } catch (error) {
+              toast({
+                title: '登录失败',
+                description: '使用 GitHub 登录时出现错误，请重试。',
+                variant: 'destructive',
+              })
+            } finally {
+              setIsGitHubLoading(false)
+            }
           }}
           disabled={isLoading || isGitHubLoading}
         >
@@ -105,7 +119,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           ) : (
             <Icons.gitHub className="mr-2 h-4 w-4" />
           )}{' '}
-          Github
+          GitHub
         </button>
       </div>
     </div>

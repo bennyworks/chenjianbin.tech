@@ -1,30 +1,30 @@
-import { MarketingConfig } from 'types'
+import type { MarketingConfig } from 'types'
 
 export const marketingConfig: MarketingConfig = {
   mainNav: [
     {
-      title: 'AI工具',
-      href: '/tools',
+      title: '产品',
+      href: '/#products',
     },
     {
-      title: '口语单词',
-      href: '/words',
+      title: 'Data-Pulse',
+      href: 'https://data-pulse.chenjianbin.tech',
     },
     {
-      title: '创新实践',
-      href: '/projects',
+      title: 'Biz-Pulse',
+      href: 'https://biz-pulse.chenjianbin.tech',
     },
     {
-      title: '团队竞赛',
-      href: '/competitions',
+      title: '解决方案',
+      href: '/solutions',
     },
     {
-      title: '教育资讯',
-      href: '/news',
+      title: '价格',
+      href: '/pricing',
     },
     {
-      title: '互动社区',
-      href: '/community',
+      title: '文档',
+      href: '/docs',
     },
   ],
 }
