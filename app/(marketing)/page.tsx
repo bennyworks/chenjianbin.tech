@@ -52,21 +52,21 @@ const USER_ROLES = [
 export default function IndexPage() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="container max-w-[64rem] mx-auto space-y-6 py-12 md:py-24">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tighter">
+      {/* Hero Section - 增加留白与视觉层次 */}
+      <section className="container max-w-[64rem] mx-auto py-20 md:py-32 lg:py-40 overflow-hidden">
+        <div className="flex flex-col items-center gap-8 text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 px-4 font-heading">
             Pulse Analytics
           </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          <p className="max-w-[42rem] text-base md:text-lg leading-relaxed text-muted-foreground px-4 mt-2">
             模块化的 SaaS 解决方案，帮助用户快速完成数据洞察与业务决策。
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-5 mt-4 px-4">
             <Link
               href="/login"
               className={cn(
                 buttonVariants({ size: 'lg' }),
-                'bg-primary hover:bg-primary/90'
+                'bg-black hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-full px-8 transition-transform hover:scale-105'
               )}
             >
               立即登录
@@ -74,7 +74,8 @@ export default function IndexPage() {
             <Link
               href="/register"
               className={cn(
-                buttonVariants({ size: 'lg', variant: 'outline' })
+                buttonVariants({ size: 'lg', variant: 'outline' }),
+                'rounded-full px-8 border-2 transition-transform hover:scale-105'
               )}
             >
               免费注册
@@ -83,78 +84,93 @@ export default function IndexPage() {
         </div>
       </section>
 
-      {/* Products Section */}
-      <section id="products" className="container max-w-[64rem] mx-auto py-12 bg-muted/50 rounded-lg">
-        <h2 className="text-3xl font-bold mb-8 text-center">我们的产品</h2>
-        <div className="grid gap-8 md:grid-cols-2">
-          {PRODUCTS.map((product) => (
-            <div key={product.id} className="group relative overflow-hidden rounded-lg border bg-background p-6 shadow-md transition-shadow hover:shadow-lg">
-              <div className="flex items-center mb-4">
-                <div className="mr-4 p-2 bg-primary/10 rounded-lg">
-                  {/* 占位图标 */}
-                  <div className="w-10 h-10 bg-primary/20 rounded-md" />
+      {/* Products Section - 产品展示部分 */}
+      <section id="products" className="py-24 md:py-32 lg:py-40 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+        <div className="container max-w-[64rem] mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-16 text-center tracking-tight font-heading">我们的产品</h2>
+          <div className="grid gap-16 md:gap-24 md:grid-cols-2">
+            {PRODUCTS.map((product) => (
+              <div key={product.id} className="group relative overflow-hidden rounded-xl bg-card p-8 md:p-10 shadow-sm hover:shadow-md transition-all duration-300 border border-border">
+                <div className="flex flex-col space-y-6">
+                  <div className="p-3 bg-muted rounded-lg w-16 h-16 flex items-center justify-center">
+                    {/* 占位图标 */}
+                    <div className="w-10 h-10 bg-primary/10 rounded-md" />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-medium tracking-tight">{product.title}</h3>
+                  <p className="text-base md:text-lg leading-relaxed text-muted-foreground">{product.description}</p>
+                  <ul className="my-6 space-y-3">
+                    {product.features.map((feature, i) => (
+                      <li key={`${product.id}-feature-${i}`} className="flex items-center text-foreground">
+                        <svg className="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="text-sm md:text-base">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-auto pt-4">
+                    <Link 
+                      href={product.url} 
+                      className={cn(
+                        buttonVariants({ variant: 'default' }),
+                        'rounded-md px-4 py-2 text-sm'
+                      )}
+                      target="_blank"
+                    >
+                      访问 {product.title}
+                    </Link>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold">{product.title}</h3>
               </div>
-              <p className="mb-4 text-muted-foreground">{product.description}</p>
-              <ul className="mb-6 space-y-2">
-                {product.features.map((feature, i) => (
-                  <li key={`${product.id}-feature-${i}`} className="flex items-center">
-                    <svg className="w-5 h-5 mr-2 text-primary" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <Link 
-                href={product.url} 
-                className={cn(buttonVariants({ variant: 'default' }))}
-                target="_blank"
-              >
-                访问 {product.title}
-              </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* User Roles Section */}
-      <section className="container max-w-[64rem] mx-auto py-12">
-        <h2 className="text-3xl font-bold mb-8 text-center">适用于不同角色</h2>
-        <div className="grid gap-6 md:grid-cols-3">
-          {USER_ROLES.map((role, i) => (
-            <div key={`role-${i}-${role.title}`} className="p-6 border rounded-lg bg-background">
-              <div className="mb-4 p-2 bg-primary/10 inline-block rounded-lg">
-                {/* 占位图标 */}
-                <div className="w-8 h-8 bg-primary/20 rounded-md" />
+      {/* User Roles Section - 角色展示部分 */}
+      <section className="py-24 md:py-32 bg-background">
+        <div className="container max-w-[64rem] mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-12 text-center tracking-tight font-heading">适用于不同角色</h2>
+          <div className="grid gap-8 md:gap-12 md:grid-cols-3">
+            {USER_ROLES.map((role, i) => (
+              <div key={`role-${i}-${role.title}`} className="flex flex-col p-6 rounded-lg bg-card border border-border shadow-sm hover:shadow transition-all duration-300">
+                <div className="mb-4 p-2 bg-muted rounded-md w-12 h-12 flex items-center justify-center">
+                  {/* 占位图标 */}
+                  <div className="w-8 h-8 bg-primary/10 rounded-md" />
+                </div>
+                <h3 className="text-lg md:text-xl font-medium mb-2">{role.title}</h3>
+                <p className="text-sm md:text-base text-muted-foreground">{role.description}</p>
               </div>
-              <h3 className="text-xl font-bold mb-2">{role.title}</h3>
-              <p className="text-muted-foreground">{role.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="container max-w-[64rem] mx-auto py-12 text-center bg-primary/5 rounded-lg">
-        <h2 className="text-3xl font-bold mb-4">开始使用 Pulse Analytics</h2>
-        <p className="max-w-[42rem] mx-auto text-muted-foreground mb-6">
-          立即注册并体验我们的数据分析和舆情监测工具。我们提供 14 天免费试用，无需信用卡。
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link 
-            href="/register" 
-            className={cn(buttonVariants({ size: 'lg' }))}
-          >
-            免费注册
-          </Link>
-          <Link 
-            href="#contact" 
-            className={cn(buttonVariants({ size: 'lg', variant: 'outline' }))}
-          >
-            联系销售
-          </Link>
+      {/* CTA Section - 号召区部分 */}
+      <section className="py-24 md:py-32 bg-muted/50">
+        <div className="container max-w-[64rem] mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6 tracking-tight font-heading">开始使用 Pulse Analytics</h2>
+          <p className="max-w-[42rem] mx-auto text-muted-foreground text-base md:text-lg leading-relaxed mb-8">
+            立即注册并体验我们的数据分析和舆情监测工具。我们提供 14 天免费试用，无需信用卡。
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+            <Link 
+              href="/register" 
+              className={cn(
+                buttonVariants({ size: 'lg' })
+              )}
+            >
+              免费注册
+            </Link>
+            <Link 
+              href="#contact" 
+              className={cn(
+                buttonVariants({ size: 'lg', variant: 'outline' })
+              )}
+            >
+              联系销售
+            </Link>
+          </div>
         </div>
       </section>
     </>

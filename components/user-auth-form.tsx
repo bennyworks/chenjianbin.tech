@@ -5,11 +5,11 @@ import { useSearchParams } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import type { z } from 'zod'
 
 import { cn } from '@/lib/utils'
 import { userAuthSchema } from '@/lib/validations/auth'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
@@ -76,10 +76,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             />
             {errors?.email && <p className="px-1 text-xs text-red-600">{errors.email.message}</p>}
           </div>
-          <button className={cn(buttonVariants())} disabled={isLoading}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In with Email
-          </button>
+            使用邮箱登录
+          </Button>
         </div>
       </form>
       <div className="relative">
@@ -91,9 +91,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         </div>
       </div>
       <div className="grid gap-2">
-        <button
+        <Button
           type="button"
-          className={cn(buttonVariants({ variant: 'outline' }))}
+          variant="outline"
           onClick={() => {
             setIsGitHubLoading(true)
             signIn('github')
@@ -104,9 +104,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Icons.gitHub className="mr-2 h-4 w-4" />
-          )}{' '}
-          Github
-        </button>
+          )}
+          GitHub
+        </Button>
       </div>
     </div>
   )
