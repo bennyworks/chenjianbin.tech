@@ -6,9 +6,8 @@ export const env = createEnv({
     // This is optional because it's only used in development.
     // See https://next-auth.js.org/deployment.
     AUTH_SECRET: z.string().min(1),
-    GITHUB_CLIENT_ID: z.string().min(1),
-    GITHUB_CLIENT_SECRET: z.string().min(1),
-    GITHUB_ACCESS_TOKEN: z.string().min(1),
+    AUTH_GITHUB_ID: z.string().min(1),
+    AUTH_GITHUB_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     DEEPSEEK_API_KEY: z.string().min(1),
     SMTP_FROM: z.string().min(1),
@@ -24,9 +23,8 @@ export const env = createEnv({
   },
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
-    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-    GITHUB_ACCESS_TOKEN: process.env.GITHUB_ACCESS_TOKEN,
+    AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
+    AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
     DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
     SMTP_FROM: process.env.SMTP_FROM,

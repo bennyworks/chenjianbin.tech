@@ -11,7 +11,7 @@ export default auth((req) => {
 
   if (isAuthPage) {
     if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/admin', req.url))
+      return NextResponse.redirect(new URL('/dashboard', req.url))
     }
 
     return null
@@ -28,5 +28,5 @@ export default auth((req) => {
 })
 
 export const config = {
-  matcher: ['/admin/:path*', '/login', '/register'],
+  matcher: ['/dashboard/:path*', '/login', '/register'],
 }
