@@ -1,258 +1,78 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+ 
 generator client {
   provider = "prisma-client-js"
 }
-
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+ 
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
+ 
 model Account {
-  id                String   @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?  @db.Text
+  id_token          String?
   session_state     String?
-  createdAt         DateTime @default(now()) @map(name: "created_at")
-  updatedAt         DateTime @default(now()) @map(name: "updated_at")
-
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map(name: "accounts")
+ 
+  @@id([provider, providerAccountId])
 }
-
+ 
 model Session {
-  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map(name: "sessions")
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-
-  accounts Account[]
-  sessions Session[]
-  Post     Post[]
-  families Family[]
-  members  Member[] // 用户可能绑定多个成员
-  events   Event[]
-  schedules Schedule[]
-
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
-
-  @@map(name: "users")
-}
-
+ 
 model VerificationToken {
   identifier String
-  token      String   @unique
+  token      String
   expires    DateTime
-
-  @@unique([identifier, token])
-  @@map(name: "verification_tokens")
+ 
+  @@id([identifier, token])
 }
-
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   Json?
-  published Boolean  @default(false)
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-  authorId  String
-
-  author User @relation(fields: [authorId], references: [id])
-
-  @@map(name: "posts")
-}
-
-enum EventType {
-  None     @map("无")
-  Interest @map("兴趣")
-  Course   @map("课程")
-  Activity @map("活动")
-  Work     @map("工作")
-  Life     @map("生活")
-}
-
-enum RepeatType {
-  NoRepeat @map("不重复")
-  Daily    @map("每天")
-  Weekly   @map("每周")
-  Monthly  @map("每月")
-  Yearly   @map("每年")
-}
-
-enum MemberType {
-  Child  @map("孩子")
-  Parent @map("父母")
-}
-
-enum LifeStage {
-  PrimaryStudent @map("小学生")
-  JuniorStudent  @map("初中生")
-  SeniorStudent  @map("高中生")
-  Parent         @map("父母")
-}
-
-model Event {
-  id        String     @id @default(cuid())
-  title     String
-  type      EventType  @default(None)
-  location  String?
-  repeat    RepeatType @default(NoRepeat)
-  startTime DateTime  @map(name: "start_time")
-  endTime   DateTime  @map(name: "end_time")
-  formData  Json
-  memberId  String
-  userId    String
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-
-  user   User  @relation(fields: [userId], references: [id])
-  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
-  @@map(name: "events")
-}
-
-model Member {
-  id          String      @id @default(cuid())
-  name        String
-  type        MemberType
-  birthday    DateTime
-  age         Int?
-  lifeStage LifeStage @map(name: "life_stage")
-  familyId    String
-  userId      String
-  events      Event[]
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-  user   User  @relation(fields: [userId], references: [id])
-  family Family @relation(fields: [familyId], references: [id])
-
-  @@map(name: "members")
-}
-
-model Family {
-  id      String   @id @default(cuid())
-  name    String
-  ownerId String
-  members Member[]
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-  user User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
-  // 创建联合唯一索引
-  @@unique([name, ownerId])
-  @@map(name: "families")
-}
-
-model Schedule {
-  id          String     @id @default(cuid())
-  title       String
-  startDate   String     @map(name: "start_date")
-  endDate     String     @map(name: "end_date")
-  location    String
-  participant String?
-  userId      String
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-  user        User       @relation(fields: [userId], references: [id])
-  timeSlots   TimeSlot[]
-  courses     Course[]
-
-  @@map(name: "schedules")
-}
-
-model TimeSlot {
-  id        String    @id @default(cuid())
-  title     String
-  startTime String    @map(name: "start_time")
-  endTime   String    @map(name: "end_time")
-  scheduleId String   @map(name: "schedule_id")
-  
-  schedule  Schedule  @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  courses   Course[]
-
-  @@map(name: "time_slots")
-}
-
-model Course {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  dayOfWeek   Int
-  scheduleId  String
-  timeSlotId  String
-  
-  schedule    Schedule  @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  timeSlot    TimeSlot  @relation(fields: [timeSlotId], references: [id])
-
-  @@map(name: "courses")
-}
-
-// 单词类型表模型
-model WordType {
-  id       Int       @id @default(autoincrement())
-  name     String
-  parentTypeId Int?   @map(name: "parent_type_id")   // 外键关联自身id字段，表示父类型
-  description String?
-  words    Word[]    @relation("WordTypeRelation")    // 与单词表的关联关系，一对多
-  @@index([parentTypeId])
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-
-  @@map(name: "word_types")
-}
-
-// 单词表模型
-model Word {
-  id          Int       @id @default(autoincrement())
-  typeId      Int       @map(name: "type_id") 
-  word        String
-  parseJson   Json?     @map(name: "parse_json")
-  relatedImage String?  @map(name: "related_image") // 假设存储图片的 URL 地址
-  wordType    WordType  @relation(name: "WordTypeRelation", fields: [typeId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-
-  @@map(name: "words")
-
+ 
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([userId, credentialID])
 }

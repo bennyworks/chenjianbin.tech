@@ -1,9 +1,10 @@
-import { getServerSession } from "next-auth/next"
-import { z } from "zod"
+import { z } from 'zod'
 
-import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
-import { userNameSchema } from "@/lib/validations/user"
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { userNameSchema } from '@/lib/validations/user'
+
+import { auth } from '@/auth'
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -11,16 +12,13 @@ const routeContextSchema = z.object({
   }),
 })
 
-export async function PATCH(
-  req: Request,
-  context: z.infer<typeof routeContextSchema>
-) {
+export async function PATCH(req: Request, context: z.infer<typeof routeContextSchema>) {
   try {
     // Validate the route context.
     const { params } = routeContextSchema.parse(context)
 
     // Ensure user is authentication and has access to this user.
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session?.user || params.userId !== session?.user.id) {
       return new Response(null, { status: 403 })
     }

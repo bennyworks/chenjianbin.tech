@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { UserNav } from '@/components/user-nav'
 
 export const metadata: Metadata = {
   title: '博客管理',
@@ -18,7 +17,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-bold">陈剑彬的博客后台</h1>
           </div>
-          <UserNav />
         </div>
       </header>
       <main className="flex-1">{children}</main>

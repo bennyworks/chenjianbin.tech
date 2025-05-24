@@ -1,34 +1,32 @@
-import { NextResponse, type NextRequest } from "next/server"
-import { auth } from "./auth"
+import { NextResponse } from 'next/server'
+import authConfig from './auth.config'
+import NextAuth from 'next-auth'
 
-export default async function middleware(req: NextRequest) {
-  const session = await auth({ req })
-  const isAuth = !!session
-  const isAuthPage = 
-    req.nextUrl.pathname.startsWith("/login") ||
-    req.nextUrl.pathname.startsWith("/register")
+const { auth } = NextAuth(authConfig)
+export default auth((req) => {
+  const { nextUrl } = req
+  const isAuthenticated = !!req.auth
+  const isAuthPage =
+    nextUrl.pathname.startsWith('/login') || nextUrl.pathname.startsWith('/register')
 
-  // 如果用户已经登录但访问登录页，重定向到管理页面
-  if (isAuthPage && isAuth) {
-    return NextResponse.redirect(new URL("/admin", req.url))
-  }
-
-  // 如果用户未登录但访问需要认证的页面，重定向到登录页
-  if (!isAuth && req.nextUrl.pathname.startsWith("/admin")) {
-    let from = req.nextUrl.pathname;
-    if (req.nextUrl.search) {
-      from += req.nextUrl.search;
+  if (isAuthPage) {
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/admin', req.url))
     }
 
-    return NextResponse.redirect(
-      new URL(`/login?from=${encodeURIComponent(from)}`, req.url)
-    );
+    return null
   }
 
-  // 其他情况下继续正常访问
-  return NextResponse.next()
-}
+  if (!isAuthenticated) {
+    let from = req.nextUrl.pathname
+    if (req.nextUrl.search) {
+      from += req.nextUrl.search
+    }
+
+    return NextResponse.redirect(new URL(`/login?from=${encodeURIComponent(from)}`, req.url))
+  }
+})
 
 export const config = {
-  matcher: ["/admin/:path*", "/login", "/register"],
+  matcher: ['/admin/:path*', '/login', '/register'],
 }
