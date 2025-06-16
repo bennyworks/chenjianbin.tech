@@ -45,22 +45,13 @@ export function MainNav({ items, children }: MainNavProps) {
           </nav>
         ) : null}
       </div>
-      
+
       <div className="hidden md:flex items-center gap-4">
-        <Link 
-          href="/login" 
-          className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
-        >
+        <Link href="/login" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
           登录
         </Link>
-        <Link 
-          href="/register" 
-          className={cn(buttonVariants({ size: 'sm' }))}
-        >
-          免费注册
-        </Link>
       </div>
-      
+
       <button
         type="button"
         className="flex items-center space-x-2 md:hidden"
