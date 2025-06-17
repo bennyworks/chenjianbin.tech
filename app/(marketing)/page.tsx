@@ -7,9 +7,8 @@ import { buttonVariants } from '@/components/ui/button'
 export default function IndexPage() {
   return (
     <>
-      {/* Hero Section - 增加留白与视觉层次 */}
-      <section className="container max-w-[64rem] mx-auto py-20 md:py-32 lg:py-40 overflow-hidden">
-        <div className="flex flex-col items-center gap-8 text-center">
+      <section className="container flex items-center justify-center min-h-[calc(100vh-10rem)] max-w-[64rem] mx-auto overflow-hidden">
+        <div className="flex flex-col items-center gap-8 text-center py-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 px-4 font-heading">
             Pulse Analytics
           </h1>
