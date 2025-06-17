@@ -12,10 +12,12 @@ const routeContextSchema = z.object({
   }),
 })
 
-export async function PATCH(req: Request, context: z.infer<typeof routeContextSchema>) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { userId: string } }
+) {
   try {
-    // Validate the route context.
-    const { params } = routeContextSchema.parse(context)
+    // 参数已经通过路由系统验证
 
     // Ensure user is authentication and has access to this user.
     const session = await auth()
