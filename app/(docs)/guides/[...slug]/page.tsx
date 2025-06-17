@@ -15,14 +15,22 @@ import { env } from "@/env.mjs"
 import { absoluteUrl, cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
-interface GuidePageProps {
-  params: {
-    slug: string[]
-  }
+// 定义页面属性接口
+type PageProps = {
+  params: Promise<any>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+interface GuidePageProps extends PageProps {
+  params: Promise<{
+    slug: string[];
+  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 async function getGuideFromParams(params: GuidePageProps["params"]) {
-  const slug = params?.slug?.join("/")
+  const resolvedParams = await params
+  const slug = resolvedParams?.slug?.join("/")
   const guide = allGuides.find((guide) => guide.slugAsParams === slug)
 
   if (!guide) {
@@ -74,10 +82,8 @@ export async function generateMetadata({
   }
 }
 
-export async function generateStaticParams(): Promise<
-  GuidePageProps["params"][]
-> {
-  return allGuides.map((guide) => ({
+export async function generateStaticParams(): Promise<Promise<{ slug: string[] }>[]> {
+  return allGuides.map((guide) => Promise.resolve({
     slug: guide.slugAsParams.split("/"),
   }))
 }
