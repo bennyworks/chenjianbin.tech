@@ -13,6 +13,7 @@ import { Metadata } from 'next'
 import { env } from '@/env.mjs'
 import { absoluteUrl } from '@/lib/utils'
 
+// 定义文档页面的属性接口
 interface DocPageProps {
   params: {
     slug: string[]

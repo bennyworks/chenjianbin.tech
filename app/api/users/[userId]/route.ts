@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
+import { prisma } from '@/lib/db'
 import { userNameSchema } from '@/lib/validations/user'
 
 import { auth } from '@/auth'
@@ -28,7 +28,7 @@ export async function PATCH(req: Request, context: z.infer<typeof routeContextSc
     const payload = userNameSchema.parse(body)
 
     // Update the user.
-    await db.user.update({
+    await prisma.user.update({
       where: {
         id: session.user.id,
       },
