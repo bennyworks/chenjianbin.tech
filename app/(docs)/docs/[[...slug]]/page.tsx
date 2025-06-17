@@ -17,6 +17,7 @@ interface DocPageProps {
   params: {
     slug: string[]
   }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
 async function getDocFromParams(params: DocPageProps['params']) {
