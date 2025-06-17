@@ -14,15 +14,20 @@ import { env } from '@/env.mjs'
 import { absoluteUrl } from '@/lib/utils'
 
 // 定义文档页面的属性接口
-interface DocPageProps {
-  params: {
-    slug: string[]
-  }
-  searchParams?: { [key: string]: string | string[] | undefined }
+type PageProps = {
+  params: Promise<any>;
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+interface DocPageProps extends PageProps {
+  params: Promise<{
+    slug: string[];
+  }>;
 }
 
 async function getDocFromParams(params: DocPageProps['params']) {
-  const slug = params?.slug?.join('/') || ''
+  const resolvedParams = await params
+  const slug = resolvedParams?.slug?.join('/') || ''
   const doc = allDocs.find((doc) => doc.slugAsParams === slug)
 
   if (!doc) {
@@ -72,8 +77,8 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
   }
 }
 
-export async function generateStaticParams(): Promise<DocPageProps['params'][]> {
-  return allDocs.map((doc) => ({
+export async function generateStaticParams(): Promise<Promise<{ slug: string[] }>[]> {
+  return allDocs.map((doc) => Promise.resolve({
     slug: doc.slugAsParams.split('/'),
   }))
 }
