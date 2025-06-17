@@ -16,13 +16,14 @@ import { absoluteUrl } from '@/lib/utils'
 // 定义文档页面的属性接口
 type PageProps = {
   params: Promise<any>;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 interface DocPageProps extends PageProps {
   params: Promise<{
     slug: string[];
   }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 async function getDocFromParams(params: DocPageProps['params']) {
