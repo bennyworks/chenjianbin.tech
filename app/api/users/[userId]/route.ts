@@ -6,22 +6,13 @@ import { userNameSchema } from '@/lib/validations/user'
 
 import { auth } from '@/auth'
 
-const routeContextSchema = z.object({
-  params: z.object({
-    userId: z.string(),
-  }),
-})
-
-export async function PATCH(
-  req: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    // 参数已经通过路由系统验证
+    const userId = (await params).userId
 
     // Ensure user is authentication and has access to this user.
     const session = await auth()
-    if (!session?.user || params.userId !== session?.user.id) {
+    if (!session?.user || userId !== session?.user.id) {
       return new Response(null, { status: 403 })
     }
 
@@ -32,7 +23,7 @@ export async function PATCH(
     // Update the user.
     await prisma.user.update({
       where: {
-        id: session.user.id,
+        id: userId,
       },
       data: {
         name: payload.name,
