@@ -5,21 +5,26 @@ import authConfig from './auth.config'
 import GitHub from 'next-auth/providers/github'
 import Email from 'next-auth/providers/email'
 import { createTransport } from 'nodemailer'
+import { NodemailerConfig } from '@auth/core/providers/nodemailer'
 
 type Theme = {
   brandColor?: string
   buttonText?: string
 }
 
-async function sendVerificationRequest(params: {
+// 使用 NextAuth 期望的参数类型
+type SendVerificationRequestParams = {
   identifier: string
   url: string
-  provider: { server: any; from: string }
-  token: string
   expires: Date
-  theme?: Theme
-  request?: Request
-}) {
+  provider: NodemailerConfig
+  token: string
+  theme: Theme
+  request: Request
+}
+
+// 定义函数并使用类型断言
+async function sendVerificationRequest(params: SendVerificationRequestParams) {
   const { identifier, url, provider, theme = {} } = params
   const { host } = new URL(url)
   // NOTE: You are not required to use `nodemailer`, use whatever you want.
@@ -113,14 +118,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Email({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        port: process.env.EMAIL_SERVER_PORT ? parseInt(process.env.EMAIL_SERVER_PORT, 10) : undefined,
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
-      sendVerificationRequest,
+      sendVerificationRequest: sendVerificationRequest as any,
     }),
   ],
 })
