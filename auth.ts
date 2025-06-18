@@ -31,7 +31,8 @@ async function sendVerificationRequest(params: {
     text: text({ url, host }),
     html: html({ url, host, theme }),
   })
-  const failed = result.rejected.concat(result.pending).filter(Boolean)
+  // 在新版本的 Nodemailer 中，SentMessageInfo 可能没有 pending 属性
+  const failed = result.rejected ? result.rejected.filter(Boolean) : []
   if (failed.length) {
     throw new Error(`Email(s) (${failed.join(', ')}) could not be sent`)
   }
