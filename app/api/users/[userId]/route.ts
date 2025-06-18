@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { userNameSchema } from '@/lib/validations/user'
 
