@@ -21,6 +21,15 @@ const nextConfig = {
     }
     return config
   },
+  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: '/:path*',
+        destination: '/:path*',
+      },
+    ];
+  },
 }
 
 export default withContentlayer(nextConfig)

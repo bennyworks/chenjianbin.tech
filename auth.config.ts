@@ -55,8 +55,9 @@ export default {
             httpOnly: true,
             sameSite: 'lax',
             path: '/',
-            secure: false
+            secure: false,
             // 开发环境不设置domain
+            domain: '.p.local'
           }
         },
       },
