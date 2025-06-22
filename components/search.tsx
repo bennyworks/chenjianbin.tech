@@ -1,10 +1,10 @@
 "use client"
 
 import * as React from "react"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
 
 interface DocsSearchProps extends React.HTMLAttributes<HTMLFormElement> {}
 
@@ -12,9 +12,8 @@ export function DocsSearch({ className, ...props }: DocsSearchProps) {
   function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
 
-    return toast({
-      title: "Not implemented",
-      description: "We're still working on the search.",
+    return toast.info('搜索功能开发中', {
+      description: '我们正在完善搜索功能。'
     })
   }
 

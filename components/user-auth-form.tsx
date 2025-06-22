@@ -6,13 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import type { z } from 'zod'
+import { toast } from 'sonner'
 
 import { cn } from '@/lib/utils'
 import { userAuthSchema } from '@/lib/validations/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { toast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -43,16 +43,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(false)
 
     if (!signInResult?.ok) {
-      return toast({
-        title: 'Something went wrong.',
-        description: 'Your sign in request failed. Please try again.',
-        variant: 'destructive',
-      })
+      return toast.error('登录请求失败，请重试。')
     }
 
-    return toast({
-      title: 'Check your email',
-      description: 'We sent you a login link. Be sure to check your spam too.',
+    return toast.success('请检查您的邮箱', {
+      description: '我们已发送登录链接，请同时检查垃圾邮件文件夹。'
     })
   }
 
