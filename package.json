@@ -19,7 +19,7 @@
     ]
   },
   "scripts": {
-    "dev": "next dev -p 3000 -H p.local",
+    "dev": "next dev",
     "build": "prisma migrate deploy && contentlayer2 build && next build",
     "start": "next start",
     "lint": "next lint",

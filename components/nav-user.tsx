@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/sidebar"
 import { CaretSortIcon, ComponentPlaceholderIcon } from "@radix-ui/react-icons"
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export function NavUser({
   user,
@@ -40,6 +41,21 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    try {
+      // 直接使用 NextAuth 的 signOut
+      await signOut({
+        callbackUrl: '/login',
+        redirect: true
+      })
+    } catch (error) {
+      console.error('登出时发生错误:', error)
+      // 确保用户被重定向到登录页面
+      router.push('/login')
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -102,7 +118,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem onClick={handleSignOut}>
               <LogOut />
               Log out
             </DropdownMenuItem>

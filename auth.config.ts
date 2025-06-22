@@ -33,6 +33,7 @@ export default {
   },
   pages: {
     signIn: '/login',
+    signOut: '/', // 添加登出页面配置
   },
   // 配置cookies以允许在父域名及其子域名之间共享
   cookies: process.env.NODE_ENV === 'production' 
@@ -47,6 +48,56 @@ export default {
             domain: '.chenjianbin.tech'
           }
         },
+        callbackUrl: {
+          name: `next-auth.callback-url`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.chenjianbin.tech'
+          }
+        },
+        csrfToken: {
+          name: `next-auth.csrf-token`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.chenjianbin.tech'
+          }
+        },
+        pkceCodeVerifier: {
+          name: `next-auth.pkce.code_verifier`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.chenjianbin.tech'
+          }
+        },
+        state: {
+          name: `next-auth.state`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.chenjianbin.tech'
+          }
+        },
+        nonce: {
+          name: `next-auth.nonce`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.chenjianbin.tech'
+          }
+        }
       }
     : {
         sessionToken: {
@@ -56,9 +107,58 @@ export default {
             sameSite: 'lax',
             path: '/',
             secure: false,
-            // 开发环境不设置domain
-            domain: '.p.local'
+            //domain: '.p.local'
           }
         },
+        callbackUrl: {
+          name: `next-auth.callback-url`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: false,
+            //domain: '.p.local'
+          }
+        },
+        csrfToken: {
+          name: `next-auth.csrf-token`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: false,
+            //domain: '.p.local'
+          }
+        },
+        pkceCodeVerifier: {
+          name: `next-auth.pkce.code_verifier`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: false,
+            //domain: '.p.local'
+          }
+        },
+        state: {
+          name: `next-auth.state`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: false,
+            //domain: '.p.local'
+          }
+        },
+        nonce: {
+          name: `next-auth.nonce`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: false,
+            //domain: '.p.local'
+          }
+        }
       },
 } satisfies NextAuthConfig
