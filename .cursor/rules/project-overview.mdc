@@ -1,0 +1,208 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 陈建彬个人网站项目规则
+
+## 项目概述
+
+这是陈建彬的个人网站（chenjianbin.tech），一个现代化的全栈Web应用，用于承载个人知识文章和效率工具。该网站采用模块化设计，提供多种功能服务。
+
+## 网站核心模块设计
+
+### 1. 首页（信息门户）
+- **动态知识墙**：瀑布流展示最新/热门/精选文章
+- **工具展示区**：6个核心效率工具入口卡片（带使用统计）
+- **个人数字名片**：技能树可视化 + 在线状态指示器
+- **智能搜索栏**：支持文章/工具跨库检索（类似Algolia）
+- **无密码登录**：邮箱魔法链接 + GitHub OAuth
+
+主页面文件：[app/(marketing)/page.tsx](mdc:app/(marketing)/page.tsx)
+
+### 2. 效率工具集
+- **Data-Pulse**：基于 LLM 的数据分析工具（支持 CSV/数据库连接、智能报表生成）
+- 工具配置文件：[config/dashboard.ts](mdc:config/dashboard.ts)
+
+### 3. 知识库系统
+- **文档管理**：基于 Contentlayer 的 MDX 文档系统
+- **文章分类**：英语学习、技术文档、指南等
+- **内容配置**：[contentlayer.config.js](mdc:contentlayer.config.js)
+- **文档配置**：[config/docs.ts](mdc:config/docs.ts)
+
+### 4. 个人后台（控制中心）
+- **数据仪表盘**：知识库热力图/工具使用频率分析
+- **用户管理**：基于 NextAuth.js 的认证系统
+- **订阅管理**：集成 Stripe 支付系统
+
+## 用户旅程
+
+1. **登录/注册**：通过官网（chenjianbin.tech）完成认证
+2. **应用切换**：从个人网站导航进入 Data-Pulse（data-pulse.chenjianbin.tech）
+3. **跨域认证**：通过共享 cookie 实现子域名间的无缝切换
+
+## 技术架构
+
+### 前端架构
+- **框架**：Next.js 15.1.8 (App Router) + TypeScript
+- **状态管理**：React Hook Form + Zod 验证
+- **UI库**：Shadcn UI + Tailwind CSS + Radix UI
+- **样式**：Tailwind CSS + CSS Variables
+- **图标**：Lucide React + Radix Icons
+
+关键配置文件：
+- [package.json](mdc:package.json) - 项目依赖管理
+- [tailwind.config.ts](mdc:tailwind.config.ts) - 样式配置
+- [components.json](mdc:components.json) - Shadcn UI 配置
+
+### 后端服务
+- **认证系统**：NextAuth.js v5 (Beta)
+- **数据库**：PostgreSQL + Prisma ORM
+- **支付系统**：Stripe 集成
+- **内容管理**：Contentlayer2 + MDX
+
+核心配置文件：
+- [auth.config.ts](mdc:auth.config.ts) - 认证配置
+- [auth.ts](mdc:auth.ts) - NextAuth 主配置
+- [prisma/schema.prisma](mdc:prisma/schema.prisma) - 数据库模式
+
+### 部署架构
+- **主域名**：chenjianbin.tech（个人网站）
+- **子域名**：data-pulse.chenjianbin.tech（数据分析工具）
+- **跨域认证**：通过 `.chenjianbin.tech` 域名共享 cookie
+
+## 项目结构
+
+### 路由结构
+- `app/(marketing)/` - 营销页面（首页）
+- `app/(auth)/` - 认证页面（登录/注册）
+- `app/(docs)/` - 文档系统
+- `app/dashboard/` - 个人后台
+- `app/api/` - API 路由
+
+### 核心组件
+- `components/ui/` - Shadcn UI 组件库
+- `components/` - 自定义业务组件
+- `config/` - 配置文件
+- `lib/` - 工具函数库
+- `hooks/` - 自定义 React Hooks
+
+### 内容管理
+- `content/docs/` - 文档内容（MDX）
+- `content/guides/` - 指南内容（MDX）
+- `public/images/` - 静态资源
+
+## 开发规范
+
+### 代码风格
+- TypeScript 严格模式
+- ESLint + Prettier 代码格式化
+- 函数式组件 + React Hooks
+- Tailwind CSS 原子化样式
+
+### 数据管理
+- Prisma ORM 数据库操作
+- Zod 数据验证
+- React Hook Form 表单管理
+
+### 认证流程
+- NextAuth.js 统一认证
+- 支持邮箱 + GitHub OAuth
+- 跨子域名会话共享
+
+## 环境配置
+
+### 开发环境
+- Node.js >= 18.0.0
+- npm >= 9.0.0
+- PostgreSQL 数据库
+
+### 环境变量
+参考 [env.mjs](mdc:env.mjs) 文件配置必要的环境变量：
+- `DATABASE_URL` - 数据库连接
+- `NEXTAUTH_SECRET` - 认证密钥
+- `NEXTAUTH_URL` - 认证回调地址
+
+### 构建命令
+- `npm run dev` - 开发服务器
+- `npm run build` - 生产构建
+- `npm run start` - 生产服务器
+
+## 特色功能
+
+1. **响应式设计**：支持桌面端和移动端
+2. **暗色模式**：基于 next-themes 的主题切换
+3. **内容搜索**：全文检索功能
+4. **SEO优化**：Meta标签和Open Graph支持
+5. **性能监控**：集成 Vercel Speed Insights
+
+## Git 提交规范
+
+### 提交消息格式
+使用 [Conventional Commits](mdc:https:/www.conventionalcommits.org) 规范：
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### 提交类型 (type)
+- **feat**: 新功能
+- **fix**: 修复bug
+- **docs**: 文档更新
+- **style**: 代码格式调整（不影响功能）
+- **refactor**: 代码重构（既不是新功能也不是修复bug）
+- **perf**: 性能优化
+- **test**: 添加或修改测试
+- **chore**: 构建过程或辅助工具的变动
+- **ci**: CI/CD 配置文件和脚本的变动
+
+### 作用域 (scope)
+- **auth**: 认证相关
+- **ui**: 用户界面
+- **api**: API 接口
+- **db**: 数据库
+- **config**: 配置文件
+- **docs**: 文档系统
+- **dashboard**: 仪表盘
+- **tools**: 效率工具
+
+### 提交示例
+```bash
+# 新功能
+feat(auth): 添加GitHub OAuth登录支持
+
+# 修复bug
+fix(ui): 修复暗色模式下按钮样式问题
+
+# 文档更新
+docs: 更新API文档和使用指南
+
+# 重构
+refactor(dashboard): 优化数据仪表盘组件结构
+
+# 性能优化
+perf(api): 优化数据库查询性能
+
+# 配置变更
+chore(deps): 升级Next.js到最新版本
+```
+
+### 提交规范要求
+1. **消息语言**: 使用中文描述，便于团队理解
+2. **描述长度**: 首行不超过50个字符
+3. **动词时态**: 使用现在时态（"添加"而不是"添加了"）
+4. **详细说明**: 复杂变更需要在body中详细说明
+5. **关联issue**: 如有相关issue，在footer中引用
+
+### 分支命名规范
+- **feature/**: 新功能分支 (feature/auth-oauth)
+- **fix/**: 修复分支 (fix/ui-dark-mode)
+- **docs/**: 文档分支 (docs/api-guide)
+- **refactor/**: 重构分支 (refactor/dashboard-components)
+
+
+
