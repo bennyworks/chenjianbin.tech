@@ -35,6 +35,8 @@
 
     --radius: 0.5rem;
 
+    --spacing: 0.25rem;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -83,6 +85,8 @@
     --ring: 216 34% 17%;
 
     --radius: 0.5rem;
+
+    --spacing: 0.25rem;
 
     --sidebar-background: 240 5.9% 10%;
 

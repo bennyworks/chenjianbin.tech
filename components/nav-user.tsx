@@ -1,10 +1,11 @@
 "use client"
 
 import {
-  BadgeCheck,
-  Bell,
-  LogOut,
-  Sparkles,
+  BellIcon,
+  CreditCardIcon,
+  LogOutIcon,
+  MoreVerticalIcon,
+  UserCircleIcon,
 } from "lucide-react"
 
 import {
@@ -27,9 +28,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { CaretSortIcon, ComponentPlaceholderIcon } from "@radix-ui/react-icons"
-import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 
 export function NavUser({
   user,
@@ -41,21 +39,6 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const router = useRouter()
-
-  const handleSignOut = async () => {
-    try {
-      // 直接使用 NextAuth 的 signOut
-      await signOut({
-        callbackUrl: '/login',
-        redirect: true
-      })
-    } catch (error) {
-      console.error('登出时发生错误:', error)
-      // 确保用户被重定向到登录页面
-      router.push('/login')
-    }
-  }
 
   return (
     <SidebarMenu>
@@ -66,15 +49,17 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {user.email}
+                </span>
               </div>
-              <CaretSortIcon className="ml-auto size-4" />
+              <MoreVerticalIcon className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -90,36 +75,31 @@ export function NavUser({
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
+                <UserCircleIcon />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <ComponentPlaceholderIcon />
+                <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell />
+                <BellIcon />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut}>
-              <LogOut />
+            <DropdownMenuItem>
+              <LogOutIcon />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
