@@ -1,7 +1,7 @@
 # Astro build output and generated files
-blog/dist/
-blog/.astro/
-blog/node_modules/
+dist/
+.astro/
+node_modules/
 
 # Local environment files
 .env
