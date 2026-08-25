@@ -16,7 +16,7 @@ const title = first?.data.series ?? '系列';
 
 <BaseLayout title={title} description={`阅读「${title}」系列文章`} showHeader={false}>
     <header class="mb-12 sm:mb-16">
-        <p class="mb-3 text-sm opacity-70">文章系列</p>
+        <p class="mb-3 text-sm opacity-70">系列文章</p>
         <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl">{title}</h1>
     </header>
     {posts.map((post) => <PostPreview post={post} class="mb-10 sm:mb-12" />)}

@@ -27,7 +27,7 @@ const { post, prevPost, nextPost } = Astro.props;
 const { title, publishDate, updatedDate, excerpt, tags = [], seo, series, part, kind } = post.data;
 const { Content } = await render(post);
 
-// Use the configured `site` to generate an absolute URL
+// 使用站点配置生成可分享的绝对地址
 const shareUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
@@ -43,7 +43,7 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site).href;
                         <>
                             {' '}
                             <span>
-                                (Updated on <FormattedDate date={updatedDate} />)
+                                （更新于 <FormattedDate date={updatedDate} />）
                             </span>
                         </>
                     )
@@ -65,15 +65,15 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site).href;
                     </div>
                 )
             }
-            <Button class="copy-url-button" aria-label="Copy link" data-url={shareUrl} data-tooltip-default="Copy link" data-tooltip-success="Copied"
-                >Share</Button
+            <Button class="copy-url-button" aria-label="复制链接" data-url={shareUrl} data-tooltip-default="复制链接" data-tooltip-success="已复制"
+                >分享</Button
             >
         </div>
     </article>
     {
         (prevPost || nextPost) && (
             <div class="my-16 sm:my-24">
-                <h2 class="mb-12 font-serif text-xl italic sm:mb-16 sm:text-2xl">Read Next</h2>
+                <h2 class="mb-12 font-serif text-xl italic sm:mb-16 sm:text-2xl">继续阅读</h2>
                 {nextPost && <PostPreview post={nextPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
                 {prevPost && <PostPreview post={prevPost} class="mb-10 sm:mb-12" headingLevel="h3" />}
             </div>
@@ -95,7 +95,7 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site).href;
 
             await navigator.clipboard.writeText(url);
 
-            button.innerText = 'Copied';
+            button.innerText = '已复制';
 
             setTimeout(() => {
                 button.innerText = label;

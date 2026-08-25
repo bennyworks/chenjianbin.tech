@@ -1,6 +1,4 @@
 ---
-import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import newsreaderWoff2 from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 import { getImage } from 'astro:assets';
 import siteConfig from '../data/site-config';
 import type { ImageInput } from '../types';
@@ -48,26 +46,22 @@ if (image?.src) {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<!-- High Priority Global Metadata -->
+<!-- 页面基础元数据 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>{title}</title>
 <meta name="generator" content={Astro.generator} />
 
-<!-- Fonts -->
-<link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin="anonymous" />
-<link rel="preload" as="font" type="font/woff2" href={newsreaderWoff2} crossorigin="anonymous" />
-
-<!-- Low Priority Global Metadata -->
+<!-- 页面资源与订阅链接 -->
 <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
 <link rel="sitemap" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/sitemap-index.xml`} />
 <link rel="alternate" type="application/rss+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/rss.xml`} title="RSS" />
 
-<!-- Page Metadata -->
+<!-- 页面元数据 -->
 <link rel="canonical" href={canonicalURL} />
 <meta name="description" content={description} />
 
-<!-- Open Graph / Facebook -->
+<!-- 社交分享元数据 -->
 <meta property="og:type" content={pageType} />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
@@ -75,7 +69,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 {resolvedImage?.src && <meta property="og:image" content={resolvedImage.src} />}
 {resolvedImage?.alt && <meta property="og:image:alt" content={resolvedImage.alt} />}
 
-<!-- X/Twitter -->
+<!-- X/Twitter 分享元数据 -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content={canonicalURL} />
 <meta name="twitter:title" content={title} />
