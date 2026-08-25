@@ -18,9 +18,10 @@ for (const item of series) {
     for (const filename of fs.readdirSync(directory).filter((name) => name.endsWith('.md'))) {
         if (filename.startsWith('00-审校报告') || filename === '合规审查报告.md' || filename.startsWith('ARCHIVED-')) continue;
         const stem = filename.replace(/\.md$/, '');
+        if (stem.startsWith('00-系列索引')) continue;
         const match = stem.match(/^(\d+)-/);
         const part = match ? Number(match[1]) : 0;
-        const kind = stem.startsWith('00-导读') ? 'intro' : stem.startsWith('00-系列索引') ? 'index' : 'article';
+        const kind = stem.startsWith('00-导读') ? 'intro' : 'article';
         const id = `${item.key}-${kind === 'article' ? String(part).padStart(2, '0') : kind}`;
         files.push({ ...item, filename, stem, part, kind, id, source: path.join(directory, filename) });
     }
@@ -56,7 +57,7 @@ for (const file of files) {
     const raw = fs.readFileSync(file.source, 'utf8');
     const bodyWithoutFrontmatter = stripFrontmatter(raw);
     const title = frontmatterValue(raw, 'title')?.replace(/^['"]|['"]$/g, '') || titleFromBody(bodyWithoutFrontmatter);
-    const excerpt = frontmatterValue(raw, 'summary') || (file.kind === 'intro' ? `${file.label}系列导读` : file.kind === 'index' ? `${file.label}系列索引` : `${file.label}系列第${file.part}篇`);
+    const excerpt = frontmatterValue(raw, 'summary') || (file.kind === 'intro' ? `${file.label}系列导读` : `${file.label}系列第${file.part}篇`);
     const keywords = frontmatterValue(raw, 'keywords');
     const tags = keywords ? keywords.replace(/^\[|\]$/g, '').split(',').map((tag) => tag.trim()).filter(Boolean) : file.tags;
     const publishDate = `2026-08-${String(Math.max(1, 24 - file.part)).padStart(2, '0')}`;

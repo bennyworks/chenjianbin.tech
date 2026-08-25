@@ -29,7 +29,7 @@ const blog = defineCollection({
             series: z.string().optional(),
             seriesId: z.string().optional(),
             part: z.number().int().nonnegative().optional(),
-            kind: z.enum(['intro', 'index', 'article']).default('article'),
+            kind: z.enum(['intro', 'article']).default('article'),
             seo: seoSchema(image).optional()
         })
 });

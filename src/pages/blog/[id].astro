@@ -35,7 +35,7 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site).href;
     <article class="mb-16 sm:mb-24">
         <header class="mb-8">
             <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">{title}</h1>
-            {series && <p class="mt-3 text-sm opacity-70">{series}{kind === 'article' ? ` · 第 ${part} 篇` : kind === 'intro' ? ' · 系列导读' : ' · 系列索引'}</p>}
+            {series && <p class="mt-3 text-sm opacity-70">{series}{kind === 'article' ? ` · 第 ${part} 篇` : ' · 系列导读'}</p>}
             <div class="mt-4 text-sm">
                 <FormattedDate date={publishDate} />
                 {
